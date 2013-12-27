@@ -1,0 +1,70 @@
+<%- include header %>
+
+<% if(locals.error) { %>
+<div class="alert alert-error" style="display:none;">
+	<%= locals.error %>
+</div>
+<% } %>
+
+<div id="wrapper">
+	<div id="main">
+		<div id="sidebar">
+			<%- include sidebar %>
+			<div id="sidebar">
+			  <div class="panel">
+			    <div class="header">
+			      <span class="col_fade">日报发布步骤</span>
+			    </div>
+			    <div class="inner">
+			      <ol>
+			        <li>填写标题</li>
+			        <li>填写内容</li>
+			        <li>确认后提交报告</li>
+			      </ol>
+			    </div>
+			  </div>
+			  <div class="panel" style="display: none;">
+			    <div class="header">
+			      <span class="col_fade">社区积分规则</span>
+			    </div>
+			    <div class="inner">
+			      <ol>
+			        <li>签到：0~5分</li>
+			        <li>日报：2分</li>
+			        <li>发帖：2分</li>
+			        <li>回复：1分</li>
+			        <li>PS：日报需审核，通过后才能得到积分</li>
+			      </ol>
+			    </div>
+			  </div>
+			</div>
+		</div>
+		<div id="content">
+			<div class="panel">
+				<div class="header">
+					<ol class="breadcrumb">
+						<li><a href="/">主页</a><span class="divider">/</span></li>
+						<li class="active" id="baoTitle">发布日报</li>
+					</ol>
+				</div>
+				<div class="inner post">
+					<form id="create_topic_form" action="/createDaily" method="post">
+						<fieldset>
+							<label class="bold" for="title">标题</label>
+							<textarea class="span9" id="title" name="title" rows="1" placeholder="默认为《yyyy/MM/dd的日报》"></textarea>
+							<label class="bold"  style="margin-top:15px;">内容</label>
+							<div style="width:700px;">
+								<textarea name="content" rows="18" style="width:100%;"></textarea>
+							</div>
+							<input type="hidden" id="topic_tags" name="topic_tags" value="">
+							<button id="submit_btn" type="submit" class="btn">提交</button>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="clearfix"></div>
+<script src="/javascripts/addDaily.js"></script>
+<%- include footer %>

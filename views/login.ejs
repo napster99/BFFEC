@@ -1,0 +1,40 @@
+<%- include header %>
+
+<form class="form-horizontal" method="post">
+	<fieldset>
+		<legend>用户登入</legend>
+		<!--div class="control-group">
+			<label class="control-label" for="username">用户名</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="username" name="username">
+				<%  if(locals.error === 'usernotexsit') { %>
+				<div class="alert alert-error">
+					Error:用户不存在
+				</div>
+				<% } %>
+			</div>
+		</div-->
+		<% if(locals.error === 'usernotexsit') { %>
+			<div class="alert alert-error" >
+				Error:用户不存在
+			</div>
+		<% } %>
+		<div class="control-group">
+			<label class="control-label" for="password">口令</label>
+			<div class="controls">
+				<input type="password" class="input-xlarge" id="password" name="password">
+				<% if(locals.error === 'pwderror') {%>
+				<span style="color:red;">Error:登录口令错误</span>
+				<% } %>
+				<span>(提示：默认密码为拼音简称加123456，如：zs123456)</span>
+			</div>
+		</div>
+
+		<div class="form-actions">
+			<button type="submit" class="btn btn-success">登入</button>
+		</div>
+	</fieldset>
+</form>
+
+<%- include footer %>
+

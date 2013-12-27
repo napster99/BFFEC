@@ -1,0 +1,34 @@
+<%- include header %>
+<!--
+<% if(locals.success && locals.user) { %>
+<div class="alert alert-success" style="display:none;">
+	<%= locals.success %>
+</div>
+<% } %>
+
+<% if(locals.success && locals.success === '登出成功') { %>
+<div class="alert alert-success" style="display:none;">
+	<%= locals.success %>
+</div>
+<% } %>
+-->
+
+<% if(locals.error) { %>
+<div class="alert alert-error" style="display:none;">
+	<%= locals.error %>
+</div>
+<% } %>
+
+
+<div id="wrapper">
+	<div id="main">
+		<div id="sidebar">
+			<%- include sidebar %>
+		</div>
+		<div id="content">
+			<%- include messageList %>
+		</div>
+	</div>
+</div>
+
+<%- include footer %>

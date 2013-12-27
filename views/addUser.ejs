@@ -1,0 +1,70 @@
+<%- include header %>
+
+<% if(locals.error === 'saveError') { %>
+<div class="alert alert-error">
+	Error:录入失败，请稍后再试！
+</div>
+<% } %>
+
+<% if(locals.success === 'saveSuccess') { %>
+<div class="alert alert-success">
+	录入成功！
+</div>
+<% } %>
+
+
+<form class="form-horizontal" method="post" action="./addUser">
+	<fieldset>
+		<legend>新成员录入</legend>
+		<div class="control-group">
+			<label class="control-label" for="name">姓名</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="name" name="name">
+				<% if(locals.error === 'namenotnull') { %>
+				<span style="color:red;">
+					Error:姓名不能为空！
+				</span>
+				<% } %>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="name">手机</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="mobile" name="mobile">
+				<% if(locals.error === 'mobilenotnull') { %>
+				<span style="color:red;">
+					Error:手机不能为空！
+				</span>
+				<% } %>
+				<% if(locals.error === 'mobileformaterror') { %>
+				<span style="color:red;">
+					Error:手机格式不对！
+				</span>
+				<% } %>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="password">口令</label>
+			<div class="controls">
+				<input type="password" class="input-xlarge" id="password" name="password">
+				<em>(不填视为默认密码，如123456)</em>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="authority">权限</label>
+			<div class="controls">
+				<select name="authority" class="selectpicker show-tick">
+					<option value="1">普通成员</option>
+					<option value="2">管理员</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-actions">
+			<button type="submit" class="btn btn-primary">录入</button>
+		</div>
+	</fieldset>
+</form>
+
+
+<%- include footer %>

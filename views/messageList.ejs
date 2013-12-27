@@ -1,0 +1,59 @@
+<div class="panel">
+    <div class="inner">
+      <div class="header clearfix">
+        社区消息<a href="/createTopic" id="create_topic_btn">
+            <button class="btn btn-success">发布消息</button>
+          </a>
+      </div>
+      <div id="topic_list">
+
+      <% for(var i=0; i<objArr.length; i++) { %>
+        <input id="totalPages" type="hidden" value="<%= objArr[i]['totalPages'] %>" />
+        <div class="cell">
+          <div class="user_avatar block">
+            <a target="_blank" href="user/<%= objArr[i]['uid'] %>" title="<%= objArr[i]['uname'] %>">
+              <img src="../images/avatar.jpg">
+            </a>
+          </div>
+          <div class="block count">
+            <a href="/topic/528f604aacf0746008001e03#52933346a6957a080961450b" title="回复数"><%= objArr[i]['replyCount'] %></a>/<span title="点击数"><%= objArr[i]['clickCount'] %></span>
+          </div>
+          <div class="topic_wrap">
+              <a class="" href="/topic/<%= objArr[i]['mid'] %>">
+                  <%= objArr[i]['title'] %>
+              </a>
+          </div>
+          <div class="last_time"> <%= objArr[i]['time'] %></div>
+        </div>
+      <% } %>
+
+
+
+		<div id="example" class="pagination" current_page="1">
+			<ul>
+				<li class="disabled"><a>«</a></li>
+				<li class="disabled active"><a>1</a></li>
+				<li><a href="/?page=2">2</a></li>
+				<li><a href="/?page=3">3</a></li>
+				<li><a href="/?page=4">4</a></li>
+				<li><a href="/?page=5">5</a></li>
+				<li><a>...</a></li>
+				<li><a href="/?page=140">»</a></li>
+			</ul>
+		</div>
+		<script>
+      var page = window.location.search.split('=')[1];
+      var totalPages = $('#totalPages').val() || 1;
+      
+      var options = {
+             currentPage: page || 1,
+              totalPages: totalPages,
+           numberOfPages:10,
+          onPageClicked : function(event,originalEvent,type,page) {
+              window.location.href = '/?page='+page;
+            }
+        }
+      $('#example').bootstrapPaginator(options);
+    </script>
+    </div>
+  </div>

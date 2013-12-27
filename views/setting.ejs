@@ -1,0 +1,87 @@
+<%- include header %>
+<div id="wrapper">
+	<div id="main">
+		<div id="sidebar">
+			<%- include sidebar %>
+		</div>
+		<div id="content">
+			<% if(!locals.user) { %>
+				<div class="panel">
+					<div class="header">
+						<ul class="breadcrumb">
+							<li><a href="/">主页</a><span class="divider">/</span></li>
+							<li class="active">个人资料</li>
+						</ul>
+					</div>
+					<div class="inner clearfix">
+						<a href="/login" id="create_topic_btn" class="create-login-btn" style="float:left;"> 
+							<button class="btn btn-success">马上登陆</button> 
+						</a>
+					</div>
+				</div>
+			<%  } else { %>
+				<div class="panel">
+					<div class="header">
+						<ul class="breadcrumb">
+							<li><a href="/">主页</a><span class="divider">/</span></li>
+							<li class="active">个人资料</li>
+						</ul>
+					</div>
+					<div class="inner">
+						<form id="setting_form" class="form-horizontal" action="/setting" method="post">
+							<div class="control-group" style="margin-top:15px;">
+								<label class="control-label" for="name">用户名</label>
+								<div class="controls">
+									<input class="input-xlarge readonly" id="name" readonly="true" name="name" size="30" type="text" value="<%= locals.user.name ||''  %>" >
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="mobile">手机号</label>
+								<div class="controls">
+									<input class="input-xlarge readonly" id="mobile" name="mobile" size="30" type="text" value="<%= locals.user.mobile ||''  %>">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="email">电子邮件</label>
+								<div class="controls">
+									<input class="input-xlarge readonly" id="email" name="email" size="30" type="text" value="<%= locals.user.email ||''  %>">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="url">个人主页</label>
+								<div class="controls">
+									<input class="input-xlarge" id="url" name="url" size="30" type="text" value="<%= locals.user.url ||'' %>">
+								</div>
+							</div>
+							<!--div class="control-group">
+								<label class="control-label" for="signature">个性签名</label>
+								<div class="controls">
+									<input class="input-xlarge" id="signature" name="signature" size="30" type="text" value="<%= locals.user.signature ||'' %>">
+								</div>
+							</div-->
+							<div class="control-group">
+								<label class="control-label" for="profile">个人技能</label>
+								<div class="controls">
+									<textarea class="input-xlarge" id="profile" name="profile"><%= locals.user.profile ||'' %></textarea>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="weibo">微博地址</label>
+								<div class="controls">
+									<input class="input-xlarge" id="weibo" name="weibo" size="30" type="text" value="<%= locals.user.weibo ||'' %>">
+								</div>
+							</div>
+							<div class="form-actions">
+								<input type="submit" class="btn" value="保存设置">
+							</div>
+						</form>
+					</div>
+				</div>
+			<% } %>
+
+			
+		</div>
+	</div>
+</div>
+<div class="clearfix"></div>
+<%- include footer %>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+    <link rel='stylesheet' href="/stylesheets/bootstrap-responsive.css" />
+    <link rel='stylesheet' href="/stylesheets/node.css" />
+    <link rel="stylesheet" href="/javascripts/kindEditor/themes/default/default.css" />
+    <link rel="stylesheet" href="/stylesheets/sign.css" />
+   
+    <script src="/javascripts/jquery-1.9.1.js"></script>
+    <script src="/javascripts/bootstrap.js"></script>
+    <script src="/javascripts/bootstrap-paginator.js"></script>
+    <script src="/javascripts/common.js"></script>
+    <script src="/javascripts/topic.edit.min.js"></script>
+    <script charset="utf-8" src="/javascripts/kindEditor/kindeditor-min.js"></script>
+    <script charset="utf-8" src="/javascripts/kindEditor/zh_CN.js"></script>
+    <!--[if IE]>
+    <script type="text/javascript" src="js/excanvas.js" onload="explorercanvasload"></script>
+    <![endif]-->
+    <script src="/javascripts/jscharts.js"></script>
+    
+  </head>
+  <body>
+   <div class="navbar navbar-fixed-top">
+   		<div class="navbar-inner">
+   			<div class="container">
+   				<a href="/" style="float:left;">
+   					<img src="/images/logo.png" width="117" height="35" />
+   				</a>
+   				<a class="brand" href="/">BF前端社区</a>
+   				<div class="nav-collapse">
+   					<ul name="common" class="nav">
+   						<li name="index" class="active"><a href="/">首页</a></li>
+              <% if(!locals.user) { %>
+   						  <li name="login"><a href="/login">登入</a></li>
+              <% } else { %>
+                <% if(locals.user.role === '2') { %>
+                  <li name="addUser"><a href="/addUser">新成员录入</a></li>
+                  <li name="webList"><a href="/webList">管理成员</a></li>
+                <% } %>
+                <li name="addDaily"><a href="/addDaily">写日报</a></li>
+                <li name="setting"><a href="/setting">个人资料</a></li>
+                <% if(locals.user.role === '1') { %>
+                <li name="modifyPwd"><a href="/modifyPwd">修改口令</a></li>
+                <% } %>
+                <li name="logout"><a href="/logout">登出</a></li>
+                <li><a href="/">Welcome <%= locals.user.name %></a></li>
+              <% } %> 
+   					</ul>
+   				</div>
+   			</div>
+   		</div>
+   </div>
+   
+   <div id="container" class="container">
+   		

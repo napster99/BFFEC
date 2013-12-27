@@ -1,0 +1,29 @@
+<%- include header %>
+
+<div id="wrapper">
+  <div id="main">
+    <div id="sidebar">
+      <%- include sidebar %>
+    </div>
+    <div id="content">
+      <input type="hidden" id="uid" value="<%=uid%>" />
+      <div class="panel">
+          <div class="inner">
+            <div class="header clearfix">
+              <%= user.name %>的日报<a href="/addDaily" id="create_topic_btn">
+                  <button class="btn btn-success">发布日报</button>
+                </a>
+            </div>
+            <div id="day_list">
+              
+            
+            </div>
+          <div id="dayPagi" class="pagination" current_page="1"></div>
+        </div>
+    </div>
+  </div>
+</div>
+<script src="/javascripts/daliyList.js"></script>
+<%- include footer %>
+
+

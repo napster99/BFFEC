@@ -1,0 +1,113 @@
+<%- include header %>
+<!--
+<% if(locals.success && locals.user) { %>
+<div class="alert alert-success" style="display:none;">
+	<%= locals.success %>
+</div>
+<% } %>
+
+<% if(locals.success && locals.success === '登出成功') { %>
+<div class="alert alert-success" style="display:none;">
+	<%= locals.success %>
+</div>
+<% } %>
+-->
+
+<% if(locals.error) { %>
+<div class="alert alert-error" style="display:none;">
+	<%= locals.error %>
+</div>
+<% } %>
+
+<div id="wrapper">
+	<div id="main">
+		<div id="sidebar">
+			<%- include sidebar %>
+		</div>
+		<div id="content">
+			<div class="panel">
+				<div class="header">
+					<ul class="breadcrumb">
+						<li><a href="/">主页</a><span class="divider">/</span></li>
+						<li class="active">消息详情</li>
+					</ul>
+				</div>
+				<div class="inner topic">
+					<h3>
+						<%= messageDetail['mtitle']  %>
+					</h3>
+					<hr>
+					<div class="topic_content">
+						<div class="markdown-text">
+							<%- messageDetail['mcontent'] %>
+						</div>
+					</div>
+					<hr>
+					<!--div class="tags">
+						<span class="col_fade">标签：无</span>  
+					</div-->
+					<div class="changes">
+						<span class="col_fade">
+							<a class="dark" href="/user/oluul"><%= messageDetail['mname'] %></a> 在 <%= messageDetail['mtime'] %> 发布
+						</span>
+					</div>
+				</div>
+			</div>
+
+				<div class="panel">
+					<div class="header">
+					<span class="col_fade"><%= messageDetail['mReplyObj'].length %>  回复</span>
+					</div>
+			 <% for(var i=0; i<messageDetail['mReplyObj'].length; i++) { %>
+					<div class="cell reply_area reply_item" id="reply<%=i%>" reply_id="5293576aa6957a0809654d1b">
+						<a id="5293576aa6957a0809654d1b"></a>
+						<div class="author_content">
+							<div class="user_avatar block">
+								<a href="/user/leapon"><img src="../images/avatar.jpg" title="leapon"></a>
+							</div>
+							<div class="user_info">
+								<span class="reply_author">
+									<a class="dark" href="/user/leapon"><%= messageDetail['mReplyObj'][i]['uname'] %></a>
+								</span>
+								<span class="col_fade">
+									<a href="#5293576aa6957a0809654d1b"><%= messageDetail['mReplyObj'][i]['rtime'] %></a>
+								</span>
+							</div>
+							<div class="user_action">
+								<span class="col_fade">#<%=i+1%></span>	
+							</div>
+						</div>	
+						<div class="reply_content">
+						<%- messageDetail['mReplyObj'][i]['rcontent'] %> 
+						</div>	
+					</div>
+			<% } %>
+				</div>
+
+			<% if(locals.user) { %>
+			<div class="panel">
+				<div class="header">
+					<span class="col_fade">添加回复</span>
+				</div>
+				<div class="inner reply">
+					<form id="reply_form" action="/reply/<%= messageDetail['mid'] %>" method="post">
+						<div class="tabbable">
+							<div class="tab-content">
+								<div style="width:700px;">
+								<textarea name="content" rows="18" style="width:100%;"></textarea>
+							</div>
+							</div>
+							<input type="hidden" name="_csrf" id="_csrf" value="S6ZQLAM5BJ1aZqwWlQHp0X52">
+						</div>
+						<button id="submit_btn" class="btn">回复</button>
+						<span class="col_fade">Ctrl+Enter 快捷回复</span>
+					</form>
+				</div>
+			</div>
+			<% } %>
+		</div>
+	</div>
+</div>
+<div class="clearfix"></div>
+<script src="/javascripts/reply.js"></script>
+<%- include footer %>

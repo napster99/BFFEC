@@ -1,0 +1,65 @@
+<%- include header %>
+
+<% if(locals.error === 'pwdformaterror') { %>
+<div class="alert alert-error">
+	Error:口令长度为6~20位之间
+</div>
+<% } %>
+
+
+<% if(locals.error === 'oldpassworderror') { %>
+<div class="alert alert-error">
+	Error: 原口令不对
+</div>
+<% } %>
+
+<% if(locals.error === 'passwordisexsit') { %>
+<div class="alert alert-error">
+	Error: 口令已存在
+</div>
+<% } %>
+
+<% if(locals.success === 'success') { %>
+<div class="alert alert-success">
+	口令已修改
+</div>
+<% } %>
+
+
+
+<form class="form-horizontal" method="post" action="./modifyPwd">
+	<fieldset>
+		<legend>修改口令</legend>
+		<!--div class="control-group">
+			<label class="control-label" for="username">用户名</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="username" name="username">
+				<p class="help-block">你的个人姓名全拼，用于登录（如：zhangsan）</p>
+			</div>
+		</div-->
+
+		<div class="control-group">
+			<label class="control-label" for="oldpassword">原口令</label>
+			<div class="controls">
+				<input type="password" class="input-xlarge" id="oldpassword" name="oldpassword">
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="password">新口令</label>
+			<div class="controls">
+				<input type="password" class="input-xlarge" id="password" name="password">
+			</div>
+		</div>
+
+
+
+		<div class="form-actions">
+			<button type="submit" class="btn btn-primary">完成</button>
+			<button type="reset" class="btn">重置</button>
+		</div>
+	</fieldset>
+</form>
+
+
+<%- include footer %>

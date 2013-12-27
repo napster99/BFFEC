@@ -1,0 +1,100 @@
+<%- include header %>
+
+<% if(locals.error) { %>
+<div class="alert alert-error" style="display:none;">
+	<%= locals.error %>
+</div>
+<% } %>
+
+<div id="wrapper">
+	<div id="main">
+		<div id="sidebar">
+			<div id="sidebar">
+			  <div class="panel">
+			    <div class="header">
+			      <span class="col_fade">话题发布步骤</span>
+			    </div>
+			    <div class="inner">
+			      <ol>
+			        <li>填写标题</li>
+			        <li>填写内容</li>
+			        <li>选择话题标签</li>
+			        <li>确认后发布话题</li>
+			      </ol>
+			    </div>
+			  </div>
+			  <div class="panel">
+			    <div class="header">
+			      <span class="col_fade">话题发布指南</span>
+			    </div>
+			    <div class="inner">
+			      <ol>
+			        <li>尽量把话题要点浓缩到标题里</li>
+			        <li>内容对标题做进一步说明，但不是必须的</li>
+			        <li>给话题选择合适的标签能增加被阅读的机会</li>
+			      </ol>
+			    </div>
+			  </div>
+			  <div class="panel" style="display: none;">
+			    <div class="header">
+			      <span class="col_fade">社区积分规则</span>
+			    </div>
+			    <div class="inner">
+			      <ol>
+			        <li>签到：0~5分</li>
+			        <li>日报：2分</li>
+			        <li>周报：5分</li>
+			        <li>发帖：2分</li>
+			        <li>回复：1分</li>
+			      </ol>
+			    </div>
+			  </div>
+			</div>
+		</div>
+		<div id="content">
+			<% if(!locals.user) { %>
+				<div class="panel">
+					<div class="header">
+						<ul class="breadcrumb">
+							<li><a href="/">主页</a><span class="divider">/</span></li>
+							<li class="active">通知</li>
+						</ul>
+					</div>
+					<div class="inner clearfix">
+						<a href="/login" id="create_topic_btn" class="create-login-btn" style="float:left;"> 
+							<button class="btn btn-success">马上登陆</button> 
+						</a>
+						<div class="alert alert-error">	
+							<strong>未登入用户不能发布话题。</strong>
+						</div>
+					</div>
+				</div>
+			<%  } else { %>
+				<div class="panel">
+				<div class="header">
+					<ol class="breadcrumb">
+						<li><a href="/">主页</a><span class="divider">/</span></li>
+						<li class="active">发布话题</li>
+					</ol>
+				</div>
+				<div class="inner post">
+					<form id="create_topic_form" action="/topic/create" method="post">
+						<fieldset>
+							<label class="bold" for="title">标题</label>
+							<textarea class="span9" id="title" name="title" rows="1" placeholder="请在此输入标题，字数控制在10到100个之间"></textarea>
+							<label class="bold" for="t_content">内容</label>
+							<div style="width:700px;">
+								<textarea name="content" rows="18" style="width:100%;"></textarea>
+							</div>
+							<button id="submit_btn" type="submit" class="btn">发布</button>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+			<% } %>
+		</div>
+	</div>
+</div>
+<div class="clearfix"></div>
+<script src="/javascripts/create.js"></script>
+<%- include footer %>

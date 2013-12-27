@@ -1,0 +1,171 @@
+<%- include header %>	
+	<div class="tabbable tabs-left" style="margin:10px 0 0;">
+			<ul class="nav nav-tabs" style="max-height:none;">
+                <li class="active"><a href="#lA" data-toggle="tab">成员列表</a></li>
+                <li class=""><a href="#lB" data-toggle="tab">待审核日报</a></li>
+                <li class=""><a href="#lC" data-toggle="tab">话题管理</a></li>
+               	<li class=""><a href="#lD" data-toggle="tab">积分日志</a></li>
+               	<li class=""><a href="#lE" data-toggle="tab">排行榜</a></li>
+            </ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="lA">
+				<div style="background:#fff">
+				    <table cellspacing="0" class="table table-primary table-hover" align="center">
+				    	<thead align="center">
+				    		<tr>
+				    			<td colspan="7"><strong>WEB研发一部（前端）成员表</strong>
+				    			<author style="float:right;">
+				    				<strong>负责人：</strong>谢武
+				    			</author>
+				    			</td>
+				    		</tr>
+				    	</thead>
+				    	<tbody align="center">
+							<% for(var i=0; i<users.length; i++) { %>
+								<tr>
+					    			<td><%= users[i]['name'] %></td>
+					    			<td><%= users[i]['mobile'] %></td>
+					    		</tr>
+							<% } %>
+			    		</tbody>
+				    </table>
+				</div>
+			</div>
+			<div class="tab-pane" id="lB">
+				<div id="msgList" style="background:#fff">
+				    <table cellspacing="0" class="table table-primary table-hover" align="center">
+				    	<thead align="center">
+				    		<tr>
+				    			<td>
+				    				<strong>待审核日报</strong>
+				    			</td>
+				    		</tr>
+				    	</thead>
+				    	<tbody>
+				    		<% for(var i=0; i<messages.length; i++) { %>
+				    			<tr>
+								<td><%= messages[i]['type']%></td>
+				    			<td><a herf="#"><%= messages[i]['mtitle']%></a></td>
+				    			<td><%= messages[i]['mtime']%></td>
+				    			<td><button name="startPassBtn"  type="button" class="btn btn-success" mid="<%= messages[i]['_id']%>">开始审核</button></td>
+				    			</tr>
+							<% } %>
+
+							<%  if(messages.length == 0) { %>
+								<td>暂无待审核日报</td>
+							<% } %>
+
+			    		</tbody>
+				    </table>
+				</div>
+
+				<div id="msgDetail" class="panel" style="display:none;"> 
+					<div class="inner topic"> 
+						<div id="msgCon"></div>
+						<div class="well">
+							<textarea id="reviews" style="width:99%;" rows="3" placeholder="管理员要说点什么吗？"></textarea>
+						</div>
+						<div class="text-right">
+							<div style="float:left;">
+								<label style="display:inline;">悬赏积分：</label>
+								<input id="score" type="text" style="width:50px; vertical-align:top;">
+							</div>
+							
+							<button id="backBtn" type="button" class="btn">返回列表</button>
+							<button id="passBtn" type="button" class="btn btn-success">通过</button>
+							<button id="unPassBtn" type="button" class="btn btn-warning">不通过</button>
+						</div>
+					</div> 
+				</div>
+			</div>
+			<div class="tab-pane" id="lC">
+				<table cellspacing="0" class="table table-primary table-hover" align="center">
+			    	<thead align="center">
+			    		<tr>
+			    			<td>
+			    				<strong>话题管理</strong>
+			    			</td>
+			    		</tr>
+			    	</thead>
+			    	<tbody>
+			    			<tr>
+								<td>正在努力开发中...</td>
+			    			</tr>
+		    		</tbody>
+			    </table>
+			</div>
+			<div class="tab-pane" id="lD">
+				<table cellspacing="0" class="table table-primary table-hover" align="center">
+			    	<thead align="center">
+			    		<tr>
+			    			<td>
+			    				<strong>积分日志</strong>
+			    			</td>
+			    		</tr>
+			    	</thead>
+			    	<tfoot>
+			    		 <tr>
+					      <td colspan="4">
+						      <div id="logPagina" class="pagination">
+						      		<ul>
+						      			<li class="active">
+						      				<a title="Current page is 1">1</a>
+						      			</li>
+						      			<li>
+						      				<a title="Go to page 2">2</a>
+						      			</li>
+						      			<li>
+						      				<a title="Go to next page">&gt;</a>
+						      			</li>
+						      			<li>
+						      				<a title="Go to last page">&gt;&gt;</a>
+						      			</li>
+						      		</ul>
+						      </div>
+					      </td>
+					    </tr>
+			    	</tfoot>
+			    	<tbody id="logContent">
+			    			<tr>
+								<td>某某</td>
+				    			<td>通过签到</td>
+				    			<td>4分</td>
+				    			<td>2013-12-21 15:50:42</td>
+			    			</tr>
+			    			<tr>
+								<td>某某</td>
+				    			<td>通过签到</td>
+				    			<td>4分</td>
+				    			<td>2013-12-21 15:50:42</td>
+			    			</tr>
+			    			<tr>
+								<td>某某</td>
+				    			<td>通过签到</td>
+				    			<td>4分</td>
+				    			<td>2013-12-21 15:50:42</td>
+			    			</tr>
+		    		</tbody>
+			    </table>
+			</div>
+			<div class="tab-pane" id="lE">
+				<table cellspacing="0" class="table" align="center">
+			    	<thead align="center">
+			    		<tr>
+			    			<td>
+			    				<strong>排行榜</strong>
+			    			</td>
+			    		</tr>
+			    	</thead>
+			    	<tbody>
+			    			<tr>
+								<td>
+									<div id="graph"></div>
+								</td>
+			    			</tr>
+		    		</tbody>
+			    </table>
+			</div>
+		</div>
+	</div>
+	<script src="/javascripts/webList.js"></script>
+<%- include footer %>

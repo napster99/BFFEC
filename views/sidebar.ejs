@@ -1,0 +1,110 @@
+<div id="sidebar">
+	<% if(!user) { %>
+		<div class="panel">
+	      <div class="inner">
+	        <p>BFCloub：边锋前端技术交流社区</p>
+	        <div>
+	          <!--a href="/addUser"><button class="btn">现在注册</button></a-->
+	          <span>已注册用户请<a class="light" href="/login"> 登录</a></span>
+	        </div>
+	      </div>
+	  </div>
+	<%  } else { %>
+		<div class="panel">
+	    	<input type="hidden" value="<%= user._id || user.uid %>" id="uid" />
+	      <div class="header">
+		      <span class="col_fade">个人信息<span>
+		      </span></span></div>
+		      <div class="inner">
+		        <div class="user_card">
+			<div>
+				<a class="user_avatar" href="user/<%= user.name %>">
+					<img src="../images/avatar.jpg" title="<%= user.name %>">
+				</a>
+				<span class="user_name">
+					<a class="dark" href="user/<%= user.name %>"> <%= user.name %></a>
+					<input id="signStatus" type="hidden" value="<%= user.curSign %>" />
+					<button id="signIn" class="btn btn-success">每日签到</button>
+				</span>
+
+				<div class="board clearfix">
+					<div class="floor">
+						<!--a href="/user/napster99/tags/">发布话题：<span class="big">0</span>个</a>
+						<div class="space"></div>
+						<a href="/user/napster99/collections">参与话题：<span class="big">1</span>个</a-->
+					</div>
+					<div class="floor">
+						<a href="javascript:;">话题：<span class="big">0</span>个</a>
+						<div class="space"></div>
+						<a href="/dailyList/<%= user._id || user.uid %>">日报：<span class="big">0</span>篇</a>
+						<div class="space"></div>
+						积分：<span id="score" class="big"><%=  user.score %></span>分
+					</div>
+				</div>
+			</div>
+		</div>
+
+	      </div>
+	      
+	  </div>
+
+	<% } %>
+	  <div class="panel">
+	      <div class="inner">
+	         <table class="table">
+	         	<thead>
+	         		<tr>
+	         			<td colspan="3">前端社区排行榜</td>
+	         		</tr>
+	         	</thead>
+	         	<tbody align="left" id="rankContainer">
+	         		<tr>
+	         			<td width="10"><label class="label label-success">1</label></td><td>张三</td><td>消息</td>
+	         		</tr>
+	         		<tr>
+	         			<td><label class="label label-warning">2</label></td><td>张三</td><td>消息</td>
+	         		</tr>
+	         		<tr>
+	         			<td><label class="label label-info">3</label></td><td>张三</td><td>消息</td>
+	         		</tr>
+	         		<tr>
+	         			<td>...</td><td></td><td></td>
+	         		</tr>
+	         		<tr>
+	         			<td>4</td><td>张三</td><td>消息</td>
+	         		</tr>
+	         		<tr>
+	         			<td>5</td><td>张三</td><td>消息</td>
+	         		</tr>
+	         		<tr>
+	         			<td>6</td><td>张三</td><td>消息</td>
+	         		</tr>
+	         		<tr>
+	         			<td>...</td><td></td><td></td>
+	         		</tr>
+	         	</tbody>
+	         </table>
+	      </div>
+	  </div>
+</div>
+
+<!-- S 弹窗-->
+<div class="scratchCard" id="scratchCard">
+    <!-- 关闭按钮 -->
+    <div>
+        <a class="close" id="sClose">X</a>
+    </div>
+    <!-- 中奖信息 -->
+    <div id="sCardInfo" class="info" onselectstart="javascript:return false;">我又不是人民币，怎么能让人人都喜欢我？<br>恭喜你获得<span>  8   </span>积分！</div>
+    <!-- 刮奖涂层 -->
+    <div class="mask">
+        <canvas id="mask" width="278" height="99" style="display: none;">您的浏览器版本不支持 canvas!</canvas>
+    </div>
+    <!-- 重抽btn -->
+    <div class="again">
+        <a id="againBtn" onselectstart="javascript:return false;" style="display:none;">领取积分</a>
+    </div>
+</div>
+<!-- E 弹窗-->
+<script src="/javascripts/siderbar.js"></script>
+<script src="/javascripts/signIn/draw.js"></script>

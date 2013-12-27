@@ -1,0 +1,75 @@
+<%- include header %>
+
+
+<% if(locals.error) { %>
+<div class="alert alert-error" style="display:none;">
+	<%= locals.error %>
+</div>
+<% } %>
+
+<div id="wrapper">
+	<div id="main">
+		<div id="sidebar">
+			<%- include sidebar %>
+		</div>
+		<div id="content">
+			<input id="mid" type="hidden" value="<%= messageDetail['mid'] %>">
+			<input id="uid" type="hidden" value="<%= messageDetail['muid'] %>">
+			<div class="panel">
+				<div class="header">
+					<div style="float:right;">
+						<% if(user && messageDetail['isPass'] === 'unpass') { %>
+							<button id="editBtn" class="btn btn-success">编辑</button> 
+						<% } %>
+						<button id="cancelBtn" class="btn" style="display:none;">取消</button>
+						<button id="saveBtn" class="btn btn-success" style="display:none;">再次提交</button>
+					</div>
+					<ul class="breadcrumb">
+						<li><a href="/dailyList/<%= user._id || user.uid %>">日报列表</a><span class="divider">/</span></li>
+						<li class="active">日报详情</li>
+					</ul>
+				</div>
+				<div id="showArea" class="inner topic">
+					<h3>
+						<%= messageDetail['mtitle']  %>
+						<% if(messageDetail['isPass'] === 'passed') { %>
+							<span style="color:#5cb85c; margin-left:10px;">[已审核]</span>
+						<% } else if (messageDetail['isPass'] === 'waiting') {  %>
+							<span style="color:red; margin-left:10px;">[等待审核]</span>
+						<% } else { %>
+							<span style="color:gray; margin-left:10px;">[审核未通过]</span>
+						<% } %>
+					</h3>
+					<hr>
+					<div class="topic_content">
+						<input type="hidden" id="theContent" value="<%= messageDetail['mcontent'] %>" />
+						<div class="markdown-text">
+							<%- messageDetail['mcontent'] %>
+						</div>
+					</div>
+					<hr>
+					<div class="changes">
+						<span class="col_fade">
+							<a class="dark" href="javascript:;"><%= messageDetail['mname'] %></a> 在 <%= messageDetail['mtime'] %> 发布
+						</span>
+					</div>
+					<% if(messageDetail['isPass'] != 'waiting') { %>
+						<div class="well">
+							管理员点评：<% if(messageDetail['rcontent'] != '') { %>
+											<%= messageDetail['rcontent'] %>
+										<% } else {%>
+											<em>暂无点评</em>
+										<% } %>
+						</div>
+					<% } %>
+				</div>
+				<div id="editArea" class="well" style="display:none;">
+					<textarea name="content" rows="18" style="width:100%;"></textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="/javascripts/dailyDetail.js"></script>
+<%- include footer %>
