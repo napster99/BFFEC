@@ -11,21 +11,21 @@
 				<div class="header">
 					<ul class="breadcrumb">
 						<li><a href="/">主页</a><span class="divider">/</span></li>
-						<li class="active"><%= locals.user.name%></li>
+						<li class="active"><%= otheruser.name%></li>
 					</ul>
 				</div>
 				<div class="inner userinfo">
 					<div class="well">
 						<span>手机号：</span>
-						<span><%= locals.user.mobile%></span>
+						<span><%= otheruser.mobile%></span>
 					</div>
 					<div class="well">
 						<span>电子邮件：</span>
-						<span><%= locals.user.email%></span>
+						<span><%= otheruser.email %></span>
 					</div>
 					<div class="well">
 						<span>个人主页：</span>
-						<a href="<%= locals.user.url%>" target="_blank"><%= locals.user.url%></a>
+						<a href="<%= otheruser.url%>" target="_blank"><%= otheruser.url %></a>
 					</div>
 					<!--div class="well">
 						<span>个性签名：</span>
@@ -33,13 +33,12 @@
 					</div-->
 					<div class="well">
 						<span>个人技能：</span>
-						<span><%= locals.user.profile%></span>
+						<span><%= otheruser.profile %></span>
 					</div>
 					<div class="well">
 						<span>微博地址：</span>
-						<span><%= locals.user.weibo%></span>
+						<span><%= otheruser.weibo %></span>
 					</div>
-
 
 					<p class="col_fade" style="margin:12px 5px 0;">于 2011-7-21 12:40 加入 BF前端社区</p>
 				</div>

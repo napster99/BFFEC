@@ -2,7 +2,7 @@
 	<div class="tabbable tabs-left" style="margin:10px 0 0;">
 			<ul class="nav nav-tabs" style="max-height:none;">
                 <li class="active"><a href="#lA" data-toggle="tab">成员列表</a></li>
-                <li class=""><a href="#lB" data-toggle="tab">待审核日报</a></li>
+                <li class=""><a href="#lB" data-toggle="tab">日报管理</a></li>
                 <li class=""><a href="#lC" data-toggle="tab">话题管理</a></li>
                	<li class=""><a href="#lD" data-toggle="tab">积分日志</a></li>
                	<li class=""><a href="#lE" data-toggle="tab">排行榜</a></li>
@@ -37,11 +37,20 @@
 				    	<thead align="center">
 				    		<tr>
 				    			<td>
-				    				<strong>待审核日报</strong>
+				    				<strong>日报管理</strong>
+				    			</td>
+				    			<td></td><td></td>
+				    			<td>
+				    				<select id="dailyStatus" style="float:left;">
+				    					<option value="">所有日报</option>
+				    					<option selected="true" value="1">未审核日报</option>
+				    					<option value="2">未通过日报</option>
+				    					<option value="3">已通过日报</option>
+				    				</select>
 				    			</td>
 				    		</tr>
 				    	</thead>
-				    	<tbody>
+				    	<tbody id="dailyCon">
 				    		<% for(var i=0; i<messages.length; i++) { %>
 				    			<tr>
 								<td><%= messages[i]['type']%></td>

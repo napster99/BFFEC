@@ -5,7 +5,9 @@ $(function() {
     $btn : $('#signIn'),
     $signBtn : $('#againBtn'),
     $signStatus : $('#signStatus'),
-    $rankContainer : $('#rankContainer')
+    $rankContainer : $('#rankContainer'),
+    $normalCount : $('span[name=normal]'),
+    $dayCount : $('span[name=day]')
   }
   var uid = $('#uid').val();
   var Page = {
@@ -17,6 +19,7 @@ $(function() {
       this.view();
       this.addEventListener();
       this.initJsChart();
+      this.getMsgDailyCount();
     },
     view : function() {
       // var signStatus = ui.$signStatus.val();
@@ -51,6 +54,24 @@ $(function() {
       }
       $.ajax(options);
     },
+
+    //获取话题数和日报数
+    getMsgDailyCount : function() {
+      var options = {
+        'url' : '/getAllCount',
+        'dataType' : 'json',
+        'data' : {uid : uid},
+        'type' : 'GET',
+        'success' : function(data) {
+          ui.$normalCount.text(data['normal']);
+          ui.$dayCount.text(data['day']);
+        },
+        'error' : function(err) {
+        }
+      }
+      $.ajax(options);
+    },
+
     //改变签到状态
     changeSignStatus : function() {
       var options = {
@@ -83,17 +104,16 @@ $(function() {
     renderRanking　 : function (data) {
       var htmlStr = '';
       var userArr = [];
-      for(var i=0; i<data.length; i++) {
-        if(data[i]['role'] == '2') {
-          // i--;
-        }else{
+      for(var i=0,j=1; i<data.length; i++,j++) {
+        if(data[i]['role'] != '2') {
           userArr.push(data[i]);
           Page.pageData.user[data[i]['_id']] = data[i];
-          Page.pageData.user[data[i]['_id']]['sort'] = i+1;
-          Page.pageData.userSort[i+1] = data[i];  
+          Page.pageData.user[data[i]['_id']]['sort'] = j;
+          Page.pageData.userSort[j] = data[i];  
+        }else{
+          j--;
         }
       }
-
       for(var i=0; i<userArr.length; i++) {
           if(i === 0) {
             htmlStr += '<tr>'
@@ -110,6 +130,7 @@ $(function() {
           }
       }
       var curUser = Page.pageData.user[uid];
+
       if(curUser) {
         if(curUser['sort']==4) {
           htmlStr += '<tr>'
@@ -136,12 +157,11 @@ $(function() {
                 +'    <td>'+curUser['sort']+'</td><td>'+curUser['score']+'</td><td>'+curUser['name']+'</td>' 
                 +'</tr>';
         }
-
-        if(curUser['sort'] > 3 &&  data.length - curUser['sort'] == 1) {
+        if(curUser['sort'] > 3 &&  userArr.length - curUser['sort'] == 1) {
           var nextUser = Page.pageData.userSort[curUser['sort'] + 1];
            htmlStr += '<tr>'
                 +'    <td>'+nextUser['sort']+'</td><td>'+nextUser['score']+'</td><td>--</td>';
-        }else if(curUser['sort'] > 3 &&  data.length - curUser['sort'] > 1) {
+        }else if(curUser['sort'] > 3 &&  userArr.length - curUser['sort'] > 1) {
           var nextUser = Page.pageData.userSort[curUser['sort'] + 1];
             htmlStr += '<tr>'
                 +'    <td>'+nextUser['sort']+'</td><td>'+nextUser['score']+'</td><td>--</td>'; 

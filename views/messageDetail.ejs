@@ -58,19 +58,19 @@
 					<div class="header">
 					<span class="col_fade"><%= messageDetail['mReplyObj'].length %>  回复</span>
 					</div>
-			 <% for(var i=0; i<messageDetail['mReplyObj'].length; i++) { %>
+			 		<% for(var i=0; i<messageDetail['mReplyObj'].length; i++) { %>
 					<div class="cell reply_area reply_item" id="reply<%=i%>" reply_id="5293576aa6957a0809654d1b">
 						<a id="5293576aa6957a0809654d1b"></a>
 						<div class="author_content">
 							<div class="user_avatar block">
-								<a href="/user/leapon"><img src="../images/avatar.jpg" title="leapon"></a>
+								<a target="_blank" href="/user/<%= messageDetail['mReplyObj'][i]['uid'] %>"><img src="../images/avatar.jpg" title="<%= messageDetail['mReplyObj'][i]['uname'] %>"></a>
 							</div>
 							<div class="user_info">
 								<span class="reply_author">
-									<a class="dark" href="/user/leapon"><%= messageDetail['mReplyObj'][i]['uname'] %></a>
+									<a class="dark" href="/user/<%= messageDetail['mReplyObj'][i]['uid'] %>"><%= messageDetail['mReplyObj'][i]['uname'] %></a>
 								</span>
 								<span class="col_fade">
-									<a href="#5293576aa6957a0809654d1b"><%= messageDetail['mReplyObj'][i]['rtime'] %></a>
+									<a target="_blank" href="#5293576aa6957a0809654d1b"><%= messageDetail['mReplyObj'][i]['rtime'] %></a>
 								</span>
 							</div>
 							<div class="user_action">
@@ -81,7 +81,7 @@
 						<%- messageDetail['mReplyObj'][i]['rcontent'] %> 
 						</div>	
 					</div>
-			<% } %>
+					<% } %>
 				</div>
 
 			<% if(locals.user) { %>

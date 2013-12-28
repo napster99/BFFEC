@@ -15,7 +15,9 @@ $(function() {
     $reviews : $('#reviews'),
     $score : $('#score'),
     $logPagina : $('#logPagina'),
-    $logContent : $('#logContent')
+    $logContent : $('#logContent'),
+    $dailyStatus : $('#dailyStatus'),
+    $dailyCon    : $('#dailyCon')
   }
 
   var Page = {
@@ -25,6 +27,7 @@ $(function() {
       this.addEventListener();
       this.initJsChart();
       this.getLogScoreAjax();
+      this.getDailyListByStatus(1);
     },
     view : function() {
 
@@ -66,6 +69,13 @@ $(function() {
         ui.$msgDetail.hide();
         ui.$msgList.show();
       })
+
+
+      //日报删选条件
+      ui.$dailyStatus.on('change','',function() {
+        var status = this.value;
+        self.getDailyListByStatus(status);
+      });
     },
 
     changeMessageStatus : function(mid,status,uid,reviews,score) {
@@ -215,7 +225,25 @@ $(function() {
         +'</tr>';
       }
       ui.$logContent.html(html);
+    },
+
+    getDailyListByStatus : function(status) {
+      var options = {
+        'url' : '/getDailyListByStatus',
+        'dataType' : 'json',
+        'type' : 'GET',
+        'data' : {status : status},
+        'success' : function(data) {
+          console.log(data)
+        },
+        'error' : function(err) {
+          
+        }
+      }
+      $.ajax(options);
     }
+
+
   }
 
   Page.init();

@@ -25,32 +25,32 @@ module.exports = function(app) {
     req.session.error = null;
     req.session.success = null;
     var url = req.originalUrl;
-      if (url != '/addUser' && url != '/login' && url != '/' && url.indexOf('/topic/') < 0 && url.indexOf('?page=') < 0 && url !='/createTopic' && url !='/getRanking' && !req.session.user) {
-          return res.redirect('/login');
-      }
-      if(req.session.user){
-        // 获取最近一次的签到积分
-        LogScore.getLastSignScore(req.session.user._id, function(err, lastSign){
-          // 判断今天签到可获得的积分
-          var curSign = 1;
-          if(lastSign){
-            // 今天是星期几
-            var now = new Date()
-              , nowDay = now.getDay()
-              , lastDay = lastSign.time.getDay();
+    if (url != '/addUser' && url != '/login' && url != '/' && url.indexOf('/topic/') < 0 && url.indexOf('?page=') < 0 && url !='/createTopic' && url !='/getRanking' && !req.session.user && url.indexOf('/user/') < 0) {
+        return res.redirect('/login');
+    }
+    if(req.session.user){
+      // 获取最近一次的签到积分
+      LogScore.getLastSignScore(req.session.user._id, function(err, lastSign){
+        // 判断今天签到可获得的积分
+        var curSign = 1;
+        if(lastSign){
+          // 今天是星期几
+          var now = new Date()
+            , nowDay = now.getDay()
+            , lastDay = lastSign.time.getDay();
 
-            if(0 == nowDay || 6 == nowDay || now.format('yyyy-MM-dd') == lastSign.time.format('yyyy-MM-dd')){
-              curSign = 0;  // 表示不需要签到
-            } else if( ( 1 == nowDay && 5 == lastDay ) || nowDay == (+lastDay + 1) ){
-              curSign += lastSign.score;
-            }
+          if(0 == nowDay || 6 == nowDay || now.format('yyyy-MM-dd') == lastSign.time.format('yyyy-MM-dd')){
+            curSign = 0;  // 表示不需要签到
+          } else if( ( 1 == nowDay && 5 == lastDay ) || nowDay == (+lastDay + 1) ){
+            curSign += lastSign.score;
           }
-          req.session.user.curSign = curSign;
-          next();
-        });
-      } else {
+        }
+        req.session.user.curSign = curSign;
         next();
-      }
+      });
+    } else {
+      next();
+    }
   })
 
   //访问首页
@@ -108,6 +108,7 @@ module.exports = function(app) {
                     title : '边锋前端社区',
                     objArr : objArr,
                     user : req.session.user,
+                    otheruser : req.session.user,
                     score : req.session.user['score']
                   });
                 }else{
@@ -115,7 +116,8 @@ module.exports = function(app) {
                   res.render('index',{
                     title : '边锋前端社区',
                     objArr : objArr,
-                    user : req.session.user
+                    user : req.session.user,
+                    otheruser : req.session.user
                   });
                 }
               })
@@ -318,10 +320,28 @@ module.exports = function(app) {
   });
 
 	//个人主页
-	app.get('/user/:user', function(req, res) {
-		res.render('user',{
-			title : '个人主页'
-		});
+	app.get('/user/:uid', function(req, res) {
+    console.log(req.params.uid)
+    var uid = req.params.uid;
+    console.log('seesion uid' +req.session.user._id)
+    console.log('+++')
+    console.log(uid)
+    User.getUserByUid(uid,function(err,user) {
+      console.log('===')
+      console.log(user)
+      if(!err&& user) {
+        res.render('user',{
+          title : user.name + '的主页',
+          otheruser : user,
+          user : req.session.user
+        });
+      }
+    });
+
+     // res.render('user',{
+     //      title : '个人的主页'
+     //    });
+		
 	});
 
 	//个人主页设置
@@ -413,7 +433,8 @@ module.exports = function(app) {
                     }else{
                       res.render('messageDetail',{
                           'title':messageDetail['mtitle'],
-                          'messageDetail' : messageDetail
+                          'messageDetail' : messageDetail,
+                          'otheruser' : req.session.user
                         })
                     }
                   });
@@ -525,7 +546,8 @@ module.exports = function(app) {
         res.render('dailyList',{
           title : '日报列表',
           uid : uid,
-          user : data[0]
+          user : data[0],
+          otheruser : data[0]
         });
       }
     })
@@ -597,17 +619,19 @@ module.exports = function(app) {
               if(replyArr.length > 0 && replyArr[0]['type'] === 'admin') {
                 messageDetail['rcontent'] = replyArr[0]['rcontent'];
                 messageDetail['rtime'] = replyArr[0]['rtime'];
-                console.log('=======')
-                console.log(replyArr[0]);
-                console.log('=======')
+               
                 res.render('dailyDetail',{
                   'title':messageDetail['mtitle'],
-                  'messageDetail' : messageDetail
+                  'messageDetail' : messageDetail,
+                  'otheruser' : req.session.user,
+                  'user' : req.session.user
                 })
               } else {
                 res.render('dailyDetail',{
                   'title':messageDetail['mtitle'],
-                  'messageDetail' : messageDetail
+                  'messageDetail' : messageDetail,
+                  'otheruser' : req.session.user,
+                  'user' : req.session.user
                 })
               }
             }
@@ -783,5 +807,55 @@ module.exports = function(app) {
     });
   });
 
+  //更新日志页面
+  app.get('/changeLog',function(req,res) {
+    res.render('changeLog',{
+      title : '更新日志'
+    });    
+  });
 
+  //获取话题、日报数
+  app.get('/getAllCount',function(req,res) {
+    var pquery = querystring.parse(url.parse(req.url).query);       
+    var uid = pquery['uid'] || req.session.user._id || req.session.user.uid;
+    var countObj = {
+      'normal' : 0,
+      'day' : 0
+    };
+    Message.getMessagesCountByUid(uid,'normal',function(err,count) {
+       Message.getMessagesCountByUid(uid,'day',function(err,dayCount) {
+        countObj['normal'] = count;
+        countObj['day'] = dayCount;
+        res.json(countObj);
+      });
+    });
+
+  });
+
+
+  //根据状态不同获取日报
+  app.get('/getDailyListByStatus',function(req,res) {
+    var pquery = querystring.parse(url.parse(req.url).query);   
+    var status = pquery['status'];
+    
+    switch(status) {
+      case '1':
+        status = 'waiting';
+        break;
+      case '2':
+        status = 'unpass';
+        break;
+      case '3':
+        status = 'passed';
+        break;
+      default:
+        status = '';
+    }
+    console.log(status)
+    Message.getDailyListByStatus(status,function(err,messages) {
+      if(!err) {
+        res.json(messages);
+      }
+    })      
+  })
 }

@@ -104,6 +104,22 @@ messageSchema.static('updateMessageContentByMid',function(mid,content,callback) 
 	}
 )
 
+//获取消息总条数通过用户ID和类型
+messageSchema.static('getMessagesCountByUid',function(uid,type,callback) {
+	return this.where({'uid': uid,'type' : type}).count(function (err, count) {
+			 callback(err,count);
+		});
+}) 
+
+
+
+//根据状态不同获取日报
+messageSchema.static('getDailyListByStatus',function(status,callback) {
+	return this.find({'type':'day','pass':status},function(err,messags) {
+		callback(err,messags);
+	})
+})
+
 var Message = mongoose.model('Message', messageSchema);
 
 
