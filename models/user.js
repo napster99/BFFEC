@@ -86,9 +86,32 @@ userSchema.static('getUserByUid', function(uid,callback) {
 
 //更新积分
 userSchema.static('updateScore',function(uid,score,callback) {
+
   return this.findOneAndUpdate({ "_id" : uid }, { score: score, 'flag.sign': (new Date).format('yyyy-MM-dd') },  function(err,user) {
     callback(err,user);
   })
+});
+
+
+//更新积分Admin
+userSchema.static('updateScoreAdmin',function(uid,score,logOptions,callback) {
+
+        var logScore = new LogScore({
+                name : logOptions['name'],
+                uid : logOptions['uid'],
+                score : logOptions['score'],
+                type : logOptions['type']
+        });
+
+        LogScore.saveLogScore(logScore,function(err,data) {
+                if(!err) {
+                        console.log('日志已经写入...'+data)
+                }
+        });
+        
+        return this.findOneAndUpdate({ "_id" : uid }, { score: score },  function(err,user) {
+                        callback(err,user);
+                })
 });
 
 

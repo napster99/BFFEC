@@ -26,9 +26,6 @@ var replySchema = new Schema({
 replySchema.static('saveReply',function(reply,callback) {
 
 	reply.save(function(err,reply) {
-		console.log('++++++++++++++++')
-		console.log(reply)
-		console.log('++++++++++++++++')
 		callback(err,reply);
 	})
 });
@@ -43,7 +40,6 @@ replySchema.static('getReplysByMids',function(midsArr,callback) {
 replySchema.static('getReplyCountByMid',function(mid,arrs) {
 	var count = 0;
 	for(var i=0; i<arrs.length; i++) {
-		console.log([mid,arrs[i]['mid']])
 		if(mid == arrs[i]['mid']) count++;
 	}
 	return count;
@@ -51,9 +47,6 @@ replySchema.static('getReplyCountByMid',function(mid,arrs) {
 
 //更新日报评语(基于日报没法回复，才可行)
 replySchema.static('updateDailyComment',function(mid,content,callback) {
-	console.log('updateDailyComment')
-	console.log(mid);//52b5279ad1a075541f000001  
-	console.log('updateDailyComment')
 	return this.update({'mid':mid},{'rcontent':content},function(err,message) {
 				callback(err,message);
 			});

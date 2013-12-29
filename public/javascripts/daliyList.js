@@ -34,7 +34,6 @@ $(function() {
 				'type' : 'GET',
 				'data' : {curPage : curPage ||1, uid : uid, type : type},
 				'success' : function(data) {
-					console.log(data)
 					if(data['type'] == 'day') {
 						if(data['day']['data'].length > 0) {
 							self.renderPagi(data['day']['page'],data['day']['totalPages'],'day');
@@ -92,7 +91,6 @@ $(function() {
 		renderList : function(data,type) {
 			var html = '';
 			for(var i=0,len=data.length; i<len; i++) {
-				console.log(data[i]['pass'])
 				html += '<div class="cell">'
 				+'<div class="user_avatar block">'
 				+'	<a target="_blank" href="javascript:;" title="xx">'

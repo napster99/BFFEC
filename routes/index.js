@@ -282,18 +282,28 @@ module.exports = function(app) {
     User.getUsers(function(err,datas) {
       Message.getUnPassMessages(function(err,messages) {
         var uids = [];
+        var mesObj = [];
         for(var i=0; i<messages.length; i++) {
           uids.push(messages[i]['uid']);
+          mesObj.push(messages[i]);
         }
         User.getUsersByUids(uids,function(err,users) {
           for(var i=0; i<messages.length; i++) {
-            messages[i]['type'] = User.getUsernameByUid(messages[i]['uid'],users);
-            messages[i]['mtime'] = CommonJS.changeTime(messages[i]['mtime']);
+            mesObj[i] = {
+              '_id' : messages[i]['_id'],
+              'mtitle' : messages[i]['mtitle'],
+              'mcontent' : messages[i]['mcontent'],
+              'uid': messages[i]['uid'],
+              'type' : messages[i]['type'],
+              'pass' : messages[i]['pass']
+            }
+            mesObj[i]['name'] = User.getUsernameByUid(messages[i]['uid'],users);;
+            mesObj[i]['mtime'] = CommonJS.changeTime(messages[i]['mtime']);
           }
           res.render('webList', {
             title : '管理人员',
             users : datas,
-            messages : messages
+            messages : mesObj
           });
 
         });
@@ -309,9 +319,15 @@ module.exports = function(app) {
       if(!err) {
         var uid = message['uid'];
         User.getUsersByUids([uid],function(err,user) {
+          console.log(message)
+          var msgObj = {
+            'mtitle' : message['mtitle'],
+            'mcontent' : message['mcontent'],
+            'mtime' : CommonJS.changeTime(message['mtime'])
+          }
           var data = {
             'uname' : user[0]['name'],
-            'message' : message
+            'message' : msgObj
           }
           res.send(data);
         })
@@ -321,14 +337,8 @@ module.exports = function(app) {
 
 	//个人主页
 	app.get('/user/:uid', function(req, res) {
-    console.log(req.params.uid)
     var uid = req.params.uid;
-    console.log('seesion uid' +req.session.user._id)
-    console.log('+++')
-    console.log(uid)
     User.getUserByUid(uid,function(err,user) {
-      console.log('===')
-      console.log(user)
       if(!err&& user) {
         res.render('user',{
           title : user.name + '的主页',
@@ -510,7 +520,8 @@ module.exports = function(app) {
   app.get('/addDaily',function(req, res) {
     res.render('addDaily',{
       title : '发布日报',
-      user : req.session.user
+      user : req.session.user,
+      otheruser:req.session.user
     });
   });
 
@@ -569,16 +580,21 @@ module.exports = function(app) {
         }else{
           dtotalPages = parseInt(dayCount/perPages) + 1;
         }
-        
+        var dayObj = [];
         for(var i=0,len=dayArr.length; i<len; i++) {
-          dayArr[i]['mtime'] = CommonJS.changeTime(dayArr[i]['mtime']);
+          dayObj[i] = {
+            '_id' : dayArr[i]['_id'],
+            'pass' : dayArr[i]['pass'],
+            'mtitle':dayArr[i]['mtitle'],
+            'mtime' : CommonJS.changeTime(dayArr[i]['mtime'])
+          }
         }
         var data = {
           'type' : type,
           'day' : {
             'page' : pquery['curPage'],
             'totalPages' : dtotalPages,
-            'data' : dayArr,
+            'data' : dayObj,
           }
         }
         res.send(data);
@@ -682,7 +698,7 @@ module.exports = function(app) {
     var status = req.body['status'];
     var reviews = req.body['reviews'];
     var score = req.body['score'];
-    
+    console.log('current'+score)
     Message.changeMessageStatus(mid,status,function(err,message) {
       //如果管理员有点评
       if(reviews != '') {
@@ -707,8 +723,12 @@ module.exports = function(app) {
                       'type' : 1 //日报
                     }
                     score = (+user['score']) + (+score);
-                    User.updateScore(uid,score,logOptions,function(err,rows) {
+                     console.log('++++')
+                    User.updateScoreAdmin(uid,score,logOptions,function(err,rows) {
+                      console.log('---------')
+                      console.log(rows)
                       if(!err) {
+                        console.log(2)
                         res.send({'message':'success'});
                       }
                     })
@@ -732,7 +752,7 @@ module.exports = function(app) {
                       'type' : 1 //日报
                     }
                     score = (+user['score']) + (+score);
-                    User.updateScore(uid,score,logOptions,function(err,rows) {
+                    User.updateScoreAdmin(uid,score,logOptions,function(err,rows) {
                       if(!err) {
                         res.send({'message':'success'});
                       }
@@ -783,9 +803,6 @@ module.exports = function(app) {
     var perPages = 5;
     LogScore.getLogScoreCount(function(err,logCount) {
       if(!err) {
-        console.log('获取积分日志');
-        console.log(logCount);
-        console.log('获取积分日志');
         LogScore.getLogScoresByMore(curPage,perPages,function(err,logsArr) {
           var dtotalPages = 1;
           if(logCount % perPages == 0 ) {
@@ -851,10 +868,28 @@ module.exports = function(app) {
       default:
         status = '';
     }
-    console.log(status)
     Message.getDailyListByStatus(status,function(err,messages) {
       if(!err) {
-        res.json(messages);
+        var mesObj = [];
+        var uids = [];
+        for(var i=0; i<messages.length; i++) {
+          uids.push(messages[i]['uid']);
+        }
+        User.getUsersByUids(uids,function(err,users) {
+          for(var i=0; i<messages.length; i++) {
+            mesObj[i] = {
+              '_id' : messages[i]['_id'],
+              'mtitle' : messages[i]['mtitle'],
+              'mcontent' : messages[i]['mcontent'],
+              'uid': messages[i]['uid'],
+              'type' : messages[i]['type'],
+              'pass' : messages[i]['pass']
+            }
+            mesObj[i]['name'] = User.getUsernameByUid(messages[i]['uid'],users);;
+            mesObj[i]['mtime'] = CommonJS.changeTime(messages[i]['mtime']);
+          }
+          res.json(mesObj);
+        });
       }
     })      
   })

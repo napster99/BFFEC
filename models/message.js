@@ -115,9 +115,15 @@ messageSchema.static('getMessagesCountByUid',function(uid,type,callback) {
 
 //根据状态不同获取日报
 messageSchema.static('getDailyListByStatus',function(status,callback) {
-	return this.find({'type':'day','pass':status},function(err,messags) {
-		callback(err,messags);
-	})
+	if(status === '') {
+		return this.find({'type':'day'},function(err,messags) {
+			callback(err,messags);
+		})
+	}else{
+		return this.find({'type':'day','pass':status},function(err,messags) {
+			callback(err,messags);
+		})
+	}
 })
 
 var Message = mongoose.model('Message', messageSchema);
