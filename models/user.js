@@ -78,7 +78,9 @@ userSchema.static('getUsernameByUid',function(uid,users) {
 
 //通过uid获取User对象
 userSchema.static('getUserByUid', function(uid,callback) {
+	console.log(uid);
 	return this.findOne({ "_id" :  uid },function(err,user) {
+		console.log(user)
 		callback(err,user);
 	})
 });

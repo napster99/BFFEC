@@ -28,29 +28,7 @@ module.exports = function(app) {
     if (url != '/addUser' && url != '/login' && url != '/' && url.indexOf('/topic/') < 0 && url.indexOf('?page=') < 0 && url !='/createTopic' && url !='/getRanking' && !req.session.user && url.indexOf('/user/') < 0) {
         return res.redirect('/login');
     }
-    if(req.session.user){
-      // 获取最近一次的签到积分
-      LogScore.getLastSignScore(req.session.user._id, function(err, lastSign){
-        // 判断今天签到可获得的积分
-        var curSign = 1;
-        if(lastSign){
-          // 今天是星期几
-          var now = new Date()
-            , nowDay = now.getDay()
-            , lastDay = lastSign.time.getDay();
-
-          if(0 == nowDay || 6 == nowDay || now.format('yyyy-MM-dd') == lastSign.time.format('yyyy-MM-dd')){
-            curSign = 0;  // 表示不需要签到
-          } else if( ( 1 == nowDay && 5 == lastDay ) || nowDay == (+lastDay + 1) ){
-            curSign += lastSign.score;
-          }
-        }
-        req.session.user.curSign = curSign;
-        next();
-      });
-    } else {
-      next();
-    }
+    next();
   })
 
   //访问首页
@@ -261,13 +239,32 @@ module.exports = function(app) {
         req.session.error = 'pwderror';
         return res.redirect('/login');
       }
-      req.session.user = user;
-      console.log('+++++++++++登入成功++++++++++++++');
-      console.log(req.session.user);
-      console.log('+++++++++++登入成功++++++++++++++');
-      req.session.success = '登入成功';
-      req.session.error = null;
-      res.redirect('/');
+      user = user.toJSON();
+      LogScore.getLastSignScore(user._id, function(err, lastSign){
+        // 判断今天签到可获得的积分
+        var curSign = 1;
+        if(lastSign){
+          // 今天是星期几
+          var now = new Date()
+            , nowDay = now.getDay()
+            , lastDay = lastSign.time.getDay();
+
+          if(0 == nowDay || 6 == nowDay || now.format('yyyy-MM-dd') == lastSign.time.format('yyyy-MM-dd')){
+            curSign = 0;  // 表示不需要签到
+          } else if( ( 1 == nowDay && 5 == lastDay ) || nowDay == (+lastDay + 1) ){
+            curSign += lastSign.score;
+          }
+        }
+        user.curSign = curSign;
+        req.session.user = user;
+
+        console.log('+++++++++++登入成功++++++++++++++');
+        console.log(req.session.user);
+        console.log('+++++++++++登入成功++++++++++++++');
+        req.session.success = '登入成功';
+        req.session.error = null;
+        res.redirect('/');
+      });
     });
   });
 
@@ -319,15 +316,11 @@ module.exports = function(app) {
       if(!err) {
         var uid = message['uid'];
         User.getUsersByUids([uid],function(err,user) {
-          console.log(message)
-          var msgObj = {
-            'mtitle' : message['mtitle'],
-            'mcontent' : message['mcontent'],
-            'mtime' : CommonJS.changeTime(message['mtime'])
-          }
+          message = message.toJSON();
+          message['mtime'] = new Date(message['mtime']).format('yyyy-MM-dd hh:mm');
           var data = {
             'uname' : user[0]['name'],
-            'message' : msgObj
+            'message' : message
           }
           res.send(data);
         })
@@ -357,7 +350,8 @@ module.exports = function(app) {
 	//个人主页设置
 	app.get('/setting', function(req, res) {
 		res.render('setting',{
-			title : '个人设置--'+req.session.user.name
+			title : '个人设置--'+req.session.user.name,
+      otheruser : req.session.user
 		})
 	});
 
@@ -635,7 +629,7 @@ module.exports = function(app) {
               if(replyArr.length > 0 && replyArr[0]['type'] === 'admin') {
                 messageDetail['rcontent'] = replyArr[0]['rcontent'];
                 messageDetail['rtime'] = replyArr[0]['rtime'];
-               
+                console.log(replyArr[0]['rcontent'])
                 res.render('dailyDetail',{
                   'title':messageDetail['mtitle'],
                   'messageDetail' : messageDetail,
@@ -698,7 +692,6 @@ module.exports = function(app) {
     var status = req.body['status'];
     var reviews = req.body['reviews'];
     var score = req.body['score'];
-    console.log('current'+score)
     Message.changeMessageStatus(mid,status,function(err,message) {
       //如果管理员有点评
       if(reviews != '') {
@@ -710,7 +703,8 @@ module.exports = function(app) {
         });
 
         Reply.getReplysByMids([mid],function(err,docs) {
-          if(docs.length == 0) {
+         
+          if(docs && docs.length == 0) {
             Reply.saveReply(reply,function(err,message) {
               if(status === 'passed') {
                 //给成员加积分
@@ -723,12 +717,8 @@ module.exports = function(app) {
                       'type' : 1 //日报
                     }
                     score = (+user['score']) + (+score);
-                     console.log('++++')
                     User.updateScoreAdmin(uid,score,logOptions,function(err,rows) {
-                      console.log('---------')
-                      console.log(rows)
                       if(!err) {
-                        console.log(2)
                         res.send({'message':'success'});
                       }
                     })
@@ -744,6 +734,8 @@ module.exports = function(app) {
               if(status === 'passed') {
                 //给成员加积分
                 User.getUserByUid(uid,function(err,user) {
+                  console.log('====')
+                  console.log(user)
                   if(!err) {
                     var logOptions = {
                       'name' : user['name'],
@@ -766,6 +758,29 @@ module.exports = function(app) {
             })
           }
         });
+      }else{
+         if(status === 'passed') {
+            //给成员加积分
+            User.getUserByUid(uid,function(err,user) {
+              if(!err) {
+                var logOptions = {
+                  'name' : user['name'],
+                  'uid' : uid,
+                  'score' : score,
+                  'type' : 1 //日报
+                }
+                score = (+user['score']) + (+score);
+                User.updateScoreAdmin(uid,score,logOptions,function(err,rows) {
+                  if(!err) {
+                    res.send({'message':'success'});
+                  }
+                })
+              }
+            })
+          } else {
+            //不通过
+            res.send({'message':'success'});
+          }
       }
     })
   })
@@ -800,23 +815,31 @@ module.exports = function(app) {
   app.get('/getLogScoreAjax',function(req,res) {
     var pquery = querystring.parse(url.parse(req.url).query);
     var curPage = pquery['curPage'];
+    var uid = pquery['uid'];
     var perPages = 5;
-    LogScore.getLogScoreCount(function(err,logCount) {
+    LogScore.getLogScoreCount(uid,function(err,logCount) {
       if(!err) {
-        LogScore.getLogScoresByMore(curPage,perPages,function(err,logsArr) {
+        LogScore.getLogScoresByMore(uid,curPage,perPages,function(err,logsArr) {
           var dtotalPages = 1;
           if(logCount % perPages == 0 ) {
             dtotalPages = parseInt(logCount/perPages);
           }else{
             dtotalPages = parseInt(logCount/perPages) + 1;
           }
+          // logsArr = logsArr.toJSON();
+          var objArr = [];
           for(var i=0,len=logsArr.length; i<len; i++) {
-            logsArr[i]['time'] = CommonJS.changeTime(logsArr[i]['time']);
+            objArr[i] = {
+              'name' : logsArr[i]['name'],
+              'type' : logsArr[i]['type'],  
+              'score' : logsArr[i]['score'],
+              'time' : new Date(logsArr[i]['time']).format('yyyy-MM-dd hh:mm')
+            }
           }
           var data = {
             'page' : curPage,
             'totalPages' : dtotalPages,
-            'data' : logsArr,
+            'data' : objArr,
           }
           res.send(data);
         });
@@ -885,12 +908,23 @@ module.exports = function(app) {
               'type' : messages[i]['type'],
               'pass' : messages[i]['pass']
             }
-            mesObj[i]['name'] = User.getUsernameByUid(messages[i]['uid'],users);;
-            mesObj[i]['mtime'] = CommonJS.changeTime(messages[i]['mtime']);
+            mesObj[i]['name'] = User.getUsernameByUid(messages[i]['uid'],users);
+            mesObj[i]['mtime'] = new Date(messages[i]['mtime']).format('yyyy-MM-dd hh:mm');
           }
           res.json(mesObj);
         });
       }
     })      
   })
+
+  app.get('/scoreList/:uid',function(req,res) {
+    var uid = req.params.uid;
+
+    res.render('scoreList',{
+        title : '我的积分日志',
+        user : req.session.user,
+        otheruser : req.session.user
+      });
+  })
+
 }

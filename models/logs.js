@@ -23,17 +23,34 @@ logScoreSchema.static('saveLogScore',function(logScore,callback) {
 
 
 //根据第几页页数 获得积分日志列表
-logScoreSchema.static('getLogScoresByMore',function(page,perCount,callback) {
-  return this.find(null,null,{skip:(page-1)*perCount,limit:perCount},function(err,messags) {
-    callback(err,messags);
-  })
-})
+logScoreSchema.static('getLogScoresByMore',function(uid,page,perCount,callback) {
+
+  if(uid) {
+    return this.find({'uid':uid},null,{skip:(page-1)*perCount,limit:perCount,sort:{time:'-1'}},function(err,messags) {
+      callback(err,messags);
+    })
+  }else{
+    return this.find(null,null,{skip:(page-1)*perCount,limit:perCount,sort:{time:'-1'}},function(err,messags) {
+      callback(err,messags);
+    })
+  }
+
+
+  
+});
 
 //获取积分日志的条数
-logScoreSchema.static('getLogScoreCount',function(callback) {
-  return this.find().count(function (err, count) {
+logScoreSchema.static('getLogScoreCount',function(uid,callback) {
+  if(uid) {
+    return this.find({'uid':uid}).count(function (err, count) {
        callback(err,count);
     });
+  }else{
+    return this.find().count(function (err, count) {
+       callback(err,count);
+    });
+  }
+  
 }) 
 
 // 获取最近一次的签到积分

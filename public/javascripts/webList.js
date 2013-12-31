@@ -60,6 +60,7 @@ $(function() {
           ui.$score.val('').focus();
           return;
         }
+
         self.changeMessageStatus(mid,'passed',uid,reviews,score);
       });
       //不通过
@@ -92,7 +93,6 @@ $(function() {
         'type' : 'POST',
         'data' : {mid : mid,status : status ,uid : uid,reviews:reviews,score:score},
         'success' : function(data) {
-          console.log(data)
           if(data['message'] == 'success') {
             window.location.href = window.location.href;
           }
@@ -228,7 +228,7 @@ $(function() {
         +'<td>'+data[i]['name']+'</td>'
         +'<td>通过'+CommonJS.logsType[data[i]['type']]+'</td>'
         +'<td>'+data[i]['score']+'分</td>'
-        +'<td>'+CommonJS.changeTime(data[i]['time'],'yyyy-MM-dd HH:mm:ss')+'</td>'
+        +'<td>'+data[i]['time']+'</td>'
         +'</tr>';
       }
       ui.$logContent.html(html);

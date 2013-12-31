@@ -23,7 +23,7 @@ messageSchema.static('saveMessage',function(message,callback) {
 
 //根据第几页页数获得对应的消息列表
 messageSchema.static('getMessagesByPage',function(page,perCount,callback) {
-	return this.find({type:'normal'},null,{skip:(page-1)*perCount,limit:perCount},function(err,messags) {
+	return this.find({type:'normal'},null,{skip:(page-1)*perCount,limit:perCount,sort:{mtime:'-1'}},function(err,messags) {
 		callback(err,messags);
 	})
 })

@@ -17,36 +17,41 @@
 		      </span></span></div>
 		      <div class="inner">
 		        <div class="user_card">
-			<div>
-				<a class="user_avatar" href="/user/<%= otheruser._id %>">
-					<img src="../images/avatar.jpg" title="<%= otheruser._id %>">
-				</a>
-				<span class="user_name">
-					<a class="dark" href="/user/<%= otheruser._id %>"> <%= otheruser.name %></a>
-					<input id="signStatus" type="hidden" value="<%= otheruser.curSign %>" />
-					<%  if(user._id == otheruser._id) { %>
-					<button id="signIn" class="btn btn-success">每日签到</button>
-					<% } %>
-				</span>
-				<div class="board clearfix">
-					<div class="floor">
-						<%  if(user._id == otheruser._id) { %>
-							<a href="javascript:;">话题：<span name="normal" class="big">0</span>个</a>
-						<% } else {%>
-							<span>话题：<span name="normal" class="big"></span>个</span>
-						<% } %>
-						<div class="space"></div>
-						<%  if(user._id == otheruser._id) { %>
-							<a href="/dailyList/<%= user._id || user.uid %>">日报：<span name="day" class="big"></span>篇</a>
-						<% } else {%>
-							<span>日报：<span name="day" class="big"></span>篇</span>
-						<% } %>
-						<div class="space"></div>
-						积分：<span id="score" class="big"><%=  otheruser.score %></span>分
+					<div>
+						<a class="user_avatar" href="/user/<%= otheruser._id %>">
+							<img src="../images/avatar.jpg" title="<%= otheruser._id %>">
+						</a>
+						<span class="user_name">
+							<a class="dark" href="/user/<%= otheruser._id %>"> <%= otheruser.name %></a>
+							<input id="signStatus" type="hidden" value="<%= otheruser.curSign %>" />
+							<%  if(user._id == otheruser._id) { %>
+							<button id="signIn" class="btn btn-success">每日签到</button>
+							<% } %>
+						</span>
+						<div class="board clearfix">
+							<div class="floor">
+								<%  if(user._id == otheruser._id) { %>
+									<a href="javascript:;">话题：<span name="normal" class="big">0</span>个</a>
+								<% } else {%>
+									<span>话题：<span name="normal" class="big"></span>个</span>
+								<% } %>
+								<div class="space"></div>
+								<%  if(user._id == otheruser._id) { %>
+									<a href="/dailyList/<%= user._id || user.uid %>">日报：<span name="day" class="big"></span>篇</a>
+								<% } else {%>
+									<span>日报：<span name="day" class="big"></span>篇</span>
+								<% } %>
+								<div class="space"></div>
+
+								<%  if(user._id == otheruser._id) { %>
+									<a href="/scoreList/<%= user._id || user.uid %>">积分：<%=  otheruser.score %></span>分</a><sup><img src="../images/new.gif" align="absmiddle" border="0"></sup>
+								<% } else {%>
+									<span>积分：<%=  otheruser.score %>分</span><sup><img src="../images/new.gif" align="absmiddle" border="0"></sup>
+								<% } %>
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
-		</div>
 
 	      </div>
 	      

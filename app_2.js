@@ -12,6 +12,8 @@ var express = require('express')
   , settings = require('./settings')
   , partials = require('express-partials'); 
 
+var router = require('./routes/router');
+
 var app = express();
 
 app.configure(function() {
@@ -44,6 +46,11 @@ app.configure(function() {
     // if (url != '/login' && url != '/' && !req.session.user) {
     //     return res.redirect('/login');
     // }
+
+    res.ajaxReturn = function(code, data, message){
+      res.send({ code: code, data: data, message: message });
+    }
+
     next();
   });
 
@@ -51,14 +58,18 @@ app.configure(function() {
   app.use(express.static(path.join(__dirname,'public')));
 });
 
+
 app.configure('development',function() {
   app.use(express.errorHandler());
 });
 
-http.createServer(app).listen(3001,function() {
-  console.log('DEV Express server listening on port ' + 3001);
+http.createServer(app).listen(app.get('port'),function() {
+  console.log('Express server listening on port ' + app.get('port'));
 });
 
+router.route(app, {
+  controllers: '/controllers/'
+, filters:'/filters/'
+});
 
-
-init(app);
+// init(app);

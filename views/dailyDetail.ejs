@@ -55,7 +55,7 @@
 					</div>
 					<% if(messageDetail['isPass'] != 'waiting') { %>
 						<div class="well">
-							管理员点评：<% if(messageDetail['rcontent'] != '') { %>
+							管理员点评：<% if( typeof messageDetail['rcontent'] != 'undefined') { %>
 											<%= messageDetail['rcontent'] %>
 										<% } else {%>
 											<em>暂无点评</em>

@@ -1,0 +1,64 @@
+<%- include header %>
+
+
+<% if(locals.error) { %>
+<div class="alert alert-error" style="display:none;">
+	<%= locals.error %>
+</div>
+<% } %>
+
+<div id="wrapper">
+	<div id="main">
+		<div id="sidebar">
+			<%- include sidebar %>
+		</div>
+		<div id="content">
+			<input type="hidden" value="<%= user._id || user.uid %>" name="uid" />
+			<div class="panel">
+				<div class="header">
+					<ul class="breadcrumb">
+						<li><a href="/dailyList/<%= user._id || user.uid %>">首页</a><span class="divider">/</span></li>
+						<li class="active">我的积分日志</li>
+					</ul>
+				</div>
+				<div class="inner topic">
+					<table cellspacing="0" class="table table-primary table-hover" align="center">
+						<thead align="center">
+				    		<tr>
+				    			<td>
+				    				<strong>积分日志</strong>
+				    			</td>
+				    		</tr>
+				    	</thead>
+				    	<tfoot>
+				    		 <tr>
+						      <td colspan="4">
+							      <div id="logPagina" class="pagination">
+							      		<ul>
+							      			<li class="active">
+							      				<a title="Current page is 1">1</a>
+							      			</li>
+							      			<li>
+							      				<a title="Go to page 2">2</a>
+							      			</li>
+							      			<li>
+							      				<a title="Go to next page">&gt;</a>
+							      			</li>
+							      			<li>
+							      				<a title="Go to last page">&gt;&gt;</a>
+							      			</li>
+							      		</ul>
+							      </div>
+						      </td>
+						    </tr>
+				    	</tfoot>
+				    	<tbody id="logContent">
+			    		</tbody>
+				    </table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="/javascripts/scoreList.js"></script>
+<%- include footer %>
