@@ -16,7 +16,7 @@ $(function(){
 			showWhich($('li[name=login]'));
 			break;
 		case '/modifyPwd':
-			showWhich($('li[name=modifyPwd]'));
+			showWhich($('li[name=home]'));
 			break;
 		case '/addUser':
 			showWhich($('li[name=addUser]'));
@@ -28,14 +28,29 @@ $(function(){
 			showWhich($('li[name=webList]'));
 			break;
 		case '/setting':
-			showWhich($('li[name=setting]'));
+			showWhich($('li[name=home]'));
 			break;
 		case '/changelog':
 			showWhich($('li[name=changelog]'));
 			break;
+		case '/createTopic':
+			showWhich($('li[name=topic]'));
+			break;
 		default:
 			$('ul[name=common]').find('li.active').removeClass('active');
 	}
+
+	if(window.location.pathname.indexOf('dailyList') > -1) {
+		showWhich($('li[name=addDaily]'));
+	}
+	if(window.location.pathname.indexOf('topicList') > -1) {
+		showWhich($('li[name=topic]'));
+	}
+	if(window.location.pathname.indexOf('scoreList') > -1) {
+		showWhich($('li[name=home]'));
+	}
+
+	
 	
 	$('.alert').fadeIn(1000,function(){
 		var that = this;

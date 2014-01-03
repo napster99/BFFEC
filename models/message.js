@@ -111,6 +111,31 @@ messageSchema.static('getMessagesCountByUid',function(uid,type,callback) {
 		});
 }) 
 
+//获取话题的条数
+messageSchema.static('getTopicCount',function(uid,callback) {
+  if(uid) {
+    return this.find({'uid':uid,'type':'normal'}).count(function (err, count) {
+       callback(err,count);
+    });
+  }else{
+    return this.find({'type':'normal'}).count(function (err, count) {
+       callback(err,count);
+    });
+  }
+}) 
+
+//根据第几页页数 获得话题列表
+messageSchema.static('getTopicByMore',function(uid,page,perCount,callback) {
+  if(uid) {
+    return this.find({'uid':uid,'type':'normal'},null,{skip:(page-1)*perCount,limit:perCount,sort:{mtime:'-1'}},function(err,messags) {
+      callback(err,messags);
+    })
+  }else{
+    return this.find({'type':'normal'},null,{skip:(page-1)*perCount,limit:perCount,sort:{mtime:'-1'}},function(err,messags) {
+      callback(err,messags);
+    })
+  }
+});
 
 
 //根据状态不同获取日报
@@ -125,6 +150,45 @@ messageSchema.static('getDailyListByStatus',function(status,callback) {
 		})
 	}
 })
+
+
+
+//+++++++++++++++Redis Four START++++++++++++++++
+
+//list
+messageSchema.static('list',function(options,callback) {
+	return this.find(options,function(err,users) {
+		callback(err,users);
+	})
+})
+
+//add
+messageSchema.static('add',function(options,callback) {
+	var newMessage = new User(options);
+	newMessage.save(function(err,user) {
+		callback(err,user);
+	})
+})
+
+//edit
+messageSchema.static('edit',function(options,callback) {
+	var condition = options['conditionObj']
+	,editObj = options['fieldObj'];
+
+	return this.findOneAndUpdate(condition, editObj,  function(err,user) {
+		callback(err,user);
+	})
+})
+
+//del
+messageSchema.static('del',function(options,callback) {
+	var condition = options['conditionObj'];
+	return this.remove(condition,function(err,users) {
+		callback(err,users);
+	})
+})
+
+//+++++++++++++++Redis Four  END++++++++++++++++
 
 var Message = mongoose.model('Message', messageSchema);
 

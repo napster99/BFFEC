@@ -40,15 +40,30 @@
                   <li name="webList"><a href="/webList">管理成员</a></li>
                 <% } %>
                 <% if(user.role === '1') { %>
-                <li name="addDaily"><a href="/addDaily">写日报</a></li>
+                <li name="addDaily" class="dropdown"><a href="javascript:;">日报管理<s class="downArrow"></s></a>
+                  <ul class="dropdown-menu">
+                  <li><a href="/addDaily">写日报</a></li>
+                  <li><a href="/dailyList/<%= user._id%>">我的日报</a></li>
+                </ul>
+
+              </li>
                 <% } %>
-                <li name="setting"><a href="/setting">个人资料</a></li>
-                <% if(user.role === '1') { %>
-                <li name="modifyPwd"><a href="/modifyPwd">修改口令</a></li>
-                <% } %>
-                <li name="logout"><a href="/logout">登出</a></li>
-                <li><a href="/">Welcome <%= user.name %></a></li>
-                <li name="changelog"><a href="/changelog">更新日志<sup><img src="../images/new.gif" align="absmiddle" border="0"></sup></a></li>
+               <li name="topic" class="dropdown"><a href="javascript:;">话题管理<s class="downArrow"></s></a>
+                  <ul class="dropdown-menu">
+                  <li><a href="/createTopic">发布话题</a></li>
+                  <li><a href="/topicList/<%= user._id%>">我的话题</a></li>
+                </ul>
+              </li>
+               
+                <li name="home" class="dropdown"><a href="/">Welcome <%= user.name %><s class="downArrow"></s></a>
+                    <ul class="dropdown-menu">
+                    <li><a href="/setting">个人资料</a></li>
+                    <li><a href="/modifyPwd">修改口令</a></li>
+                    <li><a href="/scoreList/<%= user._id%>">积分日志</a></li>
+                  </ul>
+                </li>
+                <li name="changelog"><a href="/changelog">更新日志(<span class="dateFont">2014/01/03</span>)<sup><img src="../images/new.gif" align="absmiddle" border="0"></sup></a></li>
+                 <li name="logout"><a href="/logout">登出</a></li>
               <% } %> 
    					</ul>
    				</div>

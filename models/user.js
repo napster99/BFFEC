@@ -30,6 +30,7 @@ userSchema.static('saveUser',function(user,callback) {
 	})
 })
 
+
 //根据所有用户
 userSchema.static('getUsers',function(callback) {
 	return this.find(function(err,users) {
@@ -66,7 +67,6 @@ userSchema.static('getUsersByUids',function(uids,callback) {
 	})
 });
 
-
 //通过uid得到uname
 userSchema.static('getUsernameByUid',function(uid,users) {
 	for(var i=0; i<users.length; i++) {
@@ -75,16 +75,12 @@ userSchema.static('getUsernameByUid',function(uid,users) {
 	return '';
 })
 
-
 //通过uid获取User对象
 userSchema.static('getUserByUid', function(uid,callback) {
-	console.log(uid);
 	return this.findOne({ "_id" :  uid },function(err,user) {
-		console.log(user)
 		callback(err,user);
 	})
 });
-
 
 //更新积分
 userSchema.static('updateScore',function(uid,score,callback) {
@@ -93,7 +89,6 @@ userSchema.static('updateScore',function(uid,score,callback) {
     callback(err,user);
   })
 });
-
 
 //更新积分Admin
 userSchema.static('updateScoreAdmin',function(uid,score,logOptions,callback) {
@@ -116,7 +111,6 @@ userSchema.static('updateScoreAdmin',function(uid,score,logOptions,callback) {
                 })
 });
 
-
 //通过uid获取更新签到
 userSchema.static('changeSignStatus', function(uid,callback) {
 	var nowDate = new Date();
@@ -131,7 +125,6 @@ userSchema.static('getRanking',function(callback) {
 	return this.find().sort({'score':-1}).exec(callback);;
 });
 
-
 //更新个人信息
 userSchema.static('updateUser',function(uid,user,callback) {
 	
@@ -140,8 +133,42 @@ userSchema.static('updateUser',function(uid,user,callback) {
 		});
 });
 
+//+++++++++++++++Redis Four START++++++++++++++++
 
+//list
+userSchema.static('list',function(options,callback) {
+	return this.find(options,function(err,users) {
+		callback(err,users);
+	})
+})
 
+//add
+userSchema.static('add',function(options,callback) {
+	var newUser = new User(options);
+	newUser.save(function(err,user) {
+		callback(err,user);
+	})
+})
+
+//edit
+userSchema.static('edit',function(options,callback) {
+	var condition = options['conditionObj']
+	,editObj = options['fieldObj'];
+
+	return this.findOneAndUpdate(condition, editObj,  function(err,user) {
+		callback(err,user);
+	})
+})
+
+//del
+userSchema.static('del',function(options,callback) {
+	var condition = options['conditionObj'];
+	return this.remove(condition,function(err,users) {
+		callback(err,users);
+	})
+})
+
+//+++++++++++++++Redis Four  END++++++++++++++++
 
 var User = mongoose.model('User', userSchema);
 

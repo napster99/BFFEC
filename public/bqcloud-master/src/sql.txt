@@ -1,0 +1,24 @@
+	create table if not exists person(
+		
+		id int not null auto_increment primary key,
+		
+		account varchar(10) not null ,
+		
+		password  varchar(10) not null,
+		
+		nickname varchar(100)
+	);
+	
+	create table if not exists note(
+	
+		id int not null auto_increment primary key,
+		
+		account varchar(10),
+		
+		noteHtml varchar(1000) ,
+		
+		sendTime datetime
+	);
+	
+	
+	insert into person values (null,"napster",'123456','zhang');

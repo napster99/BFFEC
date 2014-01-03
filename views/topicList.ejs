@@ -1,0 +1,31 @@
+<%- include header %>
+
+<div id="wrapper">
+  <div id="main">
+    <div id="sidebar">
+      <%- include sidebar %>
+    </div>
+    <div id="content">
+
+      <input type="hidden" id="uid" value="<%= user._id || user.uid %>" />
+      <div class="panel">
+          <div class="inner">
+            <div class="header clearfix">
+              <%= user.name %>的话题<a href="/addDaily" id="create_topic_btn">
+                </a>
+                 <a href="/createTopic" id="create_topic_btn"> 
+                  <button class="btn btn-success">发布话题</button> 
+                </a>
+            </div>
+            <div id="topicContent">
+              
+             </div>
+          <div id="topicPagina" class="pagination"></div>
+        </div>
+    </div>
+  </div>
+</div>
+<script src="/javascripts/topicList.js"></script>
+<%- include footer %>
+
+

@@ -16,10 +16,10 @@
             </a>
           </div>
           <div class="block count">
-            <a href="/topic/528f604aacf0746008001e03#52933346a6957a080961450b" title="回复数"><%= objArr[i]['replyCount'] %></a>/<span title="点击数"><%= objArr[i]['clickCount'] %></span>
+            <a target="_blank" href="/topic/<%= objArr[i]['mid'] %>" title="回复数"><%= objArr[i]['replyCount'] %></a>/<span title="点击数"><%= objArr[i]['clickCount'] %></span>
           </div>
           <div class="topic_wrap">
-              <a class="" href="/topic/<%= objArr[i]['mid'] %>">
+              <a target="_blank" href="/topic/<%= objArr[i]['mid'] %>">
                   <%= objArr[i]['title'] %>
               </a>
           </div>

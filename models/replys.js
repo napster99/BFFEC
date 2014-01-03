@@ -52,6 +52,46 @@ replySchema.static('updateDailyComment',function(mid,content,callback) {
 			});
 });
 
+
+
+//+++++++++++++++Redis Four START++++++++++++++++
+
+//list
+replySchema.static('list',function(options,callback) {
+	return this.find(options,function(err,users) {
+		callback(err,users);
+	})
+})
+
+//add
+replySchema.static('add',function(options,callback) {
+	var newReply = new User(options);
+	newReply.save(function(err,user) {
+		callback(err,user);
+	})
+})
+
+//edit
+replySchema.static('edit',function(options,callback) {
+	var condition = options['conditionObj']
+	,editObj = options['fieldObj'];
+
+	return this.findOneAndUpdate(condition, editObj,  function(err,user) {
+		callback(err,user);
+	})
+})
+
+//del
+replySchema.static('del',function(options,callback) {
+	var condition = options['conditionObj'];
+	return this.remove(condition,function(err,users) {
+		callback(err,users);
+	})
+})
+
+//+++++++++++++++Redis Four  END++++++++++++++++
+
+
 var Reply = mongoose.model('Reply', replySchema);
 
 module.exports = Reply;

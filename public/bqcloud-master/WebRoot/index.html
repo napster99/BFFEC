@@ -1,0 +1,332 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta name="keywords" content="便签,便签云,便签工具,在线便签工具" />
+		<meta name="description" content="便签云!随时随地记录你生活的点点滴滴!" />
+		<title>便签云!随时随地记录你生活的点点滴滴!</title>
+		<link rel="shortcut icon" href="images/favicon.ico">
+		<link href="css/reset.css" rel="stylesheet" />
+		<link href="css/main.css" rel="stylesheet" />
+	</head>
+	<body class="welcome">
+		<!--S 遮罩层 -->
+		<div id="mask"></div>
+		<!--E 遮罩层-->
+		<!--S 定位层 -->
+		<div id="posTools">
+			<a name="top" href="javascript:posTop();">上</a>
+			<a name="middle" href="javascript:posMid();">中</a>
+			<a name="bottom" href="javascript:posBtm();">下</a>
+		</div>
+		<!--E 定位层-->
+		<div id="hello">
+			<h1>
+				<a href="#">便签,便签云</a>
+			</h1>
+			<p>
+				<strong name="tip">已有账号？</strong>
+				<a href="javascript:void(0);" id="quickLogin">马上登录</a>
+				
+				<strong class="write">
+					<a href="#">我也要写</a>
+				</strong>
+			</p>
+			<div class="nav">
+				<a href="#" class="reg btnstyle" name="register" >马上注册</a>
+			</div>
+			<s>
+				<b class="l"></b>
+				<b class="r"></b>
+			</s>
+			<!--S 填写便签 -->
+			<div id="putNote" class="bdstyle">
+				<div class="hd fieldstyle">记录生活的点点滴滴...
+					<a href="#">X</a>
+				</div>
+				<div class="out">
+					
+						<span class="fieldstyle">标题</span>
+						<input  name="title" autofocus="true" class="compstyle" type="text" placeholder="在此输入标题" required/>
+						<span class="fieldstyle">内容</span>
+						<textarea name="content" required class="compstyle" type="text" placeholder="在此输入内容"></textarea>
+						<span class="fieldstyle">挂上你的大名</span>
+						<input name="nickname" class="compstyle" type="text" placeholder="匿名" />
+						<div class="foot-bts">
+							<a href="#" name="pub" class="pub btnstyle">发布</a>
+							<a href="#" name="reset" class="reset btnstyle">置空</a>
+						</div>
+					
+				</div>
+
+			</div>
+			<!--E 填写便签 -->
+			<!--S 登录 -->
+			<div id="login" class="bdstyle">
+				<div class="hd fieldstyle">大家一起来登录...
+					<a href="#">X</a>
+					<em class="loginError">用户或密码错误!</em>
+				</div>
+				<form id="loginForm" action="Person.do?method=login" method="post">
+						<span class="fieldstyle">账号</span>
+						<input name="account" class="compstyle" type="text" placeholder="在此输入账号"/>
+						<span  class="fieldstyle">密码</span>
+						<input name="pwd" class="compstyle" type="password" placeholder="在此输入密码"/>
+						<div class="foot-bts">
+							<a href="#" name="login" class="login btnstyle">登录</a>
+							<a href="#" name="cancel" class="cancel btnstyle">取消</a>
+						</div>
+				</form>
+			</div>
+			<!--E 登录 -->
+			<!-- S 注册 -->
+			<div id="register" class="bdstyle">
+				<div class="hd fieldstyle">欢迎加入便签云...
+					<a href="#">X</a>
+					<em class="regError">用户或密码错误!</em>
+				</div>
+				<form id="regForm" action="Person.do?method=register" method="post">
+						<span class="fieldstyle">账号</span>
+						<input name="account" class="compstyle" type="text" placeholder="在此输入账号"/>
+						<span  class="fieldstyle">密码</span>
+						<input name="pwd" class="compstyle" type="password" placeholder="在此输入密码"/>
+						<span  class="fieldstyle">昵称</span>
+						<input name="nickname" class="compstyle" type="text" placeholder="在此输入昵称"/>
+						<div class="foot-bts">
+							<a href="javascript:;" name="register" class="register btnstyle">注册</a>
+							<a href="javascript:;" name="reset" class="reset btnstyle">重置</a>
+						</div>
+				</form>
+			</div>
+			<!-- E 注册 -->
+			
+		</div>
+		<div class="con">
+			<div class="section">
+				<span>
+					<a title="背景不好看，想换一换" id="changeBG" href="javascript:void(0);" target="_blank">换一换背景</a>
+				</span>
+				<p>
+					<a href="#">热门便签</a>
+					<em class="dot">●</em>
+					<a href="#" class="selected">最新便签</a>
+				</p>	
+			</div>
+			<div id='waterfall'>
+	    		<div col="1">
+	    			<!-- section>
+	    				<div class="note-t"></div>
+	    				<h2>今天好开心！</h2>
+	    				<article>
+	    					1.是法师啊分团委暗示法打飞暗室逢灯 就哦儿惹我突然儿童<br />
+	    					2.温柔 示范点是发生地方暗示 e淘网他
+	    					3.程序啊噶 额我哥 啊多少个好 人阿斯顿f
+	    					4.啊恩他要我爱普生地方温柔 一好哈士大夫
+		    				<address>作者：Napster
+								<time datetime="2008-02-14">时间：2008-02-14</time>		
+		    				</address>
+
+		    			</article>
+
+	    			</section>
+					<section>
+						<div class="note-t"></div>
+	    				<h2>今天好开心！</h2>
+	    				<article>
+	    					1.是法师啊分团委暗示法打飞暗室逢灯 就哦儿惹我突然儿童<br />
+	    					2.温柔 示范点是发生地方暗示 e淘网他
+	    					3.程序啊噶 额我哥 啊多少个好 人阿斯顿f
+	    					4.啊恩他要我爱普生地方温柔 一好哈士大夫
+		    				<address>作者：Napster
+								<time datetime="2008-02-14">时间：2008-02-14</time>		
+		    				</address>
+
+		    			</article>
+	    			</section -->
+	    			<div class="load">
+	    				<p>加载中...</p>
+	    			</div>
+	    		</div>
+
+	    		<div col="2">
+	    			<!-- section>
+	    				<div class="note-t"></div>
+	    				<h2>今天好开心！</h2>
+	    				<article>
+	    					1.是法师啊分团委暗示法打飞暗室逢灯 就哦儿惹我突然儿童<br />
+	    					2.温柔 示范点是发生地方暗示 e淘网他
+	    					3.程序啊噶 额我哥 啊多少个好 人阿斯顿f
+	    					4.啊恩他要我爱普生地方温柔 一好哈士大夫
+		    				<address>作者：Napster
+								<time datetime="2008-02-14">时间：2008-02-14</time>		
+		    				</address>
+
+		    			</article>
+	    			</section>
+					<section>
+						<div class="note-t"></div>
+	    				<h2>今天好开心！</h2>
+	    				<article>
+	    					1.是法师啊分团委暗示法打飞暗室逢灯 就哦儿惹我突然儿童<br />
+	    					2.温柔 示范点是发生地方暗示 e淘网他
+	    					3.程序啊噶 额我哥 啊多少个好 人阿斯顿f
+	    					4.啊恩他要我爱普生地方温柔 一好哈士大夫
+		    				<address>作者：Napster
+								<time datetime="2008-02-14">时间：2008-02-14</time>		
+		    				</address>
+
+		    			</article>
+	    			</section-->
+	    			<div class="load">
+	    				<p>加载中...</p>
+	    			</div>
+	    		</div>
+
+	    		<div col="3">
+					<!-- section>
+						<div class="note-t"></div>
+	    				<h2>今天好开心！</h2>
+	    				<article>
+	    					1.是法师啊分团委暗示法打飞暗室逢灯 就哦儿惹我突然儿童<br />
+	    					2.温柔 示范点是发生地方暗示 e淘网他
+	    					3.程序啊噶 额我哥 啊多少个好 人阿斯顿f
+	    					4.啊恩他要我爱普生地方温柔 一好哈士大夫
+		    				<address>作者：Napster
+								<time datetime="2008-02-14">时间：2008-02-14</time>		
+		    				</address>
+
+		    			</article>
+	    			</section>
+					<section>
+						<div class="note-t"></div>
+	    				<h2>今天好开心！</h2>
+	    				<article>
+	    					1.是法师啊分团委暗示法打飞暗室逢灯 就哦儿惹我突然儿童<br />
+	    					2.温柔 示范点是发生地方暗示 e淘网他
+	    					3.程序啊噶 额我哥 啊多少个好 人阿斯顿f
+	    					4.啊恩他要我爱普生地方温柔 一好哈士大夫
+		    				<address>作者：Napster
+								<time datetime="2008-02-14">时间：2008-02-14</time>		
+		    				</address>
+
+		    			</article>
+	    			</section-->
+	    			<div class="load">
+	    				<p>加载中...</p>
+	    			</div>
+	    		</div>
+
+	    		<div col="4">
+					<!-- section>
+						<div class="note-t"></div>
+	    				<h2>今天好开心！</h2>
+	    				<article>
+	    					1.是法师啊分团委暗示法打飞暗室逢灯 就哦儿惹我突然儿童<br />
+	    					2.温柔 示范点是发生地方暗示 e淘网他
+	    					3.程序啊噶 额我哥 啊多少个好 人阿斯顿f
+	    					4.啊恩他要我爱普生地方温柔 一好哈士大夫
+		    				<address>作者：Napster
+								<time datetime="2008-02-14">时间：2008-02-14</time>		
+		    				</address>
+
+		    			</article>
+	    			</section>
+					<section>
+						<div class="note-t"></div>
+	    				<h2>今天好开心！</h2>
+	    				<article>
+	    					1.是法师啊分团委暗示法打飞暗室逢灯 就哦儿惹我突然儿童<br />
+	    					2.温柔 示范点是发生地方暗示 e淘网他
+	    					3.程序啊噶 额我哥 啊多少个好 人阿斯顿f
+	    					4.啊恩他要我爱普生地方温柔 一好哈士大夫
+		    				<address>作者：Napster
+								<time datetime="2008-02-14">时间：2008-02-14</time>		
+		    				</address>
+
+		    			</article>
+	    			</section-->
+	    			<div class="load">
+	    				<p>加载中...</p>
+	    			</div>
+	    		</div>
+
+	    		<div col="5">
+					<!-- section>
+						<div class="note-t"></div>
+	    				<h2>今天好开心！</h2>
+	    				<article>
+	    					1.是法师啊分团委暗示法打飞暗室逢灯 就哦儿惹我突然儿童<br />
+	    					2.温柔 示范点是发生地方暗示 e淘网他
+	    					3.程序啊噶 额我哥 啊多少个好 人阿斯顿f
+	    					4.啊恩他要我爱普生地方温柔 一好哈士大夫
+		    				<address>作者：Napster
+								<time datetime="2008-02-14">时间：2008-02-14</time>		
+		    				</address>
+
+		    			</article>
+	    			</section>
+					<section>
+						<div class="note-t"></div>
+	    				<h2>今天好开心！</h2>
+	    				<article>
+	    					1.是法师啊分团委暗示法打飞暗室逢灯 就哦儿惹我突然儿童<br />
+	    					2.温柔 示范点是发生地方暗示 e淘网他
+	    					3.程序啊噶 额我哥 啊多少个好 人阿斯顿f
+	    					4.啊恩他要我爱普生地方温柔 一好哈士大夫
+		    				<address>作者：Napster
+								<time datetime="2008-02-14">时间：2008-02-14</time>		
+		    				</address>
+
+		    			</article>
+	    			</section>
+	    			<section>
+	    				<div class="note-t"></div>
+	    				<h2>今天好开心！</h2>
+	    				<article>
+	    					1.是法师啊分团委暗示法打飞暗室逢灯 就哦儿惹我突然儿童<br />
+	    					2.温柔 示范点是发生地方暗示 e淘网他
+	    					3.程序啊噶 额我哥 啊多少个好 人阿斯顿f
+	    					4.啊恩他要我爱普生地方温柔 一好哈士大夫
+		    				<address>作者：Napster
+								<time datetime="2008-02-14">时间：2008-02-14</time>		
+		    				</address>
+
+		    			</article>
+	    			</section>
+	    			<section>
+	    				<div class="note-t"></div>
+	    				<h2>今天好开心！</h2>
+	    				<article>
+	    					1.是法师啊分团委暗示法打飞暗室逢灯 就哦儿惹我突然儿童<br />
+	    					2.温柔 示范点是发生地方暗示 e淘网他
+	    					3.程序啊噶 额我哥 啊多少个好 人阿斯顿f
+	    					4.啊恩他要我爱普生地方温柔 一好哈士大夫
+		    				<address>作者：Napster
+								<time datetime="2008-02-14">时间：2008-02-14</time>		
+		    				</address>
+
+		    			</article>
+	    			</section-->
+	    			<div class="load">
+	    				<p>加载中...</p>
+	    			</div>
+	    		</div>
+	    	</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="script/jquery-1.9.1.js"></script>
+	<script type="text/javascript" src="script/index.js"></script>
+
+	<!-- JiaThis Button BEGIN -->
+	<script type="text/javascript" >
+	var jiathis_config={
+		summary:"便签云，云便签",
+		marginTop:300,
+		showClose:true,
+		hideMore:false
+	}
+	</script>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jiathis_r.js?btn=r.gif&move=0" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+
+</html>

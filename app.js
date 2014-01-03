@@ -4,8 +4,7 @@
  */
 
 var express = require('express')
-  , init = require('./routes/index')
-  , user = require('./routes/user')
+  , router = require('./routes/router')
   , http = require('http')
   , path = require('path')
   , MongoStore = require('connect-mongo')(express)
@@ -19,7 +18,7 @@ app.configure(function() {
   app.set('views',__dirname + '/views');
   app.set('view engine','ejs');
   app.use(partials());
-  app.use(express.favicon());
+  // app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
@@ -46,8 +45,7 @@ app.configure(function() {
     // }
     next();
   });
-
-
+  
   app.use(express.static(path.join(__dirname,'public')));
 });
 
@@ -55,10 +53,10 @@ app.configure('development',function() {
   app.use(express.errorHandler());
 });
 
-http.createServer(app).listen(3001,function() {
-  console.log('DEV Express server listening on port ' + 3001);
+http.createServer(app).listen(3000,function() {
+  console.log('DEV Express server listening on port ' + 3000);
 });
 
+router.init(app);
 
-
-init(app);
+// init(app);

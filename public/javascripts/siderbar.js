@@ -19,7 +19,8 @@ $(function() {
       this.view();
       this.addEventListener();
       this.initJsChart();
-      this.getMsgDailyCount();
+      if(uid)
+        this.getMsgDailyCount();
     },
     view : function() {
       // var signStatus = ui.$signStatus.val();

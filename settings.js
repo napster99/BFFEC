@@ -1,5 +1,5 @@
 module.exports = { 
-  cookieSecret: 'BFClubTest', 
-  db: 'BFClubTest', 
+  cookieSecret: 'BFClub', 
+  db: 'BFClub', 
   host: 'localhost'
 }; 

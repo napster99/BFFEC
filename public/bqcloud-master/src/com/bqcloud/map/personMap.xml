@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	
+	<typeAlias alias="Person" type="com.bqcloud.entity.Person" />
+
+	
+	<select id="selectPerson" resultClass="Person">
+
+		select * from person where account=#account#  and password=#password#
+		
+	</select>
+	
+	<insert id="register">
+
+		insert into person(id,account,password,nickname)
+		
+		 values
+		 
+		(null,#account#,#password#,#nickname#)
+
+	 </insert>
+	
+</sqlMap>
+

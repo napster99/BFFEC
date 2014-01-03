@@ -34,9 +34,6 @@ logScoreSchema.static('getLogScoresByMore',function(uid,page,perCount,callback) 
       callback(err,messags);
     })
   }
-
-
-  
 });
 
 //获取积分日志的条数
@@ -66,6 +63,44 @@ logScoreSchema.static('getLastSignScore', function(uid, callback){
   });
 });
 
+
+
+//+++++++++++++++Redis Four START++++++++++++++++
+
+//list
+logScoreSchema.static('list',function(options,callback) {
+  return this.find(options,function(err,users) {
+    callback(err,users);
+  })
+})
+
+//add
+logScoreSchema.static('add',function(options,callback) {
+  var newLogs = new User(options);
+  newLogs.save(function(err,user) {
+    callback(err,user);
+  })
+})
+
+//edit
+logScoreSchema.static('edit',function(options,callback) {
+  var condition = options['conditionObj']
+  ,editObj = options['fieldObj'];
+
+  return this.findOneAndUpdate(condition, editObj,  function(err,user) {
+    callback(err,user);
+  })
+})
+
+//del
+logScoreSchema.static('del',function(options,callback) {
+  var condition = options['conditionObj'];
+  return this.remove(condition,function(err,users) {
+    callback(err,users);
+  })
+})
+
+//+++++++++++++++Redis Four  END++++++++++++++++
 
 
 
