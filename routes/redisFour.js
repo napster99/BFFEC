@@ -5,7 +5,7 @@ var querystring = require('querystring');
 var mw = require('./middleware');
 var url = require('url');
 var models = require('../models/models');
-
+console.log(models)
 function RedisFour(app) {
 	this.init(app);
 }
@@ -19,12 +19,22 @@ RedisFour.prototype.init = function(app) {
 	});
 }
 
+RedisFour.prototype.isEmptyObject = function(o) {
+	for(var n in o) {
+		return false;
+	}	
+	return true;
+}
+
 RedisFour.prototype.resolution = function(req, res) {
 	// var url = req.originalUrl;
 	var controller = req.params['controller'];
 	var action = req.params['action'];
-	var options = querystring.parse(url.parse(req.url).query);   
-    
+	var options = querystring.parse(url.parse(req.url).query);
+	if(this.isEmptyObject(options)) {
+		options = req.body;
+	}
+	
 	if(typeof models[controller][action] === 'function') {
 		// delete options['callback'];
 		models[controller][action](options,function(err,result) {

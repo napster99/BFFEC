@@ -1,6 +1,6 @@
 /*
-* message控制器
-*/
+ * message控制器
+ */
 var crypto = require('crypto');
 // var User = require('../models/user');
 // var Message = require('../models/message');
@@ -74,13 +74,14 @@ exports.getSingleTopic = function(req, res) {
                     'rcontent' : replyArr[i]['rcontent'],
                     'mid' : replyArr[i]['mid'],
                     'uid' : replyArr[i]['uid'],
-                    'uname' : models['user'].getUsernameByUid(replyArr[i]['uid'],users),
+                    'uname' : models['user'].getUserFieldByUid(replyArr[i]['uid'],users,'name'),
+                    'avatar' : models['user'].getUserFieldByUid(replyArr[i]['uid'],users,'avatar'),
                     'rtime' : CommonJS.changeTime(replyArr[i]['rtime']) 
                   }
                   tempArr.push(objReply);
                 }
                 messageDetail['mReplyObj'] = tempArr;
-                models['message'].updateMessagecNumByMid(mid,function(err) {
+                models['message'].updateMessagecNumByMid(mid,'clickCount',function(err) {
                     if(err) {
                       //TODO
                     }else{
@@ -110,7 +111,7 @@ exports.getCreateTopic = function(req, res) {
 
 //提交话题
 exports.postCreateTopic = function(req, res) {
-   var title = req.body['title'];
+    var title = req.body['title'];
     var content = req.body['content'];
     var message = new models['message']({
       'mtitle' : title,
@@ -179,7 +180,9 @@ exports.getDailyListByUid = function(req, res) {
     })
 }
 
-//日报列表页
+
+
+//话题列表
 exports.getTopicListByUid = function(req, res) {
    var uid = req.params.uid;
     models['user'].getUsersByUids([uid],function(err,data) {
@@ -313,7 +316,9 @@ exports.postChangeMessageStatus = function(req, res) {
                       'name' : user['name'],
                       'uid' : uid,
                       'score' : score,
-                      'type' : 1 //日报
+                      'type' : 1, //日报
+                      'totalScore' : user['score'],
+                      'mark' : '--'
                     }
                     score = (+user['score']) + (+score);
                     models['user'].updateScoreAdmin(uid,score,logOptions,function(err,rows) {
@@ -338,7 +343,9 @@ exports.postChangeMessageStatus = function(req, res) {
                       'name' : user['name'],
                       'uid' : uid,
                       'score' : score,
-                      'type' : 1 //日报
+                      'type' : 1, //日报
+                      'totalScore' : user['score'],
+                      'mark' : '--'
                     }
                     score = (+user['score']) + (+score);
                     models['user'].updateScoreAdmin(uid,score,logOptions,function(err,rows) {
@@ -364,7 +371,9 @@ exports.postChangeMessageStatus = function(req, res) {
                   'name' : user['name'],
                   'uid' : uid,
                   'score' : score,
-                  'type' : 1 //日报
+                  'type' : 1, //日报
+                  'totalScore' : user['score'],
+                  'mark' : '--'
                 }
                 score = (+user['score']) + (+score);
                 models['user'].updateScoreAdmin(uid,score,logOptions,function(err,rows) {
@@ -420,45 +429,71 @@ exports.getAllCount = function(req, res) {
  //根据状态不同获取日报
 exports.getDailyListByStatus = function(req, res) {
   var pquery = querystring.parse(url.parse(req.url).query);   
-    var status = pquery['status'];
-    
+  var status = pquery['status'];
+
+
+  var curPage = pquery['curPage'];
+  var perPages = 10;
+  
+  var options = {
+    type : 'day'
+  }
     switch(status) {
       case '1':
         status = 'waiting';
+        options['pass'] = 'waiting';
         break;
       case '2':
         status = 'unpass';
+        options['pass'] = 'unpass';
         break;
       case '3':
         status = 'passed';
+        options['pass'] = 'passed';
         break;
       default:
         status = '';
     }
-    models['message'].getDailyListByStatus(status,function(err,messages) {
-      if(!err) {
-        var mesObj = [];
-        var uids = [];
-        for(var i=0; i<messages.length; i++) {
-          uids.push(messages[i]['uid']);
-        }
-        models['user'].getUsersByUids(uids,function(err,users) {
-          for(var i=0; i<messages.length; i++) {
-            mesObj[i] = {
-              '_id' : messages[i]['_id'],
-              'mtitle' : messages[i]['mtitle'],
-              'mcontent' : messages[i]['mcontent'],
-              'uid': messages[i]['uid'],
-              'type' : messages[i]['type'],
-              'pass' : messages[i]['pass']
-            }
-            mesObj[i]['name'] = models['user'].getUsernameByUid(messages[i]['uid'],users);
-            mesObj[i]['mtime'] = new Date(messages[i]['mtime']).format('yyyy-MM-dd hh:mm');
-          }
-          res.json(mesObj);
-        });
+
+    models['message'].list(options, function(err,messages) {
+      var dtotalPages = 1;
+      if(messages.length % perPages == 0 ) {
+        dtotalPages = parseInt(messages.length/perPages);
+      }else{
+        dtotalPages = parseInt(messages.length/perPages) + 1;
       }
-    })  
+
+      models['message'].getDailyListByStatus(status,curPage,perPages, function(err,messages) {
+        if(!err) {
+          var mesObj = [];
+          var uids = [];
+          for(var i=0; i<messages.length; i++) {
+            uids.push(messages[i]['uid']);
+          }
+          models['user'].getUsersByUids(uids,function(err,users) {
+            for(var i=0; i<messages.length; i++) {
+              mesObj[i] = {
+                '_id' : messages[i]['_id'],
+                'mtitle' : messages[i]['mtitle'],
+                'mcontent' : messages[i]['mcontent'],
+                'uid': messages[i]['uid'],
+                'type' : messages[i]['type'],
+                'pass' : messages[i]['pass']
+              }
+              mesObj[i]['name'] = models['user'].getUserFieldByUid(messages[i]['uid'],users,'name');
+              mesObj[i]['avatar'] = models['user'].getUserFieldByUid(messages[i]['uid'],users,'avatar');
+              mesObj[i]['mtime'] = new Date(messages[i]['mtime']).format('yyyy-MM-dd hh:mm');
+            }
+            res.json({
+              'page' : curPage,
+              'totalPages' : dtotalPages,
+              'data' : mesObj
+            })
+          });
+        }
+      })  
+
+    })
 }
 
 
@@ -493,6 +528,383 @@ exports.getLogTopicAjax = function(req, res) {
           }
           res.send(data);
         });
+      }
+    });
+}
+
+
+//获取文章列表
+exports.getArticleList = function(req, res) {
+  var curPage = 1,perPages = 10;
+  if(req.url.indexOf('article?page=') > -1) 
+    curPage = req.url.split('=')[1];
+  //根据curPage 获得message数组
+  models['message'].getMessagesByPage('article',curPage,perPages,function(err, data) {
+    //根据每页显示数量，message数组长度，计算出总页数
+    var totalPages = 1;
+    /* 
+     * 输出给页面的元素
+     *  回复数        点击数       标题      发表时间  消息ID    用户ID
+     *  replyCount    clickCount   title     time       mid      uid
+     */
+    var objArr = [];
+    if(data instanceof Array) {
+      models['message'].getMessagesCountByType('article',function(err,count) {
+        if(count % perPages == 0 ) {
+          totalPages = parseInt(count/perPages);
+        }else{
+          totalPages = parseInt(count/perPages) + 1;
+        }
+        var midsArr = [],uidsArr = [];
+        for(var i=0; i<data.length; i++) {
+          midsArr.push(data[i]['_id']);
+          uidsArr.push(data[i]['uid']);
+        }
+        models['replys'].getReplysByMids(midsArr,function(err,replyArr) {
+          if(err) {
+            //TODO 查询回复数出错
+          }else{
+            models['user'].getUsersByUids(uidsArr,function(err,userArr) {
+              for(var i=0; i<data.length; i++) {
+                //根据message数组不同元素，获得元素对应的回复数
+                var mtime = data[i]['mtime']
+                var time = CommonJS.changeTime(mtime);
+                
+                var obj = {
+                  'replyCount' : models['replys'].getReplyCountByMid(data[i]['_id'],replyArr),
+                  'clickCount' : data[i]['clickCount'] || 0,
+                  'title'      : data[i]['mtitle'],
+                  'time'       : time,
+                  'mid'        : data[i]['_id'],
+                  'uid'        : data[i]['uid'],
+                  'uname'    : models['user'].getUserFieldByUid(data[i]['uid'],userArr,'name'),
+                  'avatar'   : models['user'].getUserFieldByUid(data[i]['uid'],userArr,'avatar'),
+                  'totalPages' : totalPages
+                }
+                objArr.push(obj);
+              }
+
+              if(req.session.user) {
+                res.render('article',{
+                  title : '阅读版块',
+                  objArr : objArr,
+                  user : req.session.user,
+                  otheruser : req.session.user,
+                  score : req.session.user['score']
+                });
+              }else{
+                //组装成对象，输出到页面
+                res.render('article',{
+                  title : '阅读版块',
+                  objArr : objArr,
+                  user : req.session.user,
+                  otheruser : req.session.user
+                });
+              }
+            })
+          }
+        });
+      })
+    }
+  });
+}
+
+//发表文章
+exports.getCreateArticle = function (req, res) {
+    res.render('createArticle',{
+      title : '发表文章'
+    });
+}
+
+//发表文章
+exports.postCreateArticle = function(req, res) {
+    var title = req.body['title'];
+    var content = req.body['content'];
+    var articleURL = req.body['articleURL'];
+
+    var message = new models['message']({
+      'mtitle' : title,
+      'articleURL' : articleURL,
+      'mcontent' : content,
+      'uid' : req.session.user._id,
+      'type' : 'article'
+    });
+
+    models['message'].saveMessage(message,function(err,data) {
+      if(err) {
+        req.session.error = err;
+        return res.redirect('/');
+      }
+      if(data) {
+        return res.redirect('/article');
+      }
+    })
+}
+
+
+
+//文章详细页
+exports.getSingleArticle = function(req, res) {
+   var mid = req.params.id;
+    var articleDetail = {};
+    models['message'].getMessageByMid(mid,function(err,data) {
+      if(err) {
+        //TODO
+      } else {
+        /*
+         * 信息详细页展示  
+         * 文章标题  原文链接    消息内容   发布者姓名和uid 发布时间   回复数      回复实体     
+         * mtitle    articleURL   mcontent   mname muid      mtime     replyCount   mReplyObj
+         * 被赞次数
+         * good 
+         *  mReplyObj-->rcontent mid uid  uname rtime 
+         */
+        models['user'].getUsersByUids([data['uid']],function(err,user) {
+          articleDetail['mtitle'] = data['mtitle'];
+          articleDetail['articleURL'] = data['articleURL'];  //原文链接
+          articleDetail['good'] = data['good'];             //被赞次数
+          articleDetail['mcontent'] = data['mcontent'];
+          articleDetail['mname'] = user[0]['name'];
+          articleDetail['muid'] = user[0]['_id'];
+          articleDetail['mtime'] = CommonJS.changeTime(data['mtime']);
+          articleDetail['mid'] = data['_id'];
+          models['replys'].getReplysByMids([mid],function(err,replyArr) {
+            if(err) {
+              //TODO
+            }else{
+              var uidArr = [];
+              for(var i=0; i<replyArr.length; i++) {
+                uidArr.push(replyArr[i]['uid']);
+              }
+              models['user'].getUsersByUids(uidArr,function(err,users) {
+                var tempArr = [];
+                for(var i=0; i<replyArr.length; i++) {
+                  var objReply = {
+                    'rcontent' : replyArr[i]['rcontent'],
+                    'mid' : replyArr[i]['mid'],
+                    'uid' : replyArr[i]['uid'],
+                    'uname' : models['user'].getUserFieldByUid(replyArr[i]['uid'],users,'name'),
+                    'avatar' : models['user'].getUserFieldByUid(replyArr[i]['uid'],users,'avatar'),
+                    'rtime' : CommonJS.changeTime(replyArr[i]['rtime']) 
+                  }
+                  tempArr.push(objReply);
+                }
+                articleDetail['mReplyObj'] = tempArr;
+                models['message'].updateMessagecNumByMid(mid,'clickCount',function(err) {
+                    if(err) {
+                      //TODO
+                    }else{
+                      res.render('articleDetail',{
+                          'title':articleDetail['mtitle'],
+                          'articleDetail' : articleDetail,
+                          'otheruser' : req.session.user
+                        })
+                    }
+                  });
+              })
+              
+            }
+          })
+        });
+      }
+    })
+}
+
+
+//点赞
+exports.postSendGoodAction = function(req, res) {
+  var mid = req.body.mid;
+  
+  models['message'].updateMessagecNumByMid(mid,'good',function(err, goodNum) {
+    if(goodNum == 'max') {
+      res.send({'code':'1','message':'max'});
+    } else{
+      if(!err) {
+        var options = {
+          mid : mid,
+          uid : req.session.user._id
+        }
+        models['records']['RecordGood'].add(options,function(err,record) {
+          if(!err) 
+            res.send({'code':'0','message':'success','data':{'goodNum':goodNum}});
+        })
+      }
+    }
+    
+  })
+}
+
+//是否已赞
+exports.getAlreadyGood = function(req, res) {
+  var pquery = querystring.parse(url.parse(req.url).query);
+  var mid = pquery['mid'];
+  var uid = pquery['uid'];
+  var options = {
+    mid : mid,
+    uid : uid
+  }
+
+  models['records']['RecordGood'].list(options,function(err, record) {
+    if(!err && record instanceof Array && record.length > 0) {
+      res.send({
+        'code' : 0,
+        'message' : 'success',
+        'data' : '1'
+      })
+    }else{
+      res.send({
+        'code' : 0,
+        'message' : 'success',
+        'data' : '0'
+      })
+    }
+  }); 
+}
+
+
+// 获取热门文章
+exports.getHotArticles = function(req, res) {
+  models['message'].getHotArticles(function(err, messages) {
+    if(!err) {
+        res.send({
+          'code' : 0,
+          'message' : 'success',
+          'data' : messages
+        })
+    }else{
+      res.send({
+          'code' : 1,
+          'message' : 'failure'
+        })
+    }
+  })
+}
+
+
+//个人文章列表页
+exports.getArticleListByUid = function(req, res) {
+   var uid = req.params.uid;
+    models['user'].getUsersByUids([uid],function(err,data) {
+      if(!err) {
+        res.render('articleList',{
+          title : '文章列表',
+          uid : uid,
+          user : data[0],
+          otheruser : data[0]
+        });
+      }
+    })
+}
+
+
+//获取个人文章
+exports.getAticleAjax = function(req, res) {
+  var pquery = querystring.parse(url.parse(req.url).query);
+    var curPage = pquery['curPage'];
+    var uid = pquery['uid'];
+    var perPages = 5;
+    models['message'].getArticleCount(uid,function(err,articleCount) {
+      if(!err) {
+        models['message'].getArticleByMore(uid,curPage,perPages,function(err,topicsArr) {
+          var dtotalPages = 1;
+          if(articleCount % perPages == 0 ) {
+            dtotalPages = parseInt(articleCount/perPages);
+          }else{
+            dtotalPages = parseInt(articleCount/perPages) + 1;
+          }
+          // topicsArr = topicsArr.toJSON();
+          var objArr = [];
+          for(var i=0,len=topicsArr.length; i<len; i++) {
+            objArr[i] = {
+              'mtitle' : topicsArr[i]['mtitle'],
+              '_id' : topicsArr[i]['_id'],  
+              'mtime' : new Date(topicsArr[i]['mtime']).format('yyyy-MM-dd hh:mm')
+            }
+          }
+          var data = {
+            'page' : curPage,
+            'totalPages' : dtotalPages,
+            'data' : objArr,
+          }
+          res.send(data);
+        });
+      }
+    });
+}
+
+
+//话题列表
+exports.getTopicList = function(req, res) {
+  var curPage = 1,perPages = 10;
+    if(req.url.indexOf('/topicList?page=') > -1) 
+      curPage = req.url.split('=')[1];
+    //根据curPage 获得message数组
+    models['message'].getMessagesByPage('normal',curPage,perPages,function(err, data) {
+      //根据每页显示数量，message数组长度，计算出总页数
+      var totalPages = 1;
+      /* 
+       * 输出给页面的元素
+       *  回复数        点击数       标题      发表时间  消息ID    用户ID
+       *  replyCount    clickCount   title     time       mid      uid
+       */
+      var objArr = [];
+      if(data instanceof Array) {
+        models['message'].getMessagesCountByType('normal',function(err,count) {
+          if(count % perPages == 0 ) {
+            totalPages = parseInt(count/perPages);
+          }else{
+            totalPages = parseInt(count/perPages) + 1;
+          }
+          var midsArr = [],uidsArr = [];
+          for(var i=0; i<data.length; i++) {
+            midsArr.push(data[i]['_id']);
+            uidsArr.push(data[i]['uid']);
+          }
+          models['replys'].getReplysByMids(midsArr,function(err,replyArr) {
+            if(err) {
+              //TODO 查询回复数出错
+            }else{
+              models['user'].getUsersByUids(uidsArr,function(err,userArr) {
+                for(var i=0; i<data.length; i++) {
+                  //根据message数组不同元素，获得元素对应的回复数
+                  var mtime = data[i]['mtime']
+                  var time = CommonJS.changeTime(mtime);
+                  
+                  var obj = {
+                    'replyCount' : models['replys'].getReplyCountByMid(data[i]['_id'],replyArr),
+                    'clickCount' : data[i]['clickCount'] || 0,
+                    'title'      : data[i]['mtitle'],
+                    'time'       : time,
+                    'mid'        : data[i]['_id'],
+                    'uid'        : data[i]['uid'],
+                    'uname'    : models['user'].getUserFieldByUid(data[i]['uid'],userArr,'name'),
+                    'avatar'   : models['user'].getUserFieldByUid(data[i]['uid'],userArr,'avatar'),
+                    'totalPages' : totalPages
+                  }
+                  objArr.push(obj);
+                }
+
+                if(req.session.user) {
+                  res.render('topic',{
+                    title : '边锋前端社区',
+                    objArr : objArr,
+                    user : req.session.user,
+                    otheruser : req.session.user,
+                    score : req.session.user['score']
+                  });
+                }else{
+                  //组装成对象，输出到页面
+                  res.render('topic',{
+                    title : '边锋前端社区',
+                    objArr : objArr,
+                    user : req.session.user,
+                    otheruser : req.session.user
+                  });
+                }
+              })
+            }
+          });
+        })
       }
     });
 }

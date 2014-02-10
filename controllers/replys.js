@@ -15,7 +15,8 @@ var mission = require('../lib/mission');
 
 //提交回复
 exports.postSingleReply = function(req, res) {
-  var content = req.body['content'];
+    var which = req.body['which'];
+    var content = req.body['content'];
     var mid = req.params.mid;
     var uid = req.session.user._id;
     var reply = new models['replys']({
@@ -28,7 +29,9 @@ exports.postSingleReply = function(req, res) {
       if(err) {
         //TODO
       } else {
-        return res.redirect('/topic/'+mid);
+        if(which == 'topic') 
+          return res.redirect('/topic/'+mid);
+        return res.redirect('/article/'+mid);
       }
     })
 }

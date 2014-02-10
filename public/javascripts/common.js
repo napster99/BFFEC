@@ -30,6 +30,9 @@ $(function(){
 		case '/setting':
 			showWhich($('li[name=home]'));
 			break;
+		case '/modifyAvatar':
+			showWhich($('li[name=home]'));
+			break;
 		case '/changelog':
 			showWhich($('li[name=changelog]'));
 			break;
@@ -48,6 +51,9 @@ $(function(){
 	}
 	if(window.location.pathname.indexOf('scoreList') > -1) {
 		showWhich($('li[name=home]'));
+	}
+	if(window.location.pathname.indexOf('article') > -1 || window.location.pathname.indexOf('Article') > -1) {
+		showWhich($('li[name=article]'));
 	}
 
 	
@@ -85,14 +91,14 @@ Date.prototype.format =function(format){
 	return format;
 }
 
-
 var CommonJS = {
+
 	changeTime : function(time) {
 		var curTime = +new Date();
 		time = +new Date(time);
 		
 		if(curTime - time <= 60*60) {
-			return '1小时前';
+			return '1小时内';
 		}
 		var hour = parseInt((curTime-time)/(1000*60*60));
 		if(hour <= 24) {
@@ -103,7 +109,8 @@ var CommonJS = {
 	logsType : {
 		1 : '日报',
 		2 : '周报',
-		3 : '签到'
+		3 : '签到',
+		4 : '管理员'
 	}
 
 }

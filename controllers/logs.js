@@ -21,7 +21,7 @@ exports.getLogScoreAjax = function(req, res) {
   var pquery = querystring.parse(url.parse(req.url).query);
     var curPage = pquery['curPage'];
     var uid = pquery['uid'];
-    var perPages = 5;
+    var perPages = 10;
     models['logs'].getLogScoreCount(uid,function(err,logCount) {
       if(!err) {
         models['logs'].getLogScoresByMore(uid,curPage,perPages,function(err,logsArr) {
@@ -35,10 +35,13 @@ exports.getLogScoreAjax = function(req, res) {
           var objArr = [];
           for(var i=0,len=logsArr.length; i<len; i++) {
             objArr[i] = {
+              'uid' : logsArr[i]['uid'],
               'name' : logsArr[i]['name'],
               'type' : logsArr[i]['type'],  
               'score' : logsArr[i]['score'],
-              'time' : new Date(logsArr[i]['time']).format('yyyy-MM-dd hh:mm')
+              'totalScore' : logsArr[i]['totalScore'] || '--',
+              'time' : new Date(logsArr[i]['time']).format('yyyy-MM-dd hh:mm'),
+              'mark' : logsArr[i]['mark']
             }
           }
           var data = {
@@ -67,5 +70,32 @@ exports.getScoreListByUid = function(req, res) {
         user : req.session.user,
         otheruser : req.session.user
       });
+}
+
+
+//更改个人积分
+exports.changeScoreByAdmin = function(req, res) {
+  var uid = req.body.uid;
+  var score = req.body.score;
+  var mark = req.body.mark;
+
+  models['user'].getUserByUid(uid,function(err,user) {
+    if(!err) {
+      var logOptions = {
+        'name' : user['name'],
+        'uid' : uid,
+        'score' : score,
+        'type' : 4, //管理员
+        'totalScore' : user['score'],
+        'mark' : mark
+      }
+      score = (+user['score']) + (+score);
+      models['user'].updateScoreAdmin(uid,score,logOptions,function(err,rows) {
+        if(!err) {
+          res.redirect('/weblist#lD');
+        }
+      })
+    }
+  })
 }
 

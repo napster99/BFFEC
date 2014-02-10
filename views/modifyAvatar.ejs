@@ -1,0 +1,37 @@
+<%- include header %>
+
+
+<div id="wrapper">
+	<div id="main">
+		<div id="sidebar">
+			<%- include sidebar %>
+		</div>
+		<div id="content">
+			<div class="panel">
+				<div class="header">
+					<ul class="breadcrumb">
+						<li><a href="/">主页</a><span class="divider">/</span></li>
+						<li class="active">修改头像</li>
+					</ul>
+				</div>
+				<div class="inner userinfo">
+					<form method="post" action="/avatar-upload"  enctype="multipart/form-data">
+						<div class="user_avatar">
+							<div>
+								<img id="avatar" src="<%= user.avatar %>">
+							</div><br />
+							<input type="file" id="myfile" name="myfile" style="display:none;">
+							<label for="myfile" class="btn" id="chooseBtn">选择</label>
+
+							<button type="submit" name="sureBtn" class="btn btn-success" style="display:none;">确定</button>
+							<button class="btn" name="cancelBtn" style="display:none;">取消</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="clearfix"></div>
+<script src="/javascripts/modifyAvatar.js"></script>
+<%- include footer %>

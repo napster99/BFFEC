@@ -1,0 +1,207 @@
+<%- include header %>
+
+
+<div id="wrapper">
+	<div id="main">
+		<div id="sidebar">
+			<div id="sidebar">
+				<% if(!user) { %>
+					<div class="panel">
+				      <div class="inner">
+				        <p>BFCloub：边锋前端技术交流社区</p>
+				        <div>
+				          <!--a href="/addUser"><button class="btn">现在注册</button></a-->
+				          <span>已注册用户请<a class="light" href="/login"> 登录</a></span>
+				        </div>
+				      </div>
+				  </div>
+				<%  } else { %>
+					<div class="panel">
+				    	<input type="hidden" value="<%= user._id || user.uid %>" id="uid" />
+				      <div class="header">
+					      <span class="col_fade">个人信息<span>
+					      </span></span></div>
+					      <div class="inner">
+					        <div class="user_card">
+								<div>
+									<a class="user_avatar" href="/user/<%= otheruser._id %>">
+										<img src="<%= otheruser.avatar %>" title="<%= otheruser._id %>">
+									</a>
+									<span class="user_name">
+										<a class="dark" href="/user/<%= otheruser._id %>"> <%= otheruser.name %></a>
+										<input id="signStatus" type="hidden" value="<%= otheruser.curSign || user.curSign %>" />
+										<%  if(user._id == otheruser._id) { %>
+										<button id="signIn" class="btn btn-success">每日签到</button>
+										<% } %>
+									</span>
+									<div class="board clearfix">
+										<div class="floor">
+											<span>话题：<span name="normal" class="big"></span>个</span>
+											<div class="space"></div>
+											<span>日报：<span name="day" class="big"></span>篇</span>
+											<div class="space"></div>
+											<span>积分：<%=  otheruser.score %>分</span>
+										</div>
+									</div>
+								</div>
+							</div>
+				      </div>
+				  </div>
+				<% } %>
+				  <div class="panel">
+				      <div class="inner">
+				         <table class="table">
+				         	<thead>
+				         		<tr>
+				         			<td colspan="3">热门文章</td>
+				         		</tr>
+				         	</thead>
+				       		<tbody align="left" id="hotArticle">
+				       		</tbody>
+				         </table>
+				      </div>
+				  </div>
+			</div>
+		</div>
+		<div id="content">
+			<div class="panel">
+			    <div class="inner">
+			      <div class="header clearfix">
+			        社区文章<a href="/createArticle" id="create_topic_btn">
+			            <button class="btn btn-success">分享文章</button>
+			          </a>
+			      </div>
+			      <div id="topic_list">
+
+			      <% for(var i=0; i<objArr.length; i++) { %>
+			        <input id="totalPages" type="hidden" value="<%= objArr[i]['totalPages'] %>" />
+			        <div class="cell">
+			          <div class="user_avatar block">
+			            <a target="_blank" href="user/<%= objArr[i]['uid'] %>" title="<%= objArr[i]['uname'] %>">
+			              <img src="<%= objArr[i]['avatar'] %>">
+			            </a>
+			          </div>
+			          <div class="block count">
+			            <a target="_blank" href="/article/<%= objArr[i]['mid'] %>" title="回复数"><%= objArr[i]['replyCount'] %></a>/<span title="点击数"><%= objArr[i]['clickCount'] %></span>
+			          </div>
+			          <div class="topic_wrap">
+			              <a target="_blank" href="/article/<%= objArr[i]['mid'] %>">
+			                  <%= objArr[i]['title'] %>
+			              </a>
+			          </div>
+			          <div class="last_time"> <%= objArr[i]['time'] %></div>
+			        </div>
+			      <% } %>
+
+					<div id="example" class="pagination" current_page="1">
+						<ul>
+							<li class="disabled"><a>«</a></li>
+							<li class="disabled active"><a>1</a></li>
+							<li><a href="/?page=2">2</a></li>
+							<li><a href="/?page=3">3</a></li>
+							<li><a href="/?page=4">4</a></li>
+							<li><a href="/?page=5">5</a></li>
+							<li><a>...</a></li>
+							<li><a href="/?page=140">»</a></li>
+						</ul>
+					</div>
+					<script>
+			      var page = window.location.search.split('=')[1];
+			      var totalPages = $('#totalPages').val() || 1;
+			      
+			      var options = {
+			             currentPage: page || 1,
+			              totalPages: totalPages,
+			           numberOfPages:10,
+			          onPageClicked : function(event,originalEvent,type,page) {
+			              window.location.href = '/article?page='+page;
+			            }
+			        }
+			      $('#example').bootstrapPaginator(options);
+			    </script>
+			    </div>
+			  </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<%- include footer %>
+<!-- S 弹窗-->
+<div class="scratchCard" id="scratchCard">
+    <!-- 关闭按钮 -->
+    <div>
+        <a class="close" id="sClose">X</a>
+    </div>
+    <!-- 中奖信息 -->
+    <div id="sCardInfo" class="info" onselectstart="javascript:return false;">我又不是人民币，怎么能让人人都喜欢我？<br>恭喜你获得<span>  8   </span>积分！</div>
+    <!-- 刮奖涂层 -->
+    <div class="mask">
+        <canvas id="mask" width="278" height="99" style="display: none;">您的浏览器版本不支持 canvas!</canvas>
+    </div>
+    <!-- 重抽btn -->
+    <div class="again">
+        <a id="againBtn" onselectstart="javascript:return false;" style="display:none;">领取积分</a>
+    </div>
+</div>
+<!-- E 弹窗-->
+
+<script src="/javascripts/siderbar.js"></script>
+<script src="/javascripts/signIn/draw.js"></script>
+<script>
+	var ui = {
+		$hotArticle : $('#hotArticle')
+	}
+	
+	var mid = $('#curMid').val();
+	var Page = {
+
+		init : function() {
+			this.getHotArticles();
+		},
+
+
+		getHotArticles : function() {
+			var that = this;
+			var options = {
+				 'url' : '/getHotArticles'
+				,'type': 'get'	
+				,'success' : function(data) {
+					that.renderHotArticle(data)
+				}
+				,'failure' : function(err) {
+					console.log(err)
+				}
+			}
+			$.ajax(options);
+		},
+
+		renderHotArticle : function(data) {
+			var html = '';
+			if(data['message'] == 'failure') {
+				return ui.$hotArticle.html('<tr><td colspan="4">数据获取失败！</td></tr>');
+			}else{
+				var data = data['data'];
+				for(var i=0; i<data.length; i++) {
+					if(i==0) {
+						html += '<tr><td><label class="label label-success">1</label></td><td width="170"><a href="/article/'+data[i]['_id']+'">'+data[i]['mtitle']+'</a></td><td>'+data[i]['good']+'</td></tr>';
+						continue;
+					}
+					if(i==1) {
+						html += '<tr><td><label class="label label-warning">2</label></td><td width="170"><a href="/article/'+data[i]['_id']+'">'+data[i]['mtitle']+'</a></td><td>'+data[i]['good']+'</td></tr>';
+						continue;
+					}
+					if(i==2) {
+						html += '<tr><td><label class="label label-info">3</label></td><td width="170"><a href="/article/'+data[i]['_id']+'">'+data[i]['mtitle']+'</a></td><td>'+data[i]['good']+'</td></tr>';
+						continue;
+					}
+					html += '<tr><td>'+(i+1)+'</td><td width="170"><a href="/article/'+data[i]['_id']+'">'+data[i]['mtitle']+'</td><td>'+data[i]['good']+'</a></td></tr>';
+
+				}
+			}
+			ui.$hotArticle.html(html);
+		}
+	}
+
+	Page.init();
+</script>

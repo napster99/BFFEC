@@ -1,0 +1,313 @@
+表字段
+##projects##
+_id				  :  String,							//项目ID
+name			  :  String,  						 	//项目名称
+type			  :  String, 							//项目类型
+desc			  :  String,   							//项目描述
+resPerson  		  :  String,  						 	//项目负责人 userid
+joinPerson 		  :  Array,  						 	//项目参与者 [usrid,userid,...]
+approvalStartTime : {type:Date,default : Date.now},  	//立项开始时间
+approvalEndTime   : {type:Date,default : Date.now},  	//立项结束时间
+svn 			  :  String,    						//svn地址
+priority 		  : {type:Number,default : 1}, 		 	//项目优先级 1:高 2：中  3:低
+state 			  : {type:Number,default : 5}, 			//项目状态 1:未开始 2:等待审核 3:审核通过 4:审核不通过 5:进行中 6:待结项 7:已完成
+speed 			  : {type:Number,default : 0}, 			//项目总进度
+isCheck			  : {type : Boolean, default : false},  //项目是否需要审核
+comment			  : String 								//项目点评
+
+##users##
+...
+projects : [
+	{
+		'pid'   : '项目ID',
+		'speed' : '项目进度',
+		'startTime' : '开始时间',
+		'endTime' : '结束时间',
+		'role'   : '在该项目中的角色', 
+		'todo' : '用做的模块'
+	}
+]
+...
+
+
+一、项目创建
+	1-地址 /data/project/add
+	2-参数 {
+		name			  //项目名称
+		type		  	  //项目类型
+		desc			  //项目描述
+		resPerson 	      //项目负责人  '用户id'
+		joinPerson  	  //项目参与者 ['用户id','用户id','用户id','用户id']
+		approvalStartTime //立项开始时间
+		approvalEndTime   //立项结束时间
+		svn 			  //svn地址
+		priority		  //项目优先级
+	} 
+	
+
+二、项目列表查询
+	1-地址 /data/project/list
+	2-参数
+	{
+		'name'       : '项目名称',   
+		'state'     : '项目状态',
+		'uid'		: '用户ID', 
+		'pagination' : {           //注：如果不分页，则不传此参数
+			'perCount' : '每页显示几条',
+			'curPage'  : '当前页数'
+		}
+	}
+
+	3-返回数据 （默认是按开始时间降序排列（最近的显示在前））
+	{
+	  "code": "1",
+	  "message": "success",
+	  "data": [
+		{
+		  "_id": "52ca5e0a6073e1b80f000001",
+		  "name": "天枢",
+		  "type": "1",
+		  "desc": "后台管理系统",
+		  "resPerson": {
+			"name": "张三",
+			"uid": "52bd3a0c75dc0af411000008"
+		  },
+		  "svn": "121.45.125.224/web/nodeList",
+		  "comment": "测试评论",
+		  "__v": 0,
+		  "isCheck": false,
+		  "speed": 98.2,
+		  "state": 1,
+		  "priority": 1,
+		  "approvalEndTime": "2014-01-06T07:40:58.164Z",
+		  "approvalStartTime": "2014-01-06T07:40:58.164Z",
+		  "joinPerson": [
+			"52bd3a0c75dc0af411000008",
+			"52bd3a2075dc0af411000009",
+			"52bd3a4475dc0af41100000b"
+		  ],
+		  "joinPersons": [
+			{
+			  "uid": "52bd3a0c75dc0af411000008",
+			  "name": "张三",
+			  "speed": "",
+			  "role": ""
+			},
+			{
+			  "uid": "52bd3a2075dc0af411000009",
+			  "name": "李四",
+			  "speed": "",
+			  "role": ""
+			},
+			{
+			  "uid": "52bd3a4475dc0af41100000b",
+			  "name": "王五",
+			  "speed": "",
+			  "role": ""
+			}
+		  ],
+		  "role": {
+			"uid": "2"
+		  },
+		  "totalCount" : "200"    //总条数
+		}
+	  ]
+	}
+
+三、获取当前用户的信息（uid, name, role ）
+	1-地址 /getCurrentUserInfo  get 请求
+	2-参数 无需传参
+	3-返回数据
+	{
+	  "code": "1",
+	  "message": "success",
+	  "data": {
+		'name' : '张三',
+		'uid'  : '001214553af35',
+		'role' : '1'   //1 普通用户   2 管理员
+	  }
+	}
+
+四、获取所有用户的信息（uidm, name）
+	1-地址 /getAllUserInfo get 请求
+	2-参数 无需传参
+	3-返回数据
+	{
+	  "code": "1",
+	  "message": "success",
+	  "data": [
+		{
+		'name' : '张三',
+		'uid'  : '001214553af35'
+		},
+		{
+		'name' : '李四',
+		'uid'  : '105254553af35'
+		}
+	  ]
+	}
+
+五、查看当前项目信息
+	1-地址 /data/project/list
+	2-参数 {
+		'_id' : '当前项目的ID'
+	}
+	3-返回数据
+	{
+	  "code": "1",
+	  "message": "success",
+	  "data": [              // 注：单条数据也是个数组返回
+		{
+		  "_id": "52ca5e0a6073e1b80f000001",
+		  "name": "天枢",
+		  "type": "1",
+		  "desc": "后台管理系统",
+		  "resPerson": {
+			"name": "张三",
+			"uid": "52bd3a0c75dc0af411000008",
+			"startTime" : '',
+			"endTime" : '',
+			"todo" : ''
+		  },
+		  "svn": "121.45.125.224/web/nodeList",
+		  "comment": "测试评论",
+		  "__v": 0,
+		  "isCheck": false,
+		  "speed": 98.2,
+		  "state": 1,
+		  "priority": 1,
+		  "approvalEndTime": "2014-01-06T07:40:58.164Z",
+		  "approvalStartTime": "2014-01-06T07:40:58.164Z",
+		  "joinPerson": [
+			"52bd3a0c75dc0af411000008",
+			"52bd3a2075dc0af411000009",
+			"52bd3a4475dc0af41100000b"
+		  ],
+		  "joinPersons": [
+			{
+			  "uid": "52bd3a0c75dc0af411000008",
+			  "name": "张三",
+			  "speed": "",
+			  "role": "",
+			  "startTime" : '',
+			  "endTime" : '',
+			  "todo" : ''
+			},
+			{
+			  "uid": "52bd3a2075dc0af411000009",
+			  "name": "李四",
+			  "speed": "",
+			  "role": "",
+			  "startTime" : '',
+			  "endTime" : '',
+			  "todo" : ''
+			},
+			{
+			  "uid": "52bd3a4475dc0af41100000b",
+			  "name": "王五",
+			  "speed": "",
+			  "role": "",
+			  "startTime" : '',
+			  "endTime" : '',
+			  "todo" : ''
+			}
+		  ],
+		  "role": {
+			"uid": "2"
+		  }
+		}
+	  ]
+	}
+
+六、更新项目信息
+	1-地址 /data/project/edit
+	2-参数
+	{
+		'conditionObj' : {
+			'_id' : '项目ID'
+		},
+		'fieldObj' : {
+			name			  //项目名称
+			type		  	  //项目类型
+			desc			  //项目描述
+			resPerson 	      //项目负责人  '用户id'
+			joinPerson  	  //项目参与者 ['用户id','用户id','用户id','用户id']
+			approvalStartTime //立项开始时间
+			approvalEndTime   //立项结束时间
+			state 			  //项目状态
+			svn 			  //svn地址
+			priority		  //项目优先级
+			speed 			  //项目进度
+		}
+	}
+	3-返回数据
+	{
+	  "code": "1",
+	  "message": "success"
+	} or
+	{
+	  "code": "0",
+	  "message": "failure"
+	}
+
+七、项目删除
+	1-地址 /data/project/del
+	2-参数
+	{
+		'conditionObj' : {
+			'_id' : '项目ID'
+		}
+	}
+
+	3-返回数据
+	{
+	  "code": "1",
+	  "message": "success"
+	} or
+	{
+	  "code": "0",
+	  "message": "failure"
+	}
+
+八、个人更新进度
+	1-地址 /data/user/projectEdit
+	2-参数
+	{
+		'conditionObj' : {
+			'pid' : '项目ID',
+			'uid' : '用户ID'
+		},
+		'fieldObj' : {
+			'speed' 	: '项目进度',
+			'startTime' : '项目开始时间',
+			'endTime' 	: '项目结束时间',
+			'todo'    	: '要完成的项目模块',
+			'role'		: '在该项目中的角色' (不变)
+		}
+	}
+		
+	3-返回数据
+	{
+	  "code": "1",
+	  "message": "success"
+	} or
+	{
+	  "code": "0",
+	  "message": "failure"
+	}
+
+九、人员明细列表
+	1-地址 /data/user/projectList
+	2-参数 无需传参
+	
+	3-返回数据
+	{
+		'uname' : '',
+		'pname' : '',
+		'resPerson' : '',
+		'joinPerson' : '',
+		'startTime' : '',
+		'endTime'   : '',
+		'state' : ''
+	}
+

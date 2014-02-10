@@ -2,9 +2,8 @@ var CommonJS = {
 	changeTime : function(time) {
 		var curTime = +new Date();
 		time = +new Date(time);
-		
 		if(curTime - time <= 60*60) {
-			return '1小时前';
+			return '1小时内';
 		}
 		var hour = parseInt((curTime-time)/(1000*60*60));
 		if(hour <= 24) {

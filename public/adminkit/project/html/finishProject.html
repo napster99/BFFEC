@@ -1,0 +1,68 @@
+<!-- 1区：表单头部（title） -->
+<div class="heading-buttons">
+  <h3>结项</h3>
+  <div class="clearfix"></div>
+</div>
+<div class="separator bottom"></div>
+<!-- 1区：表单头部（title） End -->
+
+<div class="innerLR" ms-controller="page">
+  <!-- 左列 -->
+  <div class="col-sm-6">
+    <div class="form-group">
+      <label for="projectName">项目名称：</label>
+      <span>{{projectInfo.name}}</span>
+    </div>
+    <div class="form-group">
+      <label for="projectType">项目类型：</label>
+      <span>{{projectInfo.type}}</span>
+    </div>
+    <div class="form-group">
+      <label for="projectDesc">项目描述：</label>
+      <span>{{projectInfo.desc}}</span>
+    </div>
+    <div class="form-group">
+      <label for="projectPM">项目负责人：</label>
+      <span>{{resPersonName}}</span>
+    </div>
+    <div class="form-group">
+      <label for="projectPR">项目参与者：</label>
+      <div ms-each-el="joinPersons">
+        <p>{{el.name + "( 时间点：" + (el.startTime == null ? '无' : el.startTime) + ' 至 ' + (el.endTime == null ? '无' : el.endTime) + " ) ( 进度: " + (el.speed.length == 0 ? '无' : el.speed) +　"% ) ( 负责模块:" + (el.todo.length == 0 ? '无' : el.todo) + " )"}}</p>
+      </div>
+    </div>
+    <div class="form-group">   
+      <label class="label-control">立项时间：</label>
+      <span>{{approvalStartTime.substr(0, 10)}}</span> 
+      <label class="label-control"> 至 </label>
+      <span>{{approvalEndTime.substr(0, 10)}}</span>
+    </div>
+    <div class="form-group">
+      <label for="projectSvn">项目svn地址：</label>
+      <span>{{projectInfo.svn}}</span>
+    </div>
+    <div class="form-group">
+      <label for="projectPriority">项目优先级：</label>
+      <span>{{projectInfo.priority}}</span>
+    </div>
+    <!-- <div class="form-group">
+      <label for="inputMoney">项目状态：</label>
+      <span>{{states[projectInfo.state]}}</span>
+    </div> -->
+    <div class="form-group">
+      <label for="inputMoney">项目总进度：</label>
+      <span>{{projectInfo.speed}}</span>
+    </div>
+    <div class="form-group">
+      <label for="">备注：</label>
+      <textarea class="form-control" rows="2" ms-duplex="comment"></textarea>
+    </div>
+    <!-- 3区：按钮 -->
+    <div class="form-actions right">
+      <button type="button" class="btn btn-icon btn-default glyphicons circle_remove" ms-click="backBtn"><i></i>返回</button>
+      <button type="submit" class="btn btn-icon btn-primary glyphicons circle_ok" ms-click="submitBtn"><i></i>结项</button>
+    </div>
+    <!-- 3区：按钮end -->
+  </div>
+  <script src="scripts/finishProject.js"></script>
+</div>

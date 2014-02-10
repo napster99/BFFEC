@@ -4,7 +4,7 @@
                 <li class="active"><a href="#lA" data-toggle="tab">成员列表</a></li>
                 <li class=""><a href="#lB" data-toggle="tab">日报管理</a></li>
                 <li class=""><a href="#lC" data-toggle="tab">话题管理</a></li>
-               	<li class=""><a href="#lD" data-toggle="tab">积分日志</a></li>
+               	<li class=""><a href="#lD" data-toggle="tab">积分管理</a></li>
                	<li class=""><a href="#lE" data-toggle="tab">排行榜</a></li>
             </ul>
 		<div class="tab-content">
@@ -50,6 +50,11 @@
 				    			</td>
 				    		</tr>
 				    	</thead>
+				    	<tfoot>
+				    		<tr>
+				    			<td colspan="4"><div id="dayPagi" class="pagination" current_page="1"></div></td>
+				    		</tr>
+				    	</tfoot>
 				    	<tbody id="dailyCon">
 				    		<% for(var i=0; i<messages.length; i++) { %>
 				    			<tr>
@@ -112,39 +117,67 @@
 			    </table>
 			</div>
 			<div class="tab-pane" id="lD">
-				<table cellspacing="0" class="table table-primary table-hover" align="center">
-			    	<thead align="center">
-			    		<tr>
-			    			<td>
-			    				<strong>积分日志</strong>
-			    			</td>
-			    		</tr>
-			    	</thead>
-			    	<tfoot>
-			    		 <tr>
-					      <td colspan="4">
-						      <div id="logPagina" class="pagination">
-						      		<ul>
-						      			<li class="active">
-						      				<a title="Current page is 1">1</a>
-						      			</li>
-						      			<li>
-						      				<a title="Go to page 2">2</a>
-						      			</li>
-						      			<li>
-						      				<a title="Go to next page">&gt;</a>
-						      			</li>
-						      			<li>
-						      				<a title="Go to last page">&gt;&gt;</a>
-						      			</li>
-						      		</ul>
-						      </div>
-					      </td>
-					    </tr>
-			    	</tfoot>
-			    	<tbody id="logContent">
-		    		</tbody>
-			    </table>
+				<ul class="nav nav-tabs" style="max-height:none;"> 
+	                <li class="active"><a href="#lAd" data-toggle="tab">积分日志</a></li> 
+	               	<li class=""><a href="#lEd" data-toggle="tab">积分增减</a></li> 
+	            </ul>
+	            <div class="tab-content">
+		            <div class="tab-pane active" id="lAd">
+		            	<table cellspacing="0" class="table table-primary table-hover" align="center">
+		            		<thead>
+		            			<tr>
+		            				<td><strong>姓名</strong></td>
+		            				<td><strong>方式</strong></td>
+		            				<td><strong>总分</strong></td>
+		            				<td><strong>积分</strong></td>
+		            				<td style="width:150px;"><strong>说明</strong></td>
+		            				<td><strong>时间</strong></td>
+		            			</tr>
+		            		</thead>
+					    	<tfoot>
+					    		 <tr>
+							      <td colspan="6">
+								      <div id="logPagina" class="pagination">
+								      		<ul>
+								      			<li class="active">
+								      				<a title="Current page is 1">1</a>
+								      			</li>
+								      			<li>
+								      				<a title="Go to page 2">2</a>
+								      			</li>
+								      			<li>
+								      				<a title="Go to next page">&gt;</a>
+								      			</li>
+								      			<li>
+								      				<a title="Go to last page">&gt;&gt;</a>
+								      			</li>
+								      		</ul>
+								      </div>
+							      </td>
+							    </tr>
+					    	</tfoot>
+					    	<tbody id="logContent">
+				    		</tbody>
+					    </table>
+		            </div>
+		            <div class="tab-pane" id="lEd">
+		            	<form method="post" action="/changeScoreByAdmin" >
+		            		<div>
+		            			<label class="span-6">成员：</label><select id="userList" name="uid" required class="span-6"></select>
+		            		</div>
+		            		<div>
+		            			<label class="span-6">积分：</label><input type="number" name="score"  class="span-6" value="0">
+		            		</div>
+		            		<div>
+		            			<label class="span-6">说明：</label><input type="text" name="mark" required class="span-6" />
+		            		</div>
+		            		<div style="padding-left:62px; margin-top:15px;">
+		            			<button type="submit" class="btn btn-success">提交</button>
+		            			<button type="reset" class="btn">重置</button>
+		            		</div>
+		            	</form> 
+		            </div>
+				</div>
 			</div>
 			<div class="tab-pane" id="lE">
 				<table cellspacing="0" class="table" align="center">

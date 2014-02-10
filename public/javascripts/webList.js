@@ -20,22 +20,23 @@ $(function() {
     $logContent : $('#logContent'),
     $dailyStatus : $('#dailyStatus'),
     $dailyCon    : $('#dailyCon'),
-    $msgSeeDetail : $('#msgSeeDetail')
+    $msgSeeDetail : $('#msgSeeDetail'),
+    $dayPagi : $('#dayPagi'),
+    $userList : $('#userList')   //user list
   }
 
   var Page = {
     init : function(){
       var self = this;
-      this.view();
       this.addEventListener();
+      this.view();
       this.initJsChart();
       this.getLogScoreAjax();
       this.getDailyListByStatus(1);
+      this.getUserList();
     },
     view : function() {
-
-
-        
+      $('.nav-tabs').find('a[href='+window.location.hash+']').trigger('click');
     },
     addEventListener : function() {
       var self = this;
@@ -84,6 +85,14 @@ $(function() {
         var status = this.value;
         self.getDailyListByStatus(status);
       });
+
+      $('a[data-toggle=tab]').click(function() {
+        if(this.href.indexOf('#lB') > -1) {
+            ui.$msgDetail.hide();
+            ui.$msgSeeDetail.hide();
+            ui.$msgList.show();
+        }
+      })
     },
 
     changeMessageStatus : function(mid,status,uid,reviews,score) {
@@ -158,7 +167,7 @@ $(function() {
           myChart.setTitle('成员积分排行榜');
           myChart.setTitleColor('#8E8E8E');
           myChart.setAxisNameX('');
-          myChart.setAxisNameY('%');
+          myChart.setAxisNameY('积分');
           myChart.setAxisColor('#C4C4C4');
           myChart.setAxisNameFontSize(16);
           myChart.setAxisNameColor('#999');
@@ -174,7 +183,7 @@ $(function() {
           myChart.setBarBorderColor('#C4C4C4');
           myChart.setBarSpacingRatio(50);
           myChart.setGrid(false);
-          myChart.setSize(616, 321);
+          myChart.setSize(800, 321);
           myChart.draw();
           
         },
@@ -189,16 +198,16 @@ $(function() {
     renderPagi : function(page,totalPages,which) {
       var self = this;
        var options = { 
-                   currentPage: page || 1, 
-                    totalPages: totalPages, 
-                 numberOfPages:5, 
-                onPageClicked : function(event,originalEvent,type,page) { 
-                    var tid = $(this)[0].id;
-                    self.getLogScoreAjax(page);
-                  } 
-              } 
-              ui.$logPagina.bootstrapPaginator(options); 
-    },
+          currentPage: page || 1, 
+          totalPages: totalPages, 
+          numberOfPages:5, 
+          onPageClicked : function(event,originalEvent,type,page) { 
+            var tid = $(this)[0].id;
+            self.getLogScoreAjax(page);
+            } 
+          } 
+        ui.$logPagina.bootstrapPaginator(options); 
+},
     getLogScoreAjax : function(curPage) {
       var self = this;
       var options = {
@@ -226,29 +235,48 @@ $(function() {
       for(var i=0,len=data.length; i<len; i++) {
         html += '<tr uid="'+data[i]['uid']+'">'
         +'<td>'+data[i]['name']+'</td>'
-        +'<td>通过'+CommonJS.logsType[data[i]['type']]+'</td>'
+        +'<td>'+CommonJS.logsType[data[i]['type']]+'</td>'
+        +'<td>'+data[i]['totalScore']+'分</td>'
         +'<td>'+data[i]['score']+'分</td>'
+        +'<td>'+data[i]['mark']+'</td>'
         +'<td>'+data[i]['time']+'</td>'
         +'</tr>';
       }
       ui.$logContent.html(html);
     },
 
-    getDailyListByStatus : function(status) {
+    getDailyListByStatus : function(status,curPage) {
       var self = this;
       var options = {
         'url' : '/getDailyListByStatus',
         'dataType' : 'json',
         'type' : 'GET',
-        'data' : {status : status},
+        'data' : {status : status,curPage : curPage || 1},
         'success' : function(data) {
-          self.renderDailyList(data,status);
+          self.renderDailyList(data['data'],status);
+          if(data['totalPages'] > 0)
+          self.renderDailyPagi(data['page'],data['totalPages'],status);
         },
         'error' : function(err) {
           
         }
       }
       $.ajax(options);
+    },
+
+    //日报列表分页
+    renderDailyPagi : function(page,totalPages,status) {
+      var self = this;
+       var options = { 
+           currentPage: page || 1, 
+            totalPages: totalPages, 
+         numberOfPages:5, 
+        onPageClicked : function(event,originalEvent,type,page) { 
+            var tid = $(this)[0].id;
+            self.getDailyListByStatus(status,page);
+          } 
+      } 
+      ui.$dayPagi.bootstrapPaginator(options); 
     },
 
     renderDailyList : function(data,status) {
@@ -307,6 +335,33 @@ $(function() {
       ui.$msgList.hide();
       ui.$msgDetail.hide();
       ui.$msgSeeDetail.show();
+    },
+
+    getUserList : function() {
+      var self = this;
+      var options = {
+        'url' : '/data/user/list',
+        'dataType' : 'json',
+        'type' : 'GET',
+        'success' : function(data) {
+          if(data['code'] == '1') {
+            self.renderUserList(data['data']);
+          }
+        },
+        'error' : function(err) {
+          console.log(err)
+        }
+      }
+      $.ajax(options);
+    },
+
+    renderUserList : function(data) {
+      var html = '<option value="">请选择</option>';
+      for(var i=0; i<data.length; i++) {
+        html += '<option value="'+data[i]['_id']+'">'+data[i]['name']+'</option>'
+      }
+
+      ui.$userList.html(html);
     }
 
 

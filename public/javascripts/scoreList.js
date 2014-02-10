@@ -72,8 +72,10 @@ $(function() {
       for(var i=0,len=data.length; i<len; i++) {
         html += '<tr uid="'+data[i]['uid']+'">'
         +'<td>'+data[i]['name']+'</td>'
-        +'<td>通过'+CommonJS.logsType[data[i]['type']]+'</td>'
+        +'<td>'+CommonJS.logsType[data[i]['type']]+'</td>'
+        +'<td>'+data[i]['totalScore']+'分</td>'
         +'<td>'+data[i]['score']+'分</td>'
+        +'<td>'+data[i]['mark']+'</td>'
         +'<td>'+data[i]['time']+'</td>'
         +'</tr>';
       }

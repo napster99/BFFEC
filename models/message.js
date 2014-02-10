@@ -11,7 +11,10 @@ var messageSchema = new Schema({
   mtime : {type:Date,default:Date.now},
   clickCount : {type:Number,default:0},
   type : String,
-  pass : {type:String,default:'passed'}  // passed unpass waiting
+  pass : {type:String,default:'passed'}, // passed unpass waiting
+  
+  good : {type : Number, default:0},
+  articleURL : String
 });
 
 messageSchema.static('saveMessage',function(message,callback) {
@@ -22,8 +25,8 @@ messageSchema.static('saveMessage',function(message,callback) {
 
 
 //根据第几页页数获得对应的消息列表
-messageSchema.static('getMessagesByPage',function(page,perCount,callback) {
-	return this.find({type:'normal'},null,{skip:(page-1)*perCount,limit:perCount,sort:{mtime:'-1'}},function(err,messags) {
+messageSchema.static('getMessagesByPage',function(type, page,perCount,callback) {
+	return this.find({type:type},null,{skip:(page-1)*perCount,limit:perCount,sort:{mtime:'-1'}},function(err,messags) {
 		callback(err,messags);
 	})
 })
@@ -36,14 +39,25 @@ messageSchema.static('getMessageByMid',function(mid,callback) {
 	})
 })
 
-//通过mid更改点击数
-messageSchema.static('updateMessagecNumByMid',function(mid,callback) {
+//通过mid更改属性
+messageSchema.static('updateMessagecNumByMid',function(mid, which, callback) {
 	var self = this;
-	return this.where({'_id':mid}).findOne(function(err,message) {
-			var count = parseInt(message['clickCount']) + 1;
-			self.update({'_id':mid},{'clickCount':count},function(err,message) {
-				callback(err,message);
-			})
+	return this.where({'_id':mid}).findOne(function(err, message) {
+			var count = parseInt(message[which]) + 1;
+			if(count == 12) {
+				return callback(err,'max');
+			}
+			if(which === 'good') {
+				self.update({'_id':mid},{'good':count},function(err,message) {
+					console.log(count)
+					callback(err, count);
+				})	
+			}else{
+				self.update({'_id':mid},{'clickCount':count},function(err,message) {
+					callback(err, message);
+				})
+			}
+			
 		})
 
 		// return this.findOneAndUpdate();
@@ -54,7 +68,7 @@ messageSchema.static('updateMessagecNumByMid',function(mid,callback) {
 
 //根据第几页页数、uid 获得消息 日报 周报 列表
 messageSchema.static('getMessagesByMore',function(page,perCount,uid,type,callback) {
-	return this.find({type:type,uid:uid},null,{skip:(page-1)*perCount,limit:perCount},function(err,messags) {
+	return this.find({type:type,uid:uid},null,{skip:(page-1)*perCount,limit:perCount,sort:{mtime:-1}},function(err,messags) {
 		callback(err,messags);
 	})
 })
@@ -124,6 +138,19 @@ messageSchema.static('getTopicCount',function(uid,callback) {
   }
 }) 
 
+//获取文章的条数
+messageSchema.static('getArticleCount',function(uid,callback) {
+  if(uid) {
+    return this.find({'uid':uid,'type':'article'}).count(function (err, count) {
+       callback(err,count);
+    });
+  }else{
+    return this.find({'type':'article'}).count(function (err, count) {
+       callback(err,count);
+    });
+  }
+}) 
+
 //根据第几页页数 获得话题列表
 messageSchema.static('getTopicByMore',function(uid,page,perCount,callback) {
   if(uid) {
@@ -137,27 +164,46 @@ messageSchema.static('getTopicByMore',function(uid,page,perCount,callback) {
   }
 });
 
+//根据第几页页数 获得文章列表
+messageSchema.static('getArticleByMore',function(uid,page,perCount,callback) {
+  if(uid) {
+    return this.find({'uid':uid,'type':'article'},null,{skip:(page-1)*perCount,limit:perCount,sort:{mtime:'-1'}},function(err,messags) {
+      callback(err,messags);
+    })
+  }else{
+    return this.find({'type':'article'},null,{skip:(page-1)*perCount,limit:perCount,sort:{mtime:'-1'}},function(err,messags) {
+      callback(err,messags);
+    })
+  }
+});
+
 
 //根据状态不同获取日报
-messageSchema.static('getDailyListByStatus',function(status,callback) {
+messageSchema.static('getDailyListByStatus',function(status,page,perCount,callback) {
 	if(status === '') {
-		return this.find({'type':'day'},function(err,messags) {
+		return this.find({'type':'day'},null,{skip:(page-1)*perCount,limit:perCount,sort:{mtime:'-1'}},function(err,messags) {
 			callback(err,messags);
 		})
 	}else{
-		return this.find({'type':'day','pass':status},function(err,messags) {
+		return this.find({'type':'day','pass':status},null,{skip:(page-1)*perCount,limit:perCount,sort:{mtime:'-1'}},function(err,messags) {
 			callback(err,messags);
 		})
 	}
 })
 
 
+//获取热门文章
+messageSchema.static('getHotArticles',function(callback) {
+	return this.find({'type': 'article'},null,{'sort': { 'good':'-1'},'limit': 10},function (err, messags) {
+			 callback(err,messags);
+		});
+}) 
 
 //+++++++++++++++Redis Four START++++++++++++++++
 
 //list
 messageSchema.static('list',function(options,callback) {
-	return this.find(options,function(err,users) {
+	return this.find(options,null, {sort:{mtime:'-1'}},function(err,users) {
 		callback(err,users);
 	})
 })

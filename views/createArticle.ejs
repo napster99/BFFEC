@@ -1,0 +1,174 @@
+<%- include header %>
+
+<% if(locals.error) { %>
+<div class="alert alert-error" style="display:none;">
+	<%= locals.error %>
+</div>
+<% } %>
+
+<div id="wrapper">
+	<div id="main">
+		<div id="sidebar">
+			<div id="sidebar">
+			  <div class="panel">
+			    <div class="header">
+			      <span class="col_fade">文章发布步骤</span>
+			    </div>
+			    <div class="inner">
+			      <ol>
+			        <li>填写标题</li>
+			        <li>填写原文链接地址</li>
+			        <li>抓取网页内容</li>
+			        <li>确认后分享文章 ->添加介绍，发布提交</li>
+			      </ol>
+			    </div>
+			  </div>
+			  <div class="panel">
+			    <div class="header">
+			      <span class="col_fade">文章发布指南</span>
+			    </div>
+			    <div class="inner">
+			      <ol>
+			        <li>尽量把文章要点浓缩到标题里</li>
+			        <li>增加被赞的几率</li>
+			      </ol>
+			    </div>
+			  </div>
+			</div>
+		</div>
+		<div id="content">
+			<% if(!locals.user) { %>
+				<div class="panel">
+					<div class="header">
+						<ul class="breadcrumb">
+							<li><a href="/">主页</a><span class="divider">/</span></li>
+							<li class="active">通知</li>
+						</ul>
+					</div>
+					<div class="inner clearfix">
+						<a href="/login" id="create_topic_btn" class="create-login-btn" style="float:left;"> 
+							<button class="btn btn-success">马上登陆</button> 
+						</a>
+						<div class="alert alert-error">	
+							<strong>未登入用户不能分享文章。</strong>
+						</div>
+					</div>
+				</div>
+			<%  } else { %>
+				<div class="panel">
+				<div class="header">
+					<ol class="breadcrumb">
+						<li><a href="/">主页</a><span class="divider">/</span></li>
+						<li class="active">分享文章</li>
+					</ol>
+				</div>
+				<div class="inner post">
+					<form id="create_topic_form" action="/article/create" method="post">
+						<fieldset>
+							<label class="bold" for="title">标题</label>
+						<!-- 	<input class="input-xlarge span9" id="title" name="title" placeholder="请在此输入标题，字数控制在10到100个之间" /> -->
+							<input id="title" name="title" type="text" class="input-xlarge span9" />
+							<label class="bold" for="articleURL">原文链接</label>
+							<input id="articleURL" name="articleURL" type="text" class="input-xlarge span7" placeholder="如：http://www.icodein.com/codein/code_92.html" /><button id="getContentBtn" disabled type="button" class="btn btn-success" style="margin:-10px 0px 0px 21px;">内容抓取</button>（可选）
+							<!-- <label class="label label-warning">注：暂时只支持http://www.icodein.com/下的文章</label> -->
+							<label class="bold" for="t_content">我的介绍</label>
+							<div style="width:700px;">
+								<textarea name="content" rows="18" style="width:100%;"></textarea>
+							</div>
+							<button id="submit_btn" type="submit" class="btn">发布</button>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+			<% } %>
+		</div>
+	</div>
+</div>
+<div class="clearfix"></div>
+<%- include footer %>
+
+<script>
+	var Page = {
+		ui : {
+			$submit_btn : $('#submit_btn')
+		   ,$getContentBtn : $('#getContentBtn')
+		   ,$title	: $('#title')
+		   ,$articleURL : $('#articleURL')
+		   ,$content : $('textarea[name=content]')
+		},
+		data : {
+			editor : null,
+			o : null
+		},
+		init : function() {
+			this.view();
+			this.listen();
+		},
+		view : function() {
+			var that = this;
+			KindEditor.ready(function(K) {
+			that.data.editor = K.create('textarea[name="content"]', {
+				allowFileManager : true
+			});
+		});
+		},
+		listen : function() {
+			var that = this;
+			this.ui.$getContentBtn.click(function() {
+				var articleURL = that.ui.$articleURL.val();
+				if(articleURL == '') {
+					alert('请输入原文地址！');
+				}else{
+					var _this = this;
+					var count = 0;
+					$(_this).attr('disabled',true).text('正在获取...0s');
+					that.data.o = setInterval(function() {
+						count++;
+						$(_this).text('正在获取...'+count+'s');
+					},1000)
+					that.getURLContentAjax(articleURL);
+				}
+			})
+
+			this.ui.$submit_btn.click(function() {
+				var title = that.ui.$title.val();
+				if(title == '') {
+					that.ui.$title.focus()
+					return false;
+				}
+			});
+
+			this.ui.$articleURL.keyup(function() {
+				var value = this.value;
+				var website = 'http://www.icodein.com/';
+
+				if(value.indexOf(website) > -1) {
+					that.ui.$getContentBtn.attr('disabled',false);
+				}else{
+					that.ui.$getContentBtn.attr('disabled',true);
+				}
+			})
+		},
+		getURLContentAjax : function(articleURL) {
+			var that = this;
+			var options = {
+				url : '/getURLContentAjax'
+				,type : 'GET'
+				,data : {'articleURL' : articleURL }
+				,success : function(data) {
+					that.ui.$getContentBtn.attr('disabled',false).text('内容抓取');
+					that.data.editor.html(data['data']);
+					clearInterval(that.data.o);
+				}
+				,failure : function(err) {
+
+				}
+			}
+			$.ajax(options);
+		}
+
+	}
+
+	Page.init();
+
+</script>

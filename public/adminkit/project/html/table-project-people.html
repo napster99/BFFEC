@@ -1,0 +1,109 @@
+<!-- 1区：标题 -->
+<div class="heading-buttons">
+  <h3>人员明细</h3>
+  <div class="clearfix"></div>
+</div>
+<div class="separator bottom"></div>
+<!-- 1区：标题 End -->
+<div class="innerLR" ms-controller="page">
+  <!-- 2区：搜索 -->
+  <div class="filter-bar">
+    <form action="url.php" class="form-inline">
+      <div class="form-group col-md-3 padding-none">
+        <label class="label-control">项目状态：</label>
+        <div class="col-md-8 padding-none">
+          <select class="form-control" name="state" ms-each-el="stateArray" >
+            <option ms-value="el.id">{{el.name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group col-md-2">
+        <label class="sr-only" for="inputName">项目名称：</label>
+        <input type="text" class="form-control" placeholder="项目名称" >
+      </div>
+      <div class="form-group col-md-2">
+        <label class="sr-only" for="inputName">项目负责人：</label>
+        <input type="text" class="form-control" placeholder="项目负责人" >
+      </div>
+      <div class="form-group col-md-2">
+        <label class="sr-only" for="inputName">项目参与者：</label>
+        <input type="text" class="form-control" placeholder="项目参与者" >
+      </div>
+        <button class="btn btn-default" ms-click="searchBtn">搜索</button>
+    </form>
+  </div>
+  <!-- 2区：搜索 End -->
+  <!-- 3区：表格 -->
+  <table class="table table-bordered table-condensed table-striped table-hover table-primary">
+    <thead>
+      <tr>
+        <th>姓名</th>
+        <th>项目名称</th>
+        <th>项目负责人</th>
+        <th>项目状态</th>
+        <th>项目时间点</th>
+      </tr>
+    </thead>
+    <tbody ms-each-el="peopleList">
+      <tr>
+        <td>{{el.uname}}</td>
+        <td>{{decodeURIComponent(el.pname.name)}}</td>
+        <td>{{el.resPerson.name}}</td>
+        <td>{{states[el.state]}}</td>
+        <td>{{el.pname.approvalStartTime.substr(0, 10) + ' 至 ' + el.pname.approvalEndTime.substr(0, 10)}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- 3区：表格 End -->
+  <script src="scripts/table-project-people.js"></script>
+  <script type="text/javascript">
+    // yp.ready(function(){
+    //   avalon.define('page', function(vm){
+    //     vm.projects = dataJson.projects;
+    //     vm.membersProject = membersProject;
+    //     /* 搜索功能 */
+    //     vm.projectName = '';
+    //     vm.projectLeader = '';
+    //     vm.participator = '';
+    //     vm.selectBox = 0;
+    //     var store = vm.projects;
+    //     // 搜索按钮
+    //     vm.searchBtn = function() {
+    //       var result = [];
+    //       for(var i = 0, len = store.length; i < len; i++) {
+    //         if(
+    //             (!vm.projectLeader.length || store[i].project.leader.indexOf(vm.projectLeader) != -1) && 
+    //             (!vm.projectName.length || store[i].project.name.indexOf(vm.projectName) != -1) && 
+    //             (!vm.participator.length || store[i].name.indexOf(vm.participator) != -1)
+    //           ){
+    //           result.push(store[i]);
+    //         }
+    //       }
+    //       vm.membersProject = result;
+    //       result = null;
+    //     };
+    //     // 下拉菜单
+    //     vm.$watch('selectBox', function(newValue,oldValue) {
+    //       var result = [],
+    //           status = "";
+    //       newValue == 0 ? status = '请选择' : newValue == 1 ? status = '未开始' : newValue == 2 ? status = '在进行' : status = '已完成';
+    //       if(newValue == 0) {
+    //         result = membersProject;
+    //       } else{
+    //         for(var i = 0, len = membersProject.length; i < len; i++) {
+    //           if(membersProject[i].project.status.indexOf(status) != -1) {
+    //             result.push(membersProject[i]);
+    //           }
+    //         }
+    //       }
+    //       store = result;
+    //       result = null;
+    //       status = undefined;
+    //     });
+    //     /* 搜索功能 end*/
+    //   });
+
+    //   avalon.scan();
+    // });
+  </script>
+</div>

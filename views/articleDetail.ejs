@@ -1,0 +1,311 @@
+<%- include header %>
+<!--
+<% if(locals.success && locals.user) { %>
+<div class="alert alert-success" style="display:none;">
+	<%= locals.success %>
+</div>
+<% } %>
+
+<% if(locals.success && locals.success === '登出成功') { %>
+<div class="alert alert-success" style="display:none;">
+	<%= locals.success %>
+</div>
+<% } %>
+-->
+
+<% if(locals.error) { %>
+<div class="alert alert-error" style="display:none;">
+	<%= locals.error %>
+</div>
+<% } %>
+
+<div id="wrapper">
+	<div id="main">
+		<div id="sidebar">
+			<% if(!user) { %>
+				<div class="panel">
+			      <div class="inner">
+			        <p>BFCloub：边锋前端技术交流社区</p>
+			        <div>
+			          <!--a href="/addUser"><button class="btn">现在注册</button></a-->
+			          <span>已注册用户请<a class="light" href="/login"> 登录</a></span>
+			        </div>
+			      </div>
+			  </div>
+			<%  } else { %>
+				<div class="panel">
+			    	<input type="hidden" value="<%= user._id || user.uid %>" id="uid" />
+			      <div class="header">
+				      <span class="col_fade">个人信息<span>
+				      </span></span></div>
+				      <div class="inner">
+				        <div class="user_card">
+							<div>
+								<a class="user_avatar" href="/user/<%= otheruser._id %>">
+									<img src="<%= otheruser.avatar %>" title="<%= otheruser._id %>">
+								</a>
+								<span class="user_name">
+									<a class="dark" href="/user/<%= otheruser._id %>"> <%= otheruser.name %></a>
+									<input id="signStatus" type="hidden" value="<%= otheruser.curSign || user.curSign %>" />
+									<%  if(user._id == otheruser._id) { %>
+									<button id="signIn" class="btn btn-success">每日签到</button>
+									<% } %>
+								</span>
+								<div class="board clearfix">
+									<div class="floor">
+										<span>话题：<span name="normal" class="big"></span>个</span>
+										<div class="space"></div>
+										<span>日报：<span name="day" class="big"></span>篇</span>
+										<div class="space"></div>
+										<span>积分：<%=  otheruser.score %>分</span>
+									</div>
+								</div>
+							</div>
+						</div>
+			      </div>
+			  </div>
+			<% } %>
+			  <div class="panel">
+			      <div class="inner">
+			         <table class="table">
+			         	<thead>
+			         		<tr>
+			         			<td colspan="3">热门文章</td>
+			         		</tr>
+			         	</thead>
+			       		<tbody align="left" id="hotArticle">
+			       		</tbody>
+			         </table>
+			      </div>
+			  </div>
+		</div>
+		<div id="content">
+			<div class="panel">
+				<div class="header">
+					<div style="float:right; margin-right:30px;">
+						<img id="dwyou" src="/images/dwyou.gif" />
+						点赞：
+						<i class="icon-thumbs-up" title="赞一个" id="goodArticle" style="margin-top:0px; cursor: pointer;" ></i>
+						<em id="goodNum"><%= articleDetail['good'] %></em>
+						<input type="hidden" id="curMid" value="<%= articleDetail['mid'] %>">
+						<em id="alreayGood" style="display:none;">已赞</em>
+					</div>
+					<ul class="breadcrumb">
+						<li><a href="/article">文章列表</a><span class="divider">/</span></li>
+						<li class="active">文章详情</li>
+					</ul>
+				</div>
+				<div class="inner topic">
+					<h3>
+						<%= articleDetail['mtitle']  %>
+					</h3>
+					<div class="well">
+						<label>原文链接地址：</label>
+						<a target="_blank" href="<%= articleDetail['articleURL'] %>"><%= articleDetail['articleURL'] %></a>
+					</div>
+					<hr>
+					<div class="topic_content">
+						<div class="markdown-text">
+							<%- articleDetail['mcontent'] %>
+						</div>
+					</div>
+					<hr>
+					<!--div class="tags">
+						<span class="col_fade">标签：无</span>  
+					</div-->
+					<div class="changes">
+						<span class="col_fade">
+							<a class="dark" href="/user/oluul"><%= articleDetail['mname'] %></a> 在 <%= articleDetail['mtime'] %> 发布
+						</span>
+					</div>
+				</div>
+			</div>
+
+				<div class="panel">
+					<div class="header">
+					<span class="col_fade"><%= articleDetail['mReplyObj'].length %>  回复</span>
+					</div>
+			 		<% for(var i=0; i<articleDetail['mReplyObj'].length; i++) { %>
+					<div class="cell reply_area reply_item" id="reply<%=i%>" reply_id="5293576aa6957a0809654d1b">
+						<a id="5293576aa6957a0809654d1b"></a>
+						<div class="author_content">
+							<div class="user_avatar block">
+								<a target="_blank" href="/user/<%= articleDetail['mReplyObj'][i]['uid'] %>"><img src="<%= articleDetail['mReplyObj'][i]['avatar'] %>" title="<%= articleDetail['mReplyObj'][i]['uname'] %>"></a>
+							</div>
+							<div class="user_info">
+								<span class="reply_author">
+									<a class="dark" href="/user/<%= articleDetail['mReplyObj'][i]['uid'] %>"><%= articleDetail['mReplyObj'][i]['uname'] %></a>
+								</span>
+								<span class="col_fade">
+									<a target="_blank" href="#5293576aa6957a0809654d1b"><%= articleDetail['mReplyObj'][i]['rtime'] %></a>
+								</span>
+							</div>
+							<div class="user_action">
+								<span class="col_fade">#<%=i+1%></span>	
+							</div>
+						</div>	
+						<div class="reply_content">
+						<%- articleDetail['mReplyObj'][i]['rcontent'] %> 
+						</div>	
+					</div>
+					<% } %>
+				</div>
+
+			<% if(locals.user) { %>
+			<div class="panel">
+				<div class="header">
+					<span class="col_fade">添加回复</span>
+				</div>
+				<div class="inner reply">
+					<form id="reply_form" action="/reply/<%= articleDetail['mid'] %>" method="post">
+						<div class="tabbable">
+							<div class="tab-content">
+								<div style="width:700px;">
+								<textarea name="content" rows="18" style="width:100%;"></textarea>
+							</div>
+							</div>
+							<input type="hidden" name="which" value="article">
+						</div>
+						<button id="submit_btn" class="btn">回复</button>
+						<span class="col_fade">Ctrl+Enter 快捷回复</span>
+					</form>
+				</div>
+			</div>
+			<% } %>
+		</div>
+	</div>
+</div>
+<div class="clearfix"></div>
+<script>
+	KindEditor.ready(function(K) {
+		var editor = K.create('textarea[name="content"]', {
+			allowFileManager : true
+		});
+	});
+
+	var ui = {
+		 $goodNum : $('#goodNum')
+		,$goodArticle : $('#goodArticle')
+		,$hotArticle : $('#hotArticle')
+		,$alreayGood : $('#alreayGood')
+	}
+	
+	var mid = $('#curMid').val();
+	var uid = $('#uid').val();
+	var alreayGood = false;
+	
+	var Page = {
+
+		init : function() {
+			this.view();
+			this.listen();
+			this.getAlreadyGood();
+			this.getHotArticles();
+		},
+
+		view : function() {
+			if(ui.$goodNum.text() == '11') {
+				$('#dwyou').hide();
+			}
+		},
+
+		listen : function() {
+			var that = this;
+			ui.$goodArticle.click(function() {
+				if(alreayGood) {
+					alert('你已经赞过了！');
+				}else{
+					that.sendGoodAction();
+				}
+			});
+		},
+
+		getAlreadyGood : function() {
+			var options = {
+				 'url' : '/getAlreadyGood'
+				,'type': 'get'	
+				,'data': {'mid' : mid, 'uid' : uid}
+				,'success' : function(data) {
+					if(data['data'] == '1' ) {
+					  ui.$alreayGood.show();
+					  alreayGood = true;
+					  $('#dwyou').hide();
+					}else{
+					  ui.$alreayGood.hide();
+					  alreayGood = false;
+					} 					
+				}
+				,'failure' : function(err) {
+				}
+			}
+			$.ajax(options);
+		},
+
+		sendGoodAction : function() {
+			var self = this;
+			var options = {
+				 'url' : '/sendGoodAction'
+				,'type': 'post'	
+				,'data': {'mid' : mid}
+				,'success' : function(data) {
+					if(data['code'] == '1') {
+						alert('点赞已达最多数次！');
+					}else{
+						if(data['message'] === 'success') {
+							ui.$goodNum.text(data['data']['goodNum']);	
+							self.getAlreadyGood();
+						}	
+					}
+					
+				}
+				,'failure' : function(err) {
+					console.log(err)
+				}
+			}
+			$.ajax(options);
+		},
+		getHotArticles : function() {
+			var that = this;
+			var options = {
+				 'url' : '/getHotArticles'
+				,'type': 'get'	
+				,'success' : function(data) {
+					that.renderHotArticle(data)
+				}
+				,'failure' : function(err) {
+					console.log(err)
+				}
+			}
+			$.ajax(options);
+		},
+
+		renderHotArticle : function(data) {
+			var html = '';
+			if(data['message'] == 'failure') {
+				return ui.$hotArticle.html('<tr><td colspan="4">数据获取失败！</td></tr>');
+			}else{
+				var data = data['data'];
+				for(var i=0; i<data.length; i++) {
+					if(i==0) {
+						html += '<tr><td><label class="label label-success">1</label></td><td width="170"><a href="/article/'+data[i]['_id']+'">'+data[i]['mtitle']+'</a></td><td>'+data[i]['good']+'</td></tr>';
+						continue;
+					}
+					if(i==1) {
+						html += '<tr><td><label class="label label-warning">2</label></td><td width="170"><a href="/article/'+data[i]['_id']+'">'+data[i]['mtitle']+'</a></td><td>'+data[i]['good']+'</td></tr>';
+						continue;
+					}
+					if(i==2) {
+						html += '<tr><td><label class="label label-info">3</label></td><td width="170"><a href="/article/'+data[i]['_id']+'">'+data[i]['mtitle']+'</a></td><td>'+data[i]['good']+'</td></tr>';
+						continue;
+					}
+					html += '<tr><td>'+(i+1)+'</td><td width="170"><a href="/article/'+data[i]['_id']+'">'+data[i]['mtitle']+'</td><td>'+data[i]['good']+'</a></td></tr>';
+
+				}
+			}
+			ui.$hotArticle.html(html);
+		}
+	}
+
+	Page.init();
+</script>
+<%- include footer %>

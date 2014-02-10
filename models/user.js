@@ -12,6 +12,7 @@ var userSchema = new Schema({
   role:   String,    //角色
   mobile : {type:String,default:''},   //手机号码
   uid    : String,   //uid
+  avatar : {type:String,default : '../images/avatar.jpg'},  //个人头像地址
   email : {type:String,default:''},    //邮件
   url : {type:String,default:''},    //个人主页
   signature : {type:String,default:''},    //个性签名
@@ -21,7 +22,15 @@ var userSchema = new Schema({
   flag : {
   	sign : {type:String,default:''},
   	day : {type:String,default:''}
-  }
+  },
+  projects : [{
+  	pid : String,	  //项目id
+  	speed : Number,   //项目进度
+  	role : Number,    //1 参与者  2 负责人  3 管理员
+  	startTime : Date, //项目开始时间
+  	endTime : Date,   //项目结束时间
+  	todo : String     //项目中负责的模块
+  }]
 });
 
 userSchema.static('saveUser',function(user,callback) {
@@ -29,7 +38,6 @@ userSchema.static('saveUser',function(user,callback) {
 		callback(err,user);
 	})
 })
-
 
 //根据所有用户
 userSchema.static('getUsers',function(callback) {
@@ -68,9 +76,9 @@ userSchema.static('getUsersByUids',function(uids,callback) {
 });
 
 //通过uid得到uname
-userSchema.static('getUsernameByUid',function(uid,users) {
+userSchema.static('getUserFieldByUid',function(uid,users,field) {
 	for(var i=0; i<users.length; i++) {
-		if(uid == users[i]['_id']) return users[i]['name'];
+		if(uid == users[i]['_id']) return users[i][field];
 	}
 	return '';
 })
@@ -97,7 +105,9 @@ userSchema.static('updateScoreAdmin',function(uid,score,logOptions,callback) {
                 name : logOptions['name'],
                 uid : logOptions['uid'],
                 score : logOptions['score'],
-                type : logOptions['type']
+                type : logOptions['type'],
+                totalScore : logOptions['totalScore'],
+                mark : logOptions['mark']
         });
 
         LogScore.saveLogScore(logScore,function(err,data) {
@@ -132,6 +142,40 @@ userSchema.static('updateUser',function(uid,user,callback) {
 			callback(err,user);
 		});
 });
+
+//个人进度更新
+userSchema.static('projectEdit',function(options,callback) {
+	var that = this;
+	var pid 	= options['conditionObj']['pid']
+	,uid 		= options['conditionObj']['uid']
+	,speed		= options['fieldObj']['speed']
+	,startTime 	= options['fieldObj']['startTime']
+	,endTime 	= options['fieldObj']['endTime']
+	,todo 		= options['fieldObj']['todo']
+	,role		= options['fieldObj']['role']
+  console.log(options)
+	return that.findOne({'_id':uid},function(err,user) {
+		var projects = user['projects'];
+		for(var i=0; i<projects.length; i++) {
+			projects[i] = projects[i].toJSON();
+			if(pid == projects[i]['pid']) {
+				projects[i] = {
+					'pid'   : pid,
+					'speed' : speed,
+					'startTime' : startTime,
+					'endTime' : endTime,
+					'role'   : role, 
+					'todo' : todo
+				}
+				break;
+			}						
+		}
+		that.update({'_id' : uid},{'projects' : projects},function(err,user) {
+			callback(err,user);
+		})
+	});
+
+})
 
 //+++++++++++++++Redis Four START++++++++++++++++
 
@@ -169,6 +213,8 @@ userSchema.static('del',function(options,callback) {
 })
 
 //+++++++++++++++Redis Four  END++++++++++++++++
+
+
 
 var User = mongoose.model('User', userSchema);
 

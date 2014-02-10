@@ -9,9 +9,11 @@ var logScoreSchema = new Schema({
   name:  String,
   uid: String,
   role:   String,
-  time : {type:Date,default:Date.now},
-  score : {type:Number,default : 0},
-  type : {type:Number,default : 1}    //1:日报  2:周报  3:签到    ...
+  time : {type:Date, default:Date.now},
+  score : {type:Number, default : 0},
+  type : {type:Number, default : 1},    //1:日报  2:周报  3:签到  4:管理员  ...
+  totalScore : Number, //总积分
+  mark : {type:String, default : '--'}, //自定义字段
 });
 
 //存储积分日志

@@ -24,7 +24,7 @@
   <body>
    <div class="navbar navbar-fixed-top">
    		<div class="navbar-inner">
-   			<div class="container">
+   			<div class="container" style="width:1130px;">
    				<a href="/" style="float:left;">
    					<img src="/images/logo.png" width="117" height="35" />
    				</a>
@@ -36,7 +36,7 @@
    						  <li name="login"><a href="/login">登入</a></li>
               <% } else { %>
                 <% if(user.role === '2') { %>
-                  <li name="addUser"><a href="/addUser">新成员录入</a></li>
+                  <!-- <li name="addUser"><a href="/addUser">新成员录入</a></li> -->
                   <li name="webList"><a href="/webList">管理成员</a></li>
                 <% } %>
                 <% if(user.role === '1') { %>
@@ -48,21 +48,29 @@
 
               </li>
                 <% } %>
-               <li name="topic" class="dropdown"><a href="javascript:;">话题管理<s class="downArrow"></s></a>
+               <li name="topic" class="dropdown"><a href="/topicList">话题管理<s class="downArrow"></s></a>
                   <ul class="dropdown-menu">
                   <li><a href="/createTopic">发布话题</a></li>
                   <li><a href="/topicList/<%= user._id%>">我的话题</a></li>
                 </ul>
               </li>
-               
-                <li name="home" class="dropdown"><a href="/">Welcome <%= user.name %><s class="downArrow"></s></a>
+              <li name="article" class="dropdown"><a href="/article">阅读版块<s class="downArrow"></s><sup><img src="../images/new.gif" align="absmiddle" border="0"></sup></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="/createArticle">分享文章</a></li>
+                    <li><a href="/articleList/<%= user._id%>">我的分享</a></li>
+                     <li><a href="/article">查看所有分享</a></li>
+                  </ul>
+              </li>
+                <li name="home" class="dropdown"><a href="/setting">Welcome <%= user.name %><s class="downArrow"></s></a>
                     <ul class="dropdown-menu">
                     <li><a href="/setting">个人资料</a></li>
                     <li><a href="/modifyPwd">修改口令</a></li>
+                    <li><a href="/modifyAvatar">修改头像</a></li>
                     <li><a href="/scoreList/<%= user._id%>">积分日志</a></li>
+                    <!--li><a target="_blank" href="/project/demo/project.html">我的项目<sup><img src="../images/new.gif" align="absmiddle" border="0"></sup></a></li-->
                   </ul>
                 </li>
-                <li name="changelog"><a href="/changelog">更新日志(<span class="dateFont">2014/01/03</span>)<sup><img src="../images/new.gif" align="absmiddle" border="0"></sup></a></li>
+                <li name="changelog"><a href="/changelog">更新日志(<span class="dateFont">2014/02/08</span>)<sup><img src="../images/new.gif" align="absmiddle" border="0"></sup></a></li>
                  <li name="logout"><a href="/logout">登出</a></li>
               <% } %> 
    					</ul>

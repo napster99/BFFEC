@@ -12,6 +12,7 @@ $(function() {
 	}
 
 	var uid = $('#uid').val();
+	var avatar = $('#avatar').val();
 	
 	var Page = {
 
@@ -94,7 +95,7 @@ $(function() {
 				html += '<div class="cell">'
 				+'<div class="user_avatar block">'
 				+'	<a target="_blank" href="javascript:;" title="xx">'
-				+'		<img src="../images/avatar.jpg">'
+				+'		<img src="'+avatar+'">'
 				+'	</a>'
 				+'</div>'
 				+'<div class="topic_wrap">';

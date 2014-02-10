@@ -63,7 +63,7 @@
 						<a id="5293576aa6957a0809654d1b"></a>
 						<div class="author_content">
 							<div class="user_avatar block">
-								<a target="_blank" href="/user/<%= messageDetail['mReplyObj'][i]['uid'] %>"><img src="../images/avatar.jpg" title="<%= messageDetail['mReplyObj'][i]['uname'] %>"></a>
+								<a target="_blank" href="/user/<%= messageDetail['mReplyObj'][i]['uid'] %>"><img src="<%= messageDetail['mReplyObj'][i]['avatar'] %>" title="<%= messageDetail['mReplyObj'][i]['uname'] %>"></a>
 							</div>
 							<div class="user_info">
 								<span class="reply_author">
@@ -97,7 +97,7 @@
 								<textarea name="content" rows="18" style="width:100%;"></textarea>
 							</div>
 							</div>
-							<input type="hidden" name="_csrf" id="_csrf" value="S6ZQLAM5BJ1aZqwWlQHp0X52">
+							<input type="hidden" name="which" value="topic">
 						</div>
 						<button id="submit_btn" class="btn">回复</button>
 						<span class="col_fade">Ctrl+Enter 快捷回复</span>

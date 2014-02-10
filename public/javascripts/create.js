@@ -13,6 +13,12 @@
 
 KindEditor.ready(function(K) {
 	var editor = K.create('textarea[name="content"]', {
-		allowFileManager : true
+		allowFileManager : true,
+		items : ['source', '|', 'fullscreen', 'undo', 'redo', 'print', 'cut', 'copy', 'paste',
+				'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+				'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+				'superscript', '|', 'selectall', '-',
+				'title', 'fontname', 'fontsize', '|', 'textcolor', 'bgcolor', 'bold',
+				'italic', 'underline', 'strikethrough', 'removeformat', '|', 'advtable', 'hr', 'emoticons', 'link', 'unlink', '|', 'about']
 	});
 });

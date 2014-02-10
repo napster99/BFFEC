@@ -15,81 +15,14 @@ var url = require('url');
 var yp = require('../lib/yp');
 var mission = require('../lib/mission');
 
-
-
+// var phantomjs = require('phantomjs');
+var phantom = require('node-phantom');
 
 exports.index = function(req, res) {
-  var curPage = 1,perPages = 10;
-    if(req.url.indexOf('?page=') > -1) 
-      curPage = req.url.split('=')[1];
-    //根据curPage 获得message数组
-    models['message'].getMessagesByPage(curPage,perPages,function(err, data) {
-      //根据每页显示数量，message数组长度，计算出总页数
-      var totalPages = 1;
-      /* 
-       * 输出给页面的元素
-       *  回复数        点击数       标题      发表时间  消息ID    用户ID
-       *  replyCount    clickCount   title     time       mid      uid
-       */
-      var objArr = [];
-      if(data instanceof Array) {
-        models['message'].getMessagesCountByType('normal',function(err,count) {
-          if(count % perPages == 0 ) {
-            totalPages = parseInt(count/perPages);
-          }else{
-            totalPages = parseInt(count/perPages) + 1;
-          }
-          var midsArr = [],uidsArr = [];
-          for(var i=0; i<data.length; i++) {
-            midsArr.push(data[i]['_id']);
-            uidsArr.push(data[i]['uid']);
-          }
-          models['replys'].getReplysByMids(midsArr,function(err,replyArr) {
-            if(err) {
-              //TODO 查询回复数出错
-            }else{
-              models['user'].getUsersByUids(uidsArr,function(err,userArr) {
-                for(var i=0; i<data.length; i++) {
-                  //根据message数组不同元素，获得元素对应的回复数
-                  var mtime = data[i]['mtime']
-                  var time = CommonJS.changeTime(mtime);
-                  
-                  var obj = {
-                    'replyCount' : models['replys'].getReplyCountByMid(data[i]['_id'],replyArr),
-                    'clickCount' : data[i]['clickCount'] || 0,
-                    'title'      : data[i]['mtitle'],
-                    'time'       : time,
-                    'mid'        : data[i]['_id'],
-                    'uid'        : data[i]['uid'],
-                    'uname'    : models['user'].getUsernameByUid(data[i]['uid'],userArr),
-                    'totalPages' : totalPages
-                  }
-                  objArr.push(obj);
-                }
-
-                if(req.session.user) {
-                  res.render('index',{
-                    title : '边锋前端社区',
-                    objArr : objArr,
-                    user : req.session.user,
-                    otheruser : req.session.user,
-                    score : req.session.user['score']
-                  });
-                }else{
-                  //组装成对象，输出到页面
-                  res.render('index',{
-                    title : '边锋前端社区',
-                    objArr : objArr,
-                    user : req.session.user,
-                    otheruser : req.session.user
-                  });
-                }
-              })
-            }
-          });
-        })
-      }
-    });
+  res.render('index',{
+    title : '前端社区',
+    otheruser : req.session.user
+  })
 }
 
 //个人主页设置
@@ -135,4 +68,57 @@ exports.getRanking = function(req, res) {
         res.send(data);
       }
     });
+}
+
+//根据URL地址获取网页内容
+exports.getURLContentAjax = function(req, res) {
+    var pquery = querystring.parse(url.parse(req.url).query);
+    var articleURL = pquery['articleURL'];
+    
+   phantom.create(function(err,ph) {
+      return ph.createPage(function(err,page) {
+        return page.open(articleURL, function(err,status) {
+          console.log("opened site? ", status);
+          page.includeJs('http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', function(err) {
+            setTimeout(function() {
+              return page.evaluate(function() {
+                return $('#code').length > 0?  $('#code').html() : '无法获取！';
+              }, function(err,result) {
+                res.send({'code':'0','message':'success',data:result});
+                ph.exit();
+              });
+            }, 1000);
+          });
+
+        });
+      });
+    });
+}
+
+
+
+
+//获得话题列表
+exports.getTopicList = function(req, res) {
+   models['message'].list({'type' : 'normal'},function(err, messages) {
+      if(!err) 
+          res.send({'code':'0','message':'success',data:messages})
+   });
+}
+
+//获得文章列表
+exports.getArticleList = function(req, res) {
+   models['message'].list({'type' : 'article'},function(err, messages) {
+      if(!err) 
+          res.send({'code':'0','message':'success',data:messages})
+   });
+}
+
+//获得日报列表
+exports.getDailyList = function(req, res) {
+  var uid = req.session.user._id;
+   models['message'].list({'type' : 'day','uid' : uid},function(err, messages) {
+      if(!err) 
+          res.send({'code':'0','message':'success',data:messages})
+   });
 }

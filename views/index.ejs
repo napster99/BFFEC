@@ -7,9 +7,143 @@
 			<%- include sidebar %>
 		</div>
 		<div id="content">
-			<%- include messageList %>
+			<div class="panel clearfix" style="padding: 40px 18px 18px 18px;">
+				<div class="well boer" style="position:relative; border-color:#468847; background:rgba(210, 248, 210, 0.34); box-shadow:5px 5px 5px 0px #BDCEBD;" >
+					<div class="headTip" >话题</div>
+					<table class="table"> 
+			         	<thead> 
+			         		<tr> 
+			         			<td></td>
+			         			<td style="width:60px;">话题列表</td> 
+			         			<td><a href="/topicList" style="float:right; color:#468847;">更多...</a></td> 
+			         		</tr> 
+			         	</thead> 
+			         	<tbody id="topicList" align="left">
+			         		<tr>
+			         			<td colspan="3"><img src="images/loading.gif"  style="margin: 40px 0 0 110px" ></td> 
+			         		</tr>
+			         	</tbody> 
+	        		</table>
+				</div>
+				<div class="well boer" style="position:relative; border-color:#f89406; background:#FFF4E4;  box-shadow:5px 5px 5px 0px #CAC3BA;" >
+					<div class="headTip" style="background:#f89406;" >阅读</div>
+					<table class="table"> 
+			         	<thead> 
+			         		<tr> 
+			         			<td></td>
+			         			<td style="width:60px;">阅读列表</td> 
+			         			<td><a href="/article" style="float:right; color:#f89406;">更多...</a></td> 
+			         		</tr> 
+			         	</thead> 
+			         	<tbody id="articleList" align="left">
+			         		<tr>
+			         			<td colspan="3"><img src="images/loading.gif" style="margin: 40px 0 0 110px" ></td> 
+			         		</tr>
+			         	</tbody>
+	        		</table>
+				</div>
+				<% if(user) { %>
+				<input type="hidden" id="login" />
+				<div class="well boer" style="position:relative; border-color:#3a87ad; background:#E8F8FF;   box-shadow: 5px 5px 5px 0px #B1BDC4;" >
+					<div class="headTip" style="background:#3a87ad;" >日报</div>
+					<table class="table"> 
+			         	<thead> 
+			         		<tr> 
+			         			<td></td>
+			         			<td style="width:60px;">我的日报</td> 
+			         			<td><a href="/dailyList/<%= user._id %>" style="float:right; color:#3a87ad;">更多...</a></td> 
+			         		</tr> 
+			         	</thead> 
+			         	<tbody id="dailyList" align="left">
+			         		<tr>
+			         			<td colspan="3"><img src="images/loading.gif" style="margin: 40px 0 0 110px" ></td> 
+			         		</tr>
+			         	</tbody> 
+	        		</table>
+				</div>
+				<% } %>
+			</div>
 		</div>
 	</div>
 </div>
 
 <%- include footer %>
+
+<script>
+	var ui = {
+		 $topicList : $('#topicList')
+		,$articleList : $('#articleList')
+		,$dailyList : $('#dailyList')
+	}
+
+	var Page = {
+		init : function() {
+			this.view();
+			this.listen();
+			this.getContentList('getTopicList','topic');
+			this.getContentList('getArticleList','article');
+			if($('#login').length > 0) 
+				this.getContentList('getDailyList','daily');
+		},
+
+		view : function() {
+
+		},
+
+		listen : function() {
+
+		},
+
+		getContentList : function(url, which) {
+			var self = this;
+			var options = {
+		        'url' : url,
+		        'dataType' : 'json',
+		        'type' : 'get',
+		        'success' : function(data) {
+		           self.renderContentList(data['data'], which);
+		        },
+		        'error' : function(err) {
+		          
+		        }
+		      }
+		      $.ajax(options);
+		},
+
+		renderContentList : function(data, which) {
+
+			var html = '';
+			if(which == 'daily' && data.length == 0) {
+				$('#dailyList').html('<tr><td colspan="3" style="padding-left:100px;">暂无日报</td></tr>');
+				return;
+			}
+
+			var len = data.length >= 5 ? 5 : data.len;
+			for(var i=0; i<len; i++) {
+				if(which == 'topic') {
+					html += '<tr><td><label class="label label-success">'+(i+1)+'</label></td><td colspan="2" style="white-space:nowrap;"><a target="_blank" href="/topic/'+data[i]['_id']+'" style="display:block; width:230px; text-overflow: ellipsis; overflow:hidden;" title="'+data[i]['mtitle']+'">'+data[i]['mtitle']+'</a></td></tr>';
+				}else if(which == 'article') {
+					html += '<tr><td><label class="label label-warning">'+(i+1)+'</label></td><td colspan="2" style="white-space:nowrap;"><a target="_blank" href="/article/'+data[i]['_id']+'" style="display:block; width:230px; text-overflow: ellipsis; overflow:hidden;" title="'+data[i]['mtitle']+'">'+data[i]['mtitle']+'</a></td></tr>';
+				}else{
+					html += '<tr><td><label class="label label-info">'+(i+1)+'</label></td><td colspan="2" style="white-space:nowrap;"><a target="_blank" href="/article/'+data[i]['_id']+'" style="display:block; width:230px; text-overflow: ellipsis; overflow:hidden;" title="'+data[i]['mtitle']+'">'+data[i]['mtitle']+'</a></td></tr>';
+				}
+			}
+
+			this.getDomByWhich(which).html(html);
+			
+		},
+
+		getDomByWhich : function(which) {
+			if(which == 'topic') {
+				return ui.$topicList;
+			}else if(which == 'article') {
+				return ui.$articleList;
+			}else{
+				return ui.$dailyList;
+			}
+		} 
+	}
+
+	Page.init();
+
+</script>

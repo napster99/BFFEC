@@ -1,0 +1,143 @@
+<%- include header %>
+
+<div id="wrapper">
+  <div id="main">
+    <div id="sidebar">
+      <% if(!user) { %>
+        <div class="panel">
+                <div class="inner">
+                  <p>BFCloub：边锋前端技术交流社区</p>
+                  <div>
+                    <!--a href="/addUser"><button class="btn">现在注册</button></a-->
+                    <span>已注册用户请<a class="light" href="/login"> 登录</a></span>
+                  </div>
+                </div>
+            </div>
+          <%  } else { %>
+            <div class="panel">
+                <input type="hidden" value="<%= user._id || user.uid %>" id="uid" />
+                <div class="header">
+                  <span class="col_fade">个人信息<span>
+                  </span></span></div>
+                  <div class="inner">
+                    <div class="user_card">
+                  <div>
+                    <a class="user_avatar" href="/user/<%= otheruser._id %>">
+                      <img src="<%= otheruser.avatar %>" title="<%= otheruser._id %>">
+                    </a>
+                    <span class="user_name">
+                      <a class="dark" href="/user/<%= otheruser._id %>"> <%= otheruser.name %></a>
+                      <input id="signStatus" type="hidden" value="<%= otheruser.curSign || user.curSign %>" />
+                      <%  if(user._id == otheruser._id) { %>
+                      <button id="signIn" class="btn btn-success">每日签到</button>
+                      <% } %>
+                    </span>
+                    <div class="board clearfix">
+                      <div class="floor">
+                        <span>话题：<span name="normal" class="big"></span>个</span>
+                        <div class="space"></div>
+                        <span>日报：<span name="day" class="big"></span>篇</span>
+                        <div class="space"></div>
+                        <span>积分：<%=  otheruser.score %>分</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                </div>
+            </div>
+          <% } %>
+            <div class="panel">
+                <div class="inner">
+                   <table class="table">
+                    <thead>
+                      <tr>
+                        <td colspan="3">热门文章</td>
+                      </tr>
+                    </thead>
+                    <tbody align="left" id="hotArticle">
+                    </tbody>
+                   </table>
+                </div>
+            </div>
+        </div>
+    <div id="content">
+
+      <input type="hidden" id="uid" value="<%= user._id || user.uid %>" />
+      <input type="hidden" id="avatar" value="<%= user.avatar %>" />
+      <div class="panel">
+          <div class="inner">
+            <div class="header clearfix">
+              <%= user.name %>的文章<a href="/addDaily" id="create_topic_btn">
+                </a>
+                 <a href="/createArticle" id="create_topic_btn"> 
+                  <button class="btn btn-success">分享文章</button> 
+                </a>
+            </div>
+            <div id="articleContent">
+              
+             </div>
+          <div id="articlePagina" class="pagination"></div>
+        </div>
+    </div>
+  </div>
+</div>
+<script src="/javascripts/articleList.js"></script>
+<%- include footer %>
+
+<script>
+  var ui = {
+    $hotArticle : $('#hotArticle')
+  }
+  
+  var mid = $('#curMid').val();
+  var Page = {
+
+    init : function() {
+      this.getHotArticles();
+    },
+
+
+    getHotArticles : function() {
+      var that = this;
+      var options = {
+         'url' : '/getHotArticles'
+        ,'type': 'get'  
+        ,'success' : function(data) {
+          that.renderHotArticle(data)
+        }
+        ,'failure' : function(err) {
+          console.log(err)
+        }
+      }
+      $.ajax(options);
+    },
+
+    renderHotArticle : function(data) {
+      var html = '';
+      if(data['message'] == 'failure') {
+        return ui.$hotArticle.html('<tr><td colspan="4">数据获取失败！</td></tr>');
+      }else{
+        var data = data['data'];
+        for(var i=0; i<data.length; i++) {
+          if(i==0) {
+            html += '<tr><td><label class="label label-success">1</label></td><td width="170"><a href="/article/'+data[i]['_id']+'">'+data[i]['mtitle']+'</a></td><td>'+data[i]['good']+'</td></tr>';
+            continue;
+          }
+          if(i==1) {
+            html += '<tr><td><label class="label label-warning">2</label></td><td width="170"><a href="/article/'+data[i]['_id']+'">'+data[i]['mtitle']+'</a></td><td>'+data[i]['good']+'</td></tr>';
+            continue;
+          }
+          if(i==2) {
+            html += '<tr><td><label class="label label-info">3</label></td><td width="170"><a href="/article/'+data[i]['_id']+'">'+data[i]['mtitle']+'</a></td><td>'+data[i]['good']+'</td></tr>';
+            continue;
+          }
+          html += '<tr><td>'+(i+1)+'</td><td width="170"><a href="/article/'+data[i]['_id']+'">'+data[i]['mtitle']+'</td><td>'+data[i]['good']+'</a></td></tr>';
+
+        }
+      }
+      ui.$hotArticle.html(html);
+    }
+  }
+
+  Page.init();
+</script>

@@ -1,0 +1,122 @@
+<!-- 1区：标题 -->
+<div class="heading-buttons">
+  <h3>我的项目</h3>
+  <div class="clearfix"></div>
+</div>
+<div class="separator bottom"></div>
+<!-- 1区：标题 End -->
+
+<div class="innerLR" ms-controller="page">
+  <!-- 2区：搜索 -->
+  <div class="filter-bar">
+    <form action="url.php" class="form-inline">
+      <div class="form-group col-md-3 padding-none">
+        <label class="label-control">项目状态：</label>
+        <div class="col-md-8 padding-none">
+          <select class="form-control" name="state" id="projectState" ms-each-el="stateArray" ms-duplex="searchType">
+            <option ms-value="el.id">{{el.name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group col-md-2 padding-none hide">
+        <label class="label-control">日期：</label>
+        <div class="input-group">
+          <input size="16" type="text" class="form-control js-dateRangeFrom" id="yp-dateRangeFrom1" data-target="#yp-dateRangeTo1" placeholder="2013-12-12">
+          <span class="input-group-addon">
+            <i class="icon-calendar"></i>
+          </span>
+        </div>
+      </div>
+      <div class="form-group col-md-2 padding-none hide">
+        <label class="label-control"> 至 </label>
+        <div class="input-group">
+          <input size="16" type="text" class="form-control js-dateRangeTo" id="yp-dateRangeTo1" data-target="#yp-dateRangeFrom1" placeholder="2013-12-12">
+          <span class="input-group-addon">
+            <i class="icon-calendar"></i>
+          </span>
+        </div>
+      </div>
+      <div class="form-group col-md-3">
+        <label class="sr-only" for="inputName">项目名称：</label>
+        <input type="text" class="form-control" placeholder="项目名称" ms-duplex="searchName">
+      </div>
+      <div class="form-group col-md-2 hide">
+        <label class="sr-only" for="inputName">项目负责人：</label>
+        <input type="text" class="form-control" placeholder="项目负责人"> 
+      </div>
+      <div class="form-group col-md-2 hide">
+        <label class="sr-only" for="inputName">项目参与者：</label>
+        <input type="text" class="form-control" placeholder="项目参与者">
+      </div>
+      <button class="btn btn-default" ms-click="searchBtn">搜索</button>
+    </form>
+  </div>
+  <!-- 2区：搜索 End -->
+  <!-- 3区：表格 -->
+  <table class="table table-bordered table-condensed table-striped table-hover table-primary checkboxs">
+    <thead>
+      <tr>
+        <th class="center">序号</th>
+        <th>项目名称</th>
+        <th>项目负责人</th>
+        <th>项目参与者</th>
+        <th>项目状态</th>
+        <th class="center">项目进度</th>
+        <th>立项时间</th>
+        <th class="center">项目操作</th>
+      </tr>
+    </thead>
+    <tbody ms-each-project="projectList">
+      <tr class="selectable" ms-if="(currentPage - 1) * pageSize <= $index && $index < currentPage * pageSize">
+        <td class="center">{{$index+1}}</td>
+        <td>{{project.name}}</td>
+        <td>{{project.resPerson.name}}</td>
+        <td ms-each-el="project.joinPersons">
+          {{$last ? el.name : el.name + ','}}
+        </td>
+        <td>{{states[project.state]}}</td>
+        <td class="center">{{project.speed + '%'}}</td>
+        <td>{{project.approvalStartTime.substr(0, 10)+' 至 '+project.approvalEndTime.substr(0, 10)}}</td>
+        <td class="center">
+          <a href="javascript:;" class="btn-action glyphicons eye_open btn-info" ms-click="lookFun" title="查看"><i></i></a>
+          <a href="javascript:;" class="btn-action glyphicons pencil btn-success" ms-class="hide: !(project.role['1'].indexOf(admin.uid) > -1 || project.role['2'].indexOf(admin.uid) > -1)" title="更新个人" ms-click="updateIFun"><i></i></a>
+          <a href="javascript:;" class="btn-action glyphicons pencil btn-success" ms-class="hide: !(project.role['2'].indexOf(admin.uid) > -1)" title="更新项目" ms-click="updatePFun"><i></i></a>
+          <a href="javascript:;" class="btn-action glyphicons pencil btn-success" ms-class="hide: !(project.role['2'].indexOf(admin.uid) > -1 && project.state == 5)" title="提交结项" ms-click="applyFun"><i></i></a>
+          <!-- <a href="javascript:;" class="btn-action glyphicons pencil btn-success" ms-class="hide: !(admin.role == 3)" title="审核" ms-click="checkFun"><i></i></a> -->
+          <a href="javascript:;" class="btn-action glyphicons pencil btn-success" ms-class="hide: !(admin.role == '3' && project.state == 6)" title="结项" ms-click="finishFun"><i></i></a>
+          <a href="javascript:;" class="btn-action glyphicons remove_2 btn-danger" ms-class="hide: !(project.role['2'].indexOf(admin.uid) > -1 || admin.role == '3')" title="删除" ms-click="deleteFun"><i></i></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- 3区：表格 End -->
+  <!-- 4区：统计/操作/翻页 -->
+  <div class="col-sm-3 dataTables_info">
+    <span class="col-md-4 control-label">总数: {{totalRecords}}</span>
+  </div>
+  <div class="col-sm-9" ms-if="totalRecords > pageSize">
+    <div class="dataTables_paginate paging_bootstrap">
+      <!-- <ul class="pagination">
+        <li title="上一页"><a href="4">«</a></li>
+        <li><a href="1">1</a></li>
+        <li><span>...</span></li>
+        <li><a href="3">3</a></li>
+        <li><a href="4">4</a></li>
+        <li class="active"><span>5</span></li>
+        <li><a href="6">6</a></li>
+        <li><a href="7">7</a></li>
+        <li><span>...</span></li>
+        <li><a href="20">20</a></li>
+        <li title="下一页"><a href="6">»</a></li>
+      </ul> -->
+      <div class="input-group">
+        <input type="text" class="form-control">
+        <div class="input-group-btn">
+          <button type="button" class="btn btn-default">Go</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 4区：统计/操作/翻页 End -->
+  <script src="scripts/projectList.js"></script>
+</div>

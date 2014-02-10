@@ -1,0 +1,124 @@
+/* 面包屑导航 by bhl */
+.breadcrumb { height: 38px; line-height: 38px; }
+.breadcrumb strong {
+  display: block;
+  float: left;
+  margin: 0 10px;
+  font-weight: normal;
+  text-shadow: 1px 1px 1px #111;
+}
+.breadcrumb .breadGap {height: 38px; width: 9px; float: left;}
+.breadcrumb .btn-group.open .btn.dropdown-toggle {background-color: #64625f;}
+.breadcrumb .breadcrumb-select {padding: 0px 10px;}
+.breadcrumb .breadcrumb-select .btn {
+  background: #64625f;
+  border: 1px solid #4e4e4c;
+  color:#fff;
+  box-shadow: 0px 0px 1px 1px #787774;
+  text-shadow: 1px 1px 1px #111;
+}
+.breadcrumb .breadcrumb-select .btn:hover {
+  background: #575757;
+  border:1px solid #414141;
+  box-shadow:none;
+}
+.breadcrumb .breadcrumb-select .btn:active,
+.breadcrumb-cover .breadcrumb-select.active .btn,
+.breadcrumb-cover .breadcrumb-select.active .btn.dropdown-toggle {
+  background: #575757;
+  border:1px solid #414141;
+  box-shadow:0px 0px 10px rgba(66,66,65,0.8) inset;
+}
+.breadcrumb-select .caret {
+  margin-left: 10px; margin-top: 8px;
+  vertical-align: top;
+}
+.breadcrumb-select .btn {padding: 1px 12px; font-weight: normal}
+.breadcrumb-select .btn-group { margin-top: -3px; }
+.breadGap .icon-chevron-right:before {
+  margin-top: 13px;
+  font-size: 14px;
+  color: #222;
+}
+
+/* 重置 面包屑导航右侧 作用域切换 by bhl */
+.breadcrumb .breadcrumb-select button.selectpicker:focus
+{ outline: none !important; }
+.breadcrumb .breadcrumb-select button.selectpicker .caret
+{ border-top-color: rgba(0, 0, 0, 0.5); }
+.breadcrumb .breadcrumb-select ul.selectpicker .text { font-size: 13px; }
+.breadcrumb .breadcrumb-select .bootstrap-select.btn-group { margin-bottom: 0; }
+.breadcrumb .breadcrumb-select .bootstrap-select-searchbox .form-control
+{ height: 22px; min-height: 20px; padding: 1px 10px; }
+
+/* 左侧导航树-搜索框 by bhl */
+#yp-container-menuTree .widget-sidebar-stats .form-control {
+  height: 24px;
+  padding: 1px 5px;
+}
+#yp-container-menuTree .widget-sidebar-stats .btn {
+  width: 24px; height: 24px;
+  padding: 0;
+  background: #42403e;
+  border-color: #42403e;
+}
+#yp-container-menuTree .widget-sidebar-stats .btn i:before {
+  font-size: 14px;
+  color: #767473;
+  text-shadow: none;
+}
+/* 左侧导航树 by xiewu */
+#yp-container-menuTree .ztree li a {
+  display:inline-block;
+  width: 100%; height: auto; line-height: normal;
+  margin-bottom: 1px; padding:5px 0px 4px;
+}
+#yp-container-menuTree .ztree .loading span {font-weight:bold; color:#fff;}
+
+/* 列表页 */
+/* 大字内容表格 */
+.table-large-spacing td, .table-large-spacing th {
+  padding: 20px 15px!important;
+  font-size: 20px;
+}
+/* 图片容器外框 by dayun*/
+.imgBox {
+  /*display:table-cell;*/
+  width:80px; height:50px;
+  background:url(../images/pngBg.gif) repeat;
+  border: 1px solid #aaa;
+  vertical-align:middle;
+  text-align: center;
+  overflow: hidden;/**/
+  -webkit-user-select: none;
+}
+.imgBox img { max-width: 100%; max-height: 100%;}
+/* 表格内图片 */
+.table .imgBox {margin:0 auto;}
+
+/* 分页输入组件 by xiewu */
+.dataTables_paginate .input-group {
+  float: right;
+  width: 100px;
+  margin: 20px 0 20px 10px;
+}
+.dataTables_paginate .form-control {text-align:center;}
+
+/* 列表底部统计位置改变 by dayun */
+.dataTables_info .control-label {padding-top:9px;}
+
+/* 列表垂直居中提高层级 by dayun*/
+.table-vertical-center tbody tr td,.table-vertical-center thead tr th{vertical-align: middle;}
+
+/* 表单页 */
+/* 带图标的输入框（临时处理） */
+.input-group[class*="col-"] {padding-right: 15px; padding-left: 15px;}
+/* 输入框颜色设置 */
+input[type] {border-color: #D8D9DA; color: #A7A7A7;}
+
+/* loading */
+.loading {
+  padding-top: 50px;
+  background: url(../images/loading.gif) no-repeat center 20px;
+  text-align: center;
+}

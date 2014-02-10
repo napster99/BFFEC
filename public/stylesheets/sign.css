@@ -78,4 +78,9 @@ body{border: 0; margin: 0; /*font:16px/22px Microsoft Yahei,simsun,sans-serif;*/
 	display: inline-block;
 	border-bottom:none;
 	}
-.dropdown:hover .downArrow{border-color: hsl(210,53%,51%) hsl(0,0%,93%);};
+.dropdown:hover .downArrow{border-color: hsl(210,53%,51%) hsl(0,0%,93%);}
+
+.headTip{position:absolute; border-radius:25px; width:50px; height:50px; background:#468847; color: #fff; line-height:50px; text-align:center; left:-25px; top:-25px; box-shadow: 5px 5px 5px 0px lightgray;}
+
+.boer{float: left; width: 38%; margin: 20px;}
+
