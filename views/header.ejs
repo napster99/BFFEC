@@ -7,11 +7,13 @@
     <link rel='stylesheet' href="/stylesheets/node.css" />
     <link rel="stylesheet" href="/javascripts/kindEditor/themes/default/default.css" />
     <link rel="stylesheet" href="/stylesheets/sign.css" />
+    <link rel="stylesheet" href="/stylesheets/chat.css" />
    
     <script src="/javascripts/jquery-1.9.1.js"></script>
     <script src="/javascripts/bootstrap.js"></script>
     <script src="/javascripts/bootstrap-paginator.js"></script>
     <script src="/javascripts/common.js"></script>
+    <script src="/public/libs/bootbox/bootbox.js"></script>
     <script src="/javascripts/topic.edit.min.js"></script>
     <script charset="utf-8" src="/javascripts/kindEditor/kindeditor-min.js"></script>
     <script charset="utf-8" src="/javascripts/kindEditor/zh_CN.js"></script>
@@ -35,9 +37,10 @@
               <% if(!user) { %>
    						  <li name="login"><a href="/login">登入</a></li>
               <% } else { %>
-                <% if(user.role === '2') { %>
+                <input type="hidden" id="uid" value="<%= user._id || user.uid  %>">
+                <% if(user.auth.length != 0) { %>
                   <!-- <li name="addUser"><a href="/addUser">新成员录入</a></li> -->
-                  <li name="webList"><a href="/webList">管理成员</a></li>
+                  <li name="webList"><a href="/webList">社区管理</a></li>
                 <% } %>
                 <% if(user.role === '1') { %>
                 <li name="addDaily" class="dropdown"><a href="javascript:;">日报管理<s class="downArrow"></s></a>
@@ -45,7 +48,6 @@
                   <li><a href="/addDaily">写日报</a></li>
                   <li><a href="/dailyList/<%= user._id%>">我的日报</a></li>
                 </ul>
-
               </li>
                 <% } %>
                <li name="topic" class="dropdown"><a href="/topicList">话题管理<s class="downArrow"></s></a>
@@ -61,16 +63,23 @@
                      <li><a href="/article">查看所有分享</a></li>
                   </ul>
               </li>
-                <li name="home" class="dropdown"><a href="/setting">Welcome <%= user.name %><s class="downArrow"></s></a>
+                <li name="home" class="dropdown"><div class="notice"></div><a href="/setting">Welcome <%= user.name %><s class="downArrow"></s></a>
                     <ul class="dropdown-menu">
                     <li><a href="/setting">个人资料</a></li>
                     <li><a href="/modifyPwd">修改口令</a></li>
                     <li><a href="/modifyAvatar">修改头像</a></li>
                     <li><a href="/scoreList/<%= user._id%>">积分日志</a></li>
-                    <!--li><a target="_blank" href="/project/demo/project.html">我的项目<sup><img src="../images/new.gif" align="absmiddle" border="0"></sup></a></li-->
+                    
+                    <!-- <li><a target="_blank" href="http://demo.qpdiy.com/wlx/adminkit/yp_project/index.html#<%= sessionID %>">我的项目<sup><img src="../images/new.gif" align="absmiddle" border="0"></sup></a></li>  -->
+
+                    <li style="position:relative;" name="noticeList"><a href="/noticeList/<%= user._id%>"><div class="notice" style="top:6px; left:13px;"></div>我的消息<sup><img src="../images/new.gif" align="absmiddle" border="0"></sup></a></li>
+
+                 <!--  <li><a target="_blank" href="http://demo.qpdiy.com/zxj/project/adminkit/yp_project/index.html#<%= sessionID %>">我的项目<sup><img src="../images/new.gif" align="absmiddle" border="0"></sup></a></li>-->
+
+                   
                   </ul>
                 </li>
-                <li name="changelog"><a href="/changelog">更新日志(<span class="dateFont">2014/02/08</span>)<sup><img src="../images/new.gif" align="absmiddle" border="0"></sup></a></li>
+                <li name="changelog"><a href="/changelog">更新日志</a></li>
                  <li name="logout"><a href="/logout">登出</a></li>
               <% } %> 
    					</ul>
@@ -80,4 +89,33 @@
    </div>
    
    <div id="container" class="container">
+
+
+    <script>
+
+      //通知是否显示
+      var uid = $('#uid').val();
+      if(uid) {
+          var options = {
+          'url' : '/data/notice/list',
+          'dataType' : 'json',
+          'type' : 'GET',
+          'data' : {'uid':uid,'isRead' : false},
+          'success' : function(data) {
+            if(data['code'] == '1') {
+              if(data['data'] instanceof Array && data['data'].length > 0) {
+                $('.notice').show();
+              }else{
+                $('.notice').hide();
+              }
+            }
+          },
+          'error' : function(err) {
+            console.log(err)
+          }
+        }
+        $.ajax(options);
+      }
+      
+    </script>
    		

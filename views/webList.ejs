@@ -1,11 +1,29 @@
 <%- include header %>	
 	<div class="tabbable tabs-left" style="margin:10px 0 0;">
 			<ul class="nav nav-tabs" style="max-height:none;">
-                <li class="active"><a href="#lA" data-toggle="tab">成员列表</a></li>
-                <li class=""><a href="#lB" data-toggle="tab">日报管理</a></li>
-                <li class=""><a href="#lC" data-toggle="tab">话题管理</a></li>
-               	<li class=""><a href="#lD" data-toggle="tab">积分管理</a></li>
-               	<li class=""><a href="#lE" data-toggle="tab">排行榜</a></li>
+				<% if(user.auth.indexOf('1') > -1 )  { %>
+               		<li class="active" code="1"><a href="#lA" data-toggle="tab">成员列表</a></li>
+               	<% } %>	
+
+               	<% if(user.auth.indexOf('2') > -1 )  { %>
+               		<li class="" code="2"><a href="#lB" data-toggle="tab">日报管理</a></li>
+               	<% } %>	
+
+               	<% if(user.auth.indexOf('3') > -1 )  { %>
+                	<li class="" code="3"><a href="#lC" data-toggle="tab">话题管理</a></li>
+                <% } %>	
+
+                <% if(user.auth.indexOf('4') > -1 )  { %>
+               		<li class="" code="4"><a href="#lD" data-toggle="tab">积分管理</a></li>
+               	<% } %>	
+
+               	<% if(user.auth.indexOf('5') > -1 )  { %>
+               		<li class="" code="5"><a href="#lF" data-toggle="tab">权限管理</a></li>
+               	<% } %>	
+
+               	<% if(user.auth.indexOf('6') > -1 )  { %>
+	               	<li class="" code="6"><a href="#lE" data-toggle="tab">排行榜</a></li>
+	            <% } %>	
             </ul>
 		<div class="tab-content">
 			<div class="tab-pane active" id="lA">
@@ -94,6 +112,14 @@
 				<div id="msgSeeDetail" class="panel" style="display:none;"> 
 					<div class="inner topic"> 
 						<div id="msgSeeCon"></div>
+						<div id="commentCon" class="panel" style="display:none;"> 
+							<div class="header"> 
+							<span class="col_fade"><span id="commentNum">1</span>  回复</span> 
+							</div> 
+							 <div id="adminComment">
+
+							 </div>
+						</div>
 						<div class="text-right">
 							<button name="backBtn" type="button" class="btn">返回列表</button>
 						</div>
@@ -133,7 +159,7 @@
 		            				<td style="width:150px;"><strong>说明</strong></td>
 		            				<td><strong>时间</strong></td>
 		            			</tr>
-		            		</thead>
+		            		</thead>	
 					    	<tfoot>
 					    		 <tr>
 							      <td colspan="6">
@@ -163,7 +189,7 @@
 		            <div class="tab-pane" id="lEd">
 		            	<form method="post" action="/changeScoreByAdmin" >
 		            		<div>
-		            			<label class="span-6">成员：</label><select id="userList" name="uid" required class="span-6"></select>
+		            			<label class="span-6">成员：</label><select which="userList" name="uid" required class="span-6"></select>
 		            		</div>
 		            		<div>
 		            			<label class="span-6">积分：</label><input type="number" name="score"  class="span-6" value="0">
@@ -196,6 +222,32 @@
 			    			</tr>
 		    		</tbody>
 			    </table>
+			</div>
+			<div class="tab-pane" id="lF" style="height:400px;">
+				<strong style="margin:8px 0px 0px 5px; padding:0 0 7px 10px; display:block; border-bottom:1px solid #ddd;">权限管理</strong>
+				<select which="userList" name="auth" style="margin-top:25px;">
+				</select>
+				<ul id="authList" style="list-style:none; margin:0; padding:0; max-height:none;">
+					<li style="line-height:normal; height:32px;">
+						<input type="checkbox" value="1" id="1" style="vertical-align:top; margin-right:10px;"><label for="1" style="display:inline;">成员列表</label>
+					</li>
+					<li style="line-height:normal; height:32px;">
+						<input type="checkbox" value="2" id="2"  style="vertical-align:top; margin-right:10px;"><label for="2" style="display:inline;">日报管理</label>
+					</li>
+					<li style="line-height:normal; height:32px;">
+						<input type="checkbox" value="3" id="3"  style="vertical-align:top; margin-right:10px;"><label for="3" style="display:inline;">话题管理</label>
+					</li>
+					<li style="line-height:normal; height:32px;">
+						<input type="checkbox" value="4" id="4"  style="vertical-align:top; margin-right:10px;"><label for="4" style="display:inline;">积分管理</label>
+					</li>
+					<li style="line-height:normal; height:32px;">
+						<input type="checkbox" value="5" id="5"  style="vertical-align:top; margin-right:10px;"><label for="5" style="display:inline;">权限管理</label>
+					</li>
+					<li style="line-height:normal; height:32px;">
+						<input type="checkbox" value="6" id="6"  style="vertical-align:top; margin-right:10px;"><label for="6" style="display:inline;">排行榜</label>
+					</li>
+				</ul>
+				<button id="authSureBtn" class="btn btn-success">确定</button>
 			</div>
 		</div>
 	</div>

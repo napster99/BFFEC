@@ -1,0 +1,120 @@
+a.athena-btn:hover{color:#fff;text-decoration:none}
+.athena-icon{display: inline-block; width: 16px; height: 16px; background: url(../images/sprites.png);}
+.athena-icon.icon-message{width:12px;height:9px;background-position:-300px -50px}
+.athena-icon.icon-editor{float:left;width:15px;height:13px;margin-right:5px;background-position:-400px -50px}
+.athena-icon.icon-error{float:left;width:12px;height:12px;background-position:-350px -50px}
+.athena-icon.icon-open{float:left;width:16px;height:18px;background-position:-300px -100px}
+a.btn-close{width:24px;height:24px;padding:0;background:0 0}
+a.btn-close .icon-close{float:right;width:8px;height:8px;background-position:-50px -50px}
+a.btn-close:hover .icon-close{background-position:-50px -100px}
+a.btn-close span{display:none}
+a.btn-play{width:20px;height:20px;padding:0;background:0 0}
+a.btn-play span{display:none}
+a.btn-play .icon-play{width:20px;height:20px;background-position:-100px -150px}
+a.btn-play:hover .icon-play{background-position:-100px -200px}
+.athena-main-button{cursor:pointer;z-index:1010;position:fixed;left:0;bottom:0;width:220px;height:38px;border: 1px solid #1f1f1f;color:#fff;background:#333;box-shadow: 0 0 5px #ccc;}
+.athena-main-button .inner{padding:12px 13px}
+.athena-main-button a.btn-switch-size{position:absolute;right:13px;top:15px;width:15px;height:8px;padding:0;background:0 0}
+.athena-main-button a.btn-switch-size .icon-max-size{float:left;width:15px;height:8px;background-position:-150px -50px}
+.athena-main-button a.btn-switch-size:hover .icon-max-size{background-position:-150px -100px}
+.athena-main-button a.btn-switch-size .icon-min-size{float:left;width:15px;height:8px;background-position:-100px -50px}
+.athena-main-button a.btn-switch-size:hover .icon-min-size{background-position:-100px -100px}
+.athena-main-button .btn-switch-size span{display:none}
+.athena-main-button .content{line-height:16px;width:190px;white-space:nowrap;-o-text-overflow:ellipsis;text-overflow:ellipsis}
+.athena-main-button .content .icon-play{float:left;margin-right:7px;background-position:-50px -150px}
+.athena-main-button .content .listening-friends-count{margin-right:5px;color:#29cc7a}
+/*.athena-tip{z-index:1005;position:fixed;right:0;bottom:40px;overflow:hidden;width:239px;height:38px;border:1px solid #ccc;background:#fff;box-shadow:0 0 5px #ccc}
+.athena-tip-inner{padding:10px}
+.athena-tip a.btn-close{position:absolute;right:6px;top:6px}
+.athena-tip .tip-listening p{float:left;overflow:hidden;width:180px;white-space:nowrap;-o-text-overflow:ellipsis;text-overflow:ellipsis}
+.athena-tip .btn-play{float:left}
+.athena-tip .nick-name{color:#333}
+.athena-tip .icon-message{margin-right:5px}
+.athena-tip .tip-new-message p{cursor:pointer}*/
+.athena-tab-view{position:relative;border:1px solid #ccc;border-top:0}
+.athena-tab-view .tabs{overflow:hidden; margin: 0; list-style: none;}
+.athena-tab-view .tab{float:left;border-right:1px solid #ccc;border-bottom:1px solid #ccc;line-height:32px;background:#e6e6e6}
+.athena-tab-view .tab a{display:block;cursor:pointer;width:72px;height:32px;text-align:center;color:#333}
+.athena-tab-view .tab a:hover{color:#333;text-decoration:none;background:#d9d9d9}
+.athena-tab-view .tab.last{border-right:0}
+.athena-tab-view .tab.current{border-bottom:1px solid #fff;background:#fff}
+.athena-tab-view .tab.current a:hover{background:#fff}
+.athena-tab-view .items{clear:both;height:503px;color:#666}
+.athena-main-panel{z-index:1005;position:fixed;left:0;bottom:40px;overflow:hidden;width:220px;font-size:12px;line-height:15px;background:#fff;box-shadow: 0 0 5px #ccc;}
+.athena-main-panel a.btn-close{position:absolute;right:6px;top:6px}
+.search-wrap{display:none;margin-top:-1px;border-top:1px solid #ccc}
+.athena-search{padding:9px;border-bottom:1px solid #ccc}
+.friend-list-wrap,.talent-list-wrap{height:504px;overflow-y:scroll}
+.friend-list-wrap .no-friends-tip,.listener-list-wrap .no-listener-tip{padding:25px 10px;text-align:center}
+.athena-main-panel .friend-list-wrap .athena-user:hover,.athena-main-panel .talent-list-wrap .athena-user:hover{cursor:pointer;background:#f5f5f5}
+.athena-user{position:relative;overflow:hidden;width:204px;height:50px;padding:6px 7px;color:#999;border-bottom:1px solid #f2f2f2}
+.athena-user .image{position:relative;float:left;width:50px;height:50px;margin:0 10px 0 0;background:#ddd;border-radius:3px}
+.athena-user .image img{display:block;width:50px;height:50px;border-radius:3px}
+.athena-user .icon-status{position:absolute;display:block;right:-1px;bottom:-1px;width:8px;height:8px;border-radius:2px;background-image:none}
+.athena-user .icon-message{position:absolute;display:block;right:-2px;top:-1px}
+.athena-user .icon-status-offline{background-color:#ccc}
+.athena-user .icon-status-listening,.athena-user .icon-status-online{background-color:#00e673}
+.athena-user .info{float:left;width:135px;padding-top:6px; margin-top: 0;}
+.athena-user .nick-name p{margin-bottom:8px;color:#333}
+.athena-user .listening p,.athena-user .nick-name p,.athena-user .signature p{overflow:hidden;width:100%;white-space:nowrap;-o-text-overflow:ellipsis;text-overflow:ellipsis; margin: 0;}
+.athena-user .listening .nick-name{margin:0 3px;color:#f60;}
+.athena-user .listening .follow-num{margin:0 3px 0 0;color:#29cc7a}
+.athena-user .icon-listening{width:12px;height:10px;margin-right:3px;background-position:-250px -50px}
+.athena-user .opt{position:absolute;right:15px;top:20px}
+.athena-my-info{overflow:hidden;height:50px;padding:6px;border-bottom:1px solid #1f1f1f;color:#999;background:#333}
+.athena-my-info .image{overflow:hidden;float:left;width:50px;height:50px;margin:0 10px 0 0;background:#ddd;border-radius:4px}
+.athena-my-info .info{float:left; margin-top: 6px;}
+.athena-my-info .nick-name{margin-bottom:3px;overflow:hidden;width:100%;white-space:nowrap;-o-text-overflow:ellipsis;text-overflow:ellipsis;color:#fff;  line-height: normal; font-weight: normal;}
+.athena-my-info .listening p,.athena-my-info .signature p{overflow:hidden;width:100%;white-space:nowrap;-o-text-overflow:ellipsis;text-overflow:ellipsis}
+.athena-my-info .signature a,.athena-my-info .signature a:hover{color:#999;text-decoration:none}
+.athena-my-info .following{cursor:pointer}
+.athena-panel{position:fixed;right:20px;bottom:20px}
+.athena-playlist-panel{z-index:1010;width:250px;height:337px;background:#fff;border-radius:5px;box-shadow: 0 0 5px #ccc;}
+.athena-playlist-panel a.btn-close{display:none}
+.athena-playlist-panel .cover,.athena-playlist-panel .cover-mask{position:absolute;left:0;top:0;width:250px;height:250px;border-radius:5px 5px 0 0}
+.athena-playlist-panel .cover-mask{background:#000;opacity:.6;filter:alpha(opacity=60)}
+.athena-playlist-panel .athena-user{position:relative;width:250px;height:250px;color:#fff;padding:0;border-radius:5px 5px 0 0}
+.athena-playlist-panel .athena-user .nick-name p{cursor:pointer;color:#fff}
+.athena-playlist-panel .athena-user .image{display:none}
+.athena-playlist-panel .athena-user .info{position:absolute;left:10px;bottom:10px;width:225px}
+.athena-playlist-panel .athena-user .opt{left:78px;top:90px}
+.athena-playlist-panel .athena-user a.btn-play:hover{background-position:-150px -200px}
+.athena-playlist-panel .athena-user a.btn-play .icon-play,.athena-playlist-panel .athena-user a.btn-play span,.athena-playlist-panel .btn-play-all{display:none}
+.athena-playlist{overflow:hidden;height:86px;border:1px solid #ccc;border-top:0;border-radius:0 0 5px 5px}
+.athena-song{overflow:hidden;height:20px;padding:5px 12px 4px;border-bottom:1px solid #f2f2f2;line-height:20px}
+.athena-song .name{float:left;color:#999}
+.athena-song .opt{float:right}
+.athena-chat-panel{z-index:1005;left:255px;bottom:50px;width:350px;height:364px;background:#fff;border-radius:5px;box-shadow:0 0 5px #ccc}
+.athena-chat-panel .user-wrap{height:62px;background:#333;border:1px solid #262626;border-radius:5px 5px 0 0}
+.athena-chat-panel .athena-user{width:auto;border:0;color:#999}
+.athena-chat-panel .athena-user .image{cursor:pointer}
+.athena-chat-panel .athena-user .nick-name p{cursor:pointer;color:#fff}
+.athena-chat-panel .athena-user .opt{left:40px;top:39px;width:20px}
+.athena-chat-panel .chat-list-wrap{height:200px;border:1px solid #ccc;border-top:0;overflow-y:scroll}
+.athena-chat-panel .athena-chat-editor{height:30px;padding:10px;border:1px solid #ccc;border-top:0;border-radius:0 0 5px 5px;background:#e6e6e6}
+.athena-chat-panel .athena-chat-editor input{float:left;width:250px;height:20px;padding:4px 10px;border:1px solid #ccc;line-height:20px;font-size:12px;color:#ccc;border-radius:5px;outline:0;resize:none; background: #fff;}
+.athena-chat-panel .athena-chat-editor input.focus,.athena-chat-panel .athena-chat-editor input:focus{border-color:#f60;color:#666}
+.athena-chat-panel .athena-chat-editor a.btn-send{float:right;height:20px;padding:5px 10px;font-size:14px;line-height:20px;background:#f60;border-radius:5px; color: #fff;}
+.athena-chat-panel .athena-chat-editor a.btn-send:hover{background:#e65800}
+.athena-chat-panel a.btn-close{position:absolute;right:6px;top:6px}
+.athena-chat-panel .view-history{position:relative;padding:12px 0 15px;border-left:1px solid #ccc;border-right:1px solid #ccc}
+.athena-chat-panel .view-history span{display:block;width:100%;padding:0;margin:10px 0 0;overflow:hidden;height:1px;border:0;line-height:1px;background:#f2f2f2}
+.athena-chat-panel a.more-history{display:block;cursor:pointer;padding:3px 8px;width:100px;height:15px;margin:-10px auto 0 auto;text-align:center;color:#999;border-radius:10px;background:#f2f2f2}
+.athena-chat-panel a.more-history:hover{text-decoration:none}
+.athena-chat-list{padding:10px}
+.athena-chat-item{clear:both;overflow:hidden;margin-bottom:15px}
+.athena-chat-item .arrow{float:left; overflow: hidden; width: 12px; height: 12px; background: url(../images/sprites.png);}
+.athena-chat-item .time{margin-bottom:10px;text-align:center;font-size:11px;line-height:12px;color:#999}
+.athena-chat-item .image{position:relative;float:left;width:50px;height:50px;margin:0 10px 0 0;background:#ddd;border-radius:3px}
+.athena-chat-item .image img{display:block;width:50px;height:50px;border-radius:3px}
+.athena-chat-item .content{position:relative;float:left;min-width:100px;max-width:280px;padding:9px 8px;border-radius:5px;font-size:12px;line-height:15px;word-break:break-all}
+.athena-chat-item .tip{float:left;padding-top:4px;overflow:hidden}
+.athena-chat-item.chat-item-1 .image{float:right;margin-left:12px}
+.athena-chat-item.chat-item-2 .image{float:left;margin-right:12px}
+.athena-chat-item.chat-item-1 .arrow{float:right;background-position:-303px -200px;margin-left:-5px}
+.athena-chat-item.chat-item-2 .arrow{float:left;margin-right:-5px;background-position:-300px -150px}
+.athena-chat-item.chat-item-1 .content{float:right;margin-left:7px;background:#daf2e6}
+.athena-chat-item.chat-item-2 .content{float:left;margin-right:7px;background:#e6e6e6}
+.athena-chat-item.chat-item-1 .tip{float:right}
+.athena-chat-item.chat-item-2 .tip{float:left}
+#sidebutton{bottom:45px}

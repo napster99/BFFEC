@@ -1,0 +1,129 @@
+<!-- title -->
+<div class="heading-buttons">
+  <h3>支付渠道列表</h3>
+  <div class="buttons pull-right">
+    <a href="" class="btn btn-primary btn-icon glyphicons circle_plus"><i></i>添加</a>
+  </div>
+  <div class="clearfix"></div>
+</div>
+<div class="separator bottom"></div>
+<!-- title End -->
+
+<div class="innerLR">
+  <!-- 3区：表格 -->
+  <table class="table table-bordered table-condensed table-striped table-hover table-primary checkboxs">
+    <thead>
+      <tr>
+        <th class="uniformjs" style="width: 1%;"><input type="checkbox"></th>
+        <th>NO.</th>
+        <th>渠道标识</th>
+        <th class="center">状态</th>
+        <th class="center">名称</th>
+        <th class="center" width="150">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="selectable">
+        <td class="center uniformjs"><input type="checkbox"></td>
+        <td>1</td>
+        <td>Home Page</td>
+        <td class="center">
+          <div class="make-switch switch-mini" data-on-label="启用" data-off-label="禁用" data-on="danger" data-off="default">
+            <input type="checkbox" checked>
+          </div>
+        </td>
+        <td class="center">Guest</td>
+        <td class="center">
+          <a title="编辑" href="#" class="btn-action glyphicons pencil btn-success"><i></i></a>
+          <a title="删除" href="#" class="btn-action glyphicons remove_2 btn-danger"><i></i></a>
+        </td>
+      </tr>
+      <tr class="selectable">
+        <td class="center uniformjs"><input type="checkbox"></td>
+        <td>1</td>
+        <td>Home Page</td>
+        <td class="center">
+          <div class="make-switch switch-mini" data-on-label="启用" data-off-label="禁用" data-on="danger" data-off="default">
+            <input type="checkbox" checked>
+          </div>
+        </td>
+        <td class="center">Guest</td>
+        <td class="center">
+          <a title="编辑" href="#" class="btn-action glyphicons pencil btn-success"><i></i></a>
+          <a title="删除" href="#" class="btn-action glyphicons remove_2 btn-danger"><i></i></a>
+        </td>
+      </tr>
+      <tr class="selectable">
+        <td class="center uniformjs"><input type="checkbox"></td>
+        <td>1</td>
+        <td>Home Page</td>
+        <td class="center">
+          <div class="make-switch switch-mini" data-on-label="启用" data-off-label="禁用" data-on="danger" data-off="default">
+            <input type="checkbox" checked>
+          </div>
+        </td>
+        <td class="center">Guest</td>
+        <td class="center">
+          <a title="编辑" href="#" class="btn-action glyphicons pencil btn-success"><i></i></a>
+          <a title="删除" href="#" class="btn-action glyphicons remove_2 btn-danger"><i></i></a>
+        </td>
+      </tr>
+      <tr class="selectable">
+        <td class="center uniformjs"><input type="checkbox"></td>
+        <td>1</td>
+        <td>Home Page</td>
+        <td class="center">
+          <div class="make-switch switch-mini" data-on-label="启用" data-off-label="禁用" data-on="danger" data-off="default">
+            <input type="checkbox" checked>
+          </div>
+        </td>
+        <td class="center">Guest</td>
+        <td class="center">
+          <a title="编辑" href="#" class="btn-action glyphicons pencil btn-success"><i></i></a>
+          <a title="删除" href="#" class="btn-action glyphicons remove_2 btn-danger"><i></i></a>
+        </td>
+      </tr>
+      <tr class="selectable">
+        <td class="center uniformjs"><input type="checkbox"></td>
+        <td>1</td>
+        <td>Home Page</td>
+        <td class="center">
+          <div class="make-switch switch-mini" data-on-label="启用" data-off-label="禁用" data-on="danger" data-off="default">
+            <input type="checkbox" checked>
+          </div>
+        </td>
+        <td class="center">Guest</td>
+        <td class="center">
+          <a title="编辑" href="#" class="btn-action glyphicons pencil btn-success"><i></i></a>
+          <a title="删除" href="#" class="btn-action glyphicons remove_2 btn-danger"><i></i></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- 3区：表格 End -->
+  <!-- 4区：统计/操作/翻页 -->
+  <div class="col-sm-3 dataTables_info">
+    <div class="col-sm-6 checkboxs_actions padding-none" hidden>
+      <select class="form-control">
+        <option>删除</option>
+      </select>
+    </div>
+  </div>
+  <!-- 4区：统计/操作/翻页 End -->
+
+</div>
+
+<script>
+  yp.ready(function() {
+    $('.btn-action').on('click', function() {
+      bootbox.confirm('确认信息', function(result) {
+        notyfy({
+          text: '你点击了：' + ( result ? '确定' : '取消' )
+        , type: 'primary'
+        , layout: 'topRight'
+        , timeout: 2000
+        });
+      });
+    });
+  });
+</script>

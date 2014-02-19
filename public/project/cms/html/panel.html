@@ -1,0 +1,63 @@
+<!-- 标题 -->
+<div class="heading-buttons">
+  <h3>概览</h3>
+</div>
+<div class="separator bottom"></div>
+<!-- 标题 End -->
+
+<div class="innerLR">
+  <div class="row">
+    <div class="col-md-6">
+      <!-- Widget -->
+      <div class="widget" data-toggle="collapse-widget">
+        <div class="widget-head">
+          <h4 class="heading">系统信息</h4>
+        </div>
+        <div class="widget-body list">
+          <ul>
+            <li><span>PHP版本</span><span class="pull-right">5.4.17</span></li>
+            <li><span>版本</span><span class="pull-right">V1.0</span></li>
+            <li><span>PHP版本</span><span class="pull-right">5.4.17</span></li>
+            <li><span>版本</span><span class="pull-right">V1.0</span></li>
+            <li><span>PHP版本</span><span class="pull-right">5.4.17</span></li>
+            <li><span>版本</span><span class="pull-right">V1.0</span></li>
+          </ul>
+        </div>
+      </div>
+      <!-- // Widget END -->
+    </div>
+    <div class="col-md-6">
+      <!-- Widget -->
+      <div class="widget" data-toggle="collapse-widget">
+        <div class="widget-head">
+          <h4 class="heading">信息统计</h4>
+        </div>
+        <div class="widget-body list">
+          <ul>
+            <li><span>会员数</span><span class="pull-right">1000</span></li>
+            <li><span>图片集</span><span class="pull-right">125</span></li>
+          </ul>
+        </div>
+      </div>
+      <!-- // Widget END -->
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</div>
+
+
+<script>
+  yp.ready(function() {
+    $('.btn-action').on('click', function() {
+      bootbox.confirm('确认信息', function(result) {
+        notyfy({
+          text: '你点击了：' + ( result ? '确定' : '取消' )
+        , type: 'primary'
+        , layout: 'topRight'
+        , timeout: 2000
+        });
+      });
+    });
+  });
+</script>
+

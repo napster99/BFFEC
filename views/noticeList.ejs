@@ -1,0 +1,46 @@
+<%- include header %>
+
+
+<div id="wrapper">
+  <div id="main">
+    <div id="sidebar">
+      <%- include sidebar %>
+    </div>
+   <div id="content"> 
+    <input type="hidden" value="<%= user._id || user.uid %>" name="uid" />
+    <div class="panel"> 
+      <div class="inner"> 
+            <div class="header clearfix"> 
+              我的消息
+            </div> 
+            <div id="noticeList"></div>
+            <div id="logPagina" class="pagination">
+                  <ul>
+                    <li class="active">
+                      <a title="Current page is 1">1</a>
+                    </li>
+                    <li>
+                      <a title="Go to page 2">2</a>
+                    </li>
+                    <li>
+                      <a title="Go to next page">&gt;</a>
+                    </li>
+                    <li>
+                      <a title="Go to last page">&gt;&gt;</a>
+                    </li>
+                  </ul>
+              </div>
+        </div> 
+      </div> 
+    </div>
+  </div>
+</div>
+
+
+<div id="myModal" class="modal fade">
+   <div class="modal-body">
+   </div>
+</div>
+
+<script src="/javascripts/noticeList.js"></script>
+<%- include footer %>

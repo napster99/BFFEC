@@ -21,7 +21,16 @@ var phantom = require('node-phantom');
 exports.index = function(req, res) {
   res.render('index',{
     title : '前端社区',
-    otheruser : req.session.user
+    otheruser : req.session.user,
+    sessionID : req.cookies['connect.sid']
+  })
+}
+
+
+exports.frontNav = function(req, res) {
+  res.render('frontNav',{
+    title : '前端导航',
+    sessionID : req.cookies['connect.sid']
   })
 }
 
@@ -29,7 +38,8 @@ exports.index = function(req, res) {
 exports.getSetting = function(req, res) {
   res.render('setting',{
 			title : '个人设置--'+req.session.user.name,
-     		 otheruser : req.session.user
+     		 otheruser : req.session.user,
+         sessionID : req.cookies['connect.sid']
 		})
 }
 
@@ -78,7 +88,6 @@ exports.getURLContentAjax = function(req, res) {
    phantom.create(function(err,ph) {
       return ph.createPage(function(err,page) {
         return page.open(articleURL, function(err,status) {
-          console.log("opened site? ", status);
           page.includeJs('http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', function(err) {
             setTimeout(function() {
               return page.evaluate(function() {

@@ -30,7 +30,8 @@ var userSchema = new Schema({
   	startTime : Date, //项目开始时间
   	endTime : Date,   //项目结束时间
   	todo : String     //项目中负责的模块
-  }]
+  }],
+  auth : {type:Array, default :[]}    //权限
 });
 
 userSchema.static('saveUser',function(user,callback) {
@@ -98,7 +99,7 @@ userSchema.static('updateScore',function(uid,score,callback) {
   })
 });
 
-//更新积分Admin
+//更新积分Admin（消息）
 userSchema.static('updateScoreAdmin',function(uid,score,logOptions,callback) {
 
         var logScore = new LogScore({
@@ -111,10 +112,15 @@ userSchema.static('updateScoreAdmin',function(uid,score,logOptions,callback) {
         });
 
         LogScore.saveLogScore(logScore,function(err,data) {
-                if(!err) {
-                        console.log('日志已经写入...'+data)
-                }
         });
+
+        // var notice = new Notice({
+        // 	'uid' : uid,
+        // 	'content' : ''
+        // });
+
+
+
         
         return this.findOneAndUpdate({ "_id" : uid }, { score: score },  function(err,user) {
                         callback(err,user);
@@ -153,7 +159,6 @@ userSchema.static('projectEdit',function(options,callback) {
 	,endTime 	= options['fieldObj']['endTime']
 	,todo 		= options['fieldObj']['todo']
 	,role		= options['fieldObj']['role']
-  console.log(options)
 	return that.findOne({'_id':uid},function(err,user) {
 		var projects = user['projects'];
 		for(var i=0; i<projects.length; i++) {
@@ -177,6 +182,14 @@ userSchema.static('projectEdit',function(options,callback) {
 
 })
 
+//重置权限
+userSchema.static('resetAuth',function(uid,callback) {
+	return this.update({ "_id" : uid }, {"auth":''},  function(err,user) {
+		callback(err,user);
+	})
+})
+
+
 //+++++++++++++++Redis Four START++++++++++++++++
 
 //list
@@ -198,7 +211,6 @@ userSchema.static('add',function(options,callback) {
 userSchema.static('edit',function(options,callback) {
 	var condition = options['conditionObj']
 	,editObj = options['fieldObj'];
-
 	return this.findOneAndUpdate(condition, editObj,  function(err,user) {
 		callback(err,user);
 	})

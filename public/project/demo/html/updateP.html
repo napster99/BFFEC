@@ -1,0 +1,104 @@
+<link href="common/theme/scripts/plugins/forms/select2/select2.css" rel="stylesheet"/>
+<!-- 1区：表单头部（title） -->
+<div class="heading-buttons">
+  <h3>项目更新</h3>
+  <div class="clearfix"></div>
+</div>
+<div class="separator bottom"></div>
+<!-- 1区：表单头部（title） End -->
+
+<div class="innerLR" ms-controller="page">
+  <form role="form" id="updateForm">
+    <!-- 左列 -->
+    <div class="col-sm-6">
+      <div class="form-group">
+        <label for="projectName">项目名称：</label>
+        <input type="text" class="form-control" id="projectName" name="name" required ms-value="projectInfo.name">
+      </div>
+      <div class="form-group">
+        <label for="projectType">项目类型：</label>
+        <select class="form-control" name="type" id="projectType" ms-each-el="types" required>
+          <option ms-value="el.id" ms-selected="projectInfo.type == el.id">{{el.name}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="projectDesc">项目描述：</label>
+        <textarea class="form-control" rows="2" name="desc" id="projectDesc" required ms-value="projectInfo.desc"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="projectPM">项目负责人：</label>
+        <select class="form-control" name="resPerson" id="projectPM" ms-each-el="participators" required>
+          <option ms-value="el.uid" ms-selected="resPerson.uid == el.uid">{{el.name}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="projectPR">项目参与者：</label>
+        <!-- <div ms-each-el="participators">
+          <p>{{(projectInfo.joinPerson).indexOf(el.uid) > -1}}</p>
+        </div> -->
+        <select class="select2-offscreen" multiple name="joinPerson" id="projectPR" ms-each-el="participators" style="width:100%" required>
+          <option ms-value="el.uid" ms-selected="(projectInfo.joinPerson).indexOf(el.uid) > -1">{{el.name}}</option>
+        </select>
+
+        <!-- <select class="form-control" multiple name="joinPerson" id="projectPM" ms-each-el="participators" required>
+          <option ms-value="el.uid" ms-selected="(projectInfo.joinPerson).indexOf(el.uid) > -1">{{el.name}}</option>
+        </select> -->
+      </div>
+    </div>
+    <!-- 2左列 end -->
+    <!-- 2右列 -->
+    <div class="col-sm-6">
+      <div class="form-group">    
+        <div class="form-group col-md-6 padding-none">
+          <label class="label-control">立项时间：</label>
+          <div class="input-group">
+            <input size="16" type="text" class="form-control js-dateRangeFrom" id="yp-dateRangeFrom1" data-target="#yp-dateRangeTo1" ms-value="approvalStartTime.substr(0, 10)" name="approvalStartTime" required>
+            <span class="input-group-addon">
+              <i class="icon-calendar"></i>
+            </span>
+          </div>
+        </div>
+        <div class="form-group col-md-6 padding-none">
+          <label class="label-control"> 至 </label>
+          <div class="input-group">
+            <input size="16" type="text" class="form-control js-dateRangeTo" id="yp-dateRangeTo1" data-target="#yp-dateRangeFrom1" ms-value="approvalEndTime.substr(0, 10)" name="approvalEndTime" required>
+            <span class="input-group-addon">
+              <i class="icon-calendar"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="projectSvn">项目svn地址：</label>
+        <input type="text" class="form-control" name="svn" id="projectSvn" required ms-value="projectInfo.svn">
+      </div>
+      <div class="form-group">
+        <label for="projectPriority">项目优先级：</label>
+        <select class="form-control" name="priority" id="projectPriority" ms-each-el="prioritys">
+          <option ms-value="el.id"  ms-selected="projectInfo.priority == el.id">{{el.name}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="inputMoney">项目状态：</label>
+        <select class="form-control" name="state" id="projectState" ms-each-el="stateArray">
+          <option ms-value="el.id"  ms-selected="projectInfo.state == el.id">{{el.name}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="inputMoney">项目总进度：</label>
+        <div class="input-group">
+          <input type="num" class="form-control" ms-value="projectInfo.speed" name="speed" required>
+          <span class="input-group-addon">%</span>
+        </div>
+      </div>
+    </div>
+    <!-- 右列end -->
+     <!-- 3区：按钮 -->
+    <div class="form-actions right">
+      <button type="button" class="btn btn-icon btn-default glyphicons circle_remove" ms-click="backBtn"><i></i>返回</button>
+      <button type="submit" class="btn btn-icon btn-primary glyphicons circle_ok" ms-click="submitBtn"><i></i>保存</button>
+    </div>
+     <!-- 3区：按钮end -->
+  </form>
+  <script src="scripts/updateP.js"></script>
+</div>

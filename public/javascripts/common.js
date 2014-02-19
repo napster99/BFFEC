@@ -49,7 +49,8 @@ $(function(){
 	if(window.location.pathname.indexOf('topicList') > -1) {
 		showWhich($('li[name=topic]'));
 	}
-	if(window.location.pathname.indexOf('scoreList') > -1) {
+	if(window.location.pathname.indexOf('scoreList') > -1 || 
+		window.location.pathname.indexOf('noticeList') > -1) {
 		showWhich($('li[name=home]'));
 	}
 	if(window.location.pathname.indexOf('article') > -1 || window.location.pathname.indexOf('Article') > -1) {
@@ -111,6 +112,14 @@ var CommonJS = {
 		2 : '周报',
 		3 : '签到',
 		4 : '管理员'
+	},
+	authType : {
+		1 : '成员列表',
+		2 : '日报管理',
+		3 : '话题管理',
+		4 : '积分管理',
+		5 : '权限管理',
+		6 : '排行榜'
 	}
 
 }

@@ -5,6 +5,7 @@ module.exports = {
 	'Controller' : ['index','message','user','replys','logs'],
 	'Action' : [
 	{'url' : '','controller':'index','actions':'index','type':'get'},
+	{'url' : 'frontNav','controller':'index','actions':'frontNav','type':'get'},
 
 	{'url' : 'getTopicList','controller':'index','actions':'getTopicList','type':'get'},	
 	{'url' : 'getArticleList','controller':'index','actions':'getArticleList','type':'get'},	
@@ -76,9 +77,16 @@ module.exports = {
 
 	{'url' : 'getAlreadyGood','controller':'message','actions':'getAlreadyGood','type':'get'},
 
-	{'url' : 'changeScoreByAdmin','controller':'logs','actions':'changeScoreByAdmin','type':'post'}
+	{'url' : 'changeScoreByAdmin','controller':'logs','actions':'changeScoreByAdmin','type':'post'},
 
+	{'url' : 'resetAuth','controller':'user','actions':'resetAuth','type':'post'},
 	
+	{'url' : 'noticeList/:uid','controller':'notice','actions':'getNoticeList','type':'get'},
+
+	{'url' : 'getNoticeAjax','controller':'notice','actions':'getNoticeAjax','type':'get','middleware':['login']}
+
+
+
 
 	]
 }

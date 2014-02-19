@@ -165,6 +165,8 @@
 							</div>
 							</div>
 							<input type="hidden" name="which" value="article">
+							<input type="hidden" name="title" value="<%= articleDetail['mtitle']  %>">
+							
 						</div>
 						<button id="submit_btn" class="btn">回复</button>
 						<span class="col_fade">Ctrl+Enter 快捷回复</span>
@@ -213,7 +215,7 @@
 			var that = this;
 			ui.$goodArticle.click(function() {
 				if(alreayGood) {
-					alert('你已经赞过了！');
+					bootbox.alert('你已经赞过了！');
 				}else{
 					that.sendGoodAction();
 				}

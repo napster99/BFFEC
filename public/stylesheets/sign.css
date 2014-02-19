@@ -84,3 +84,7 @@ body{border: 0; margin: 0; /*font:16px/22px Microsoft Yahei,simsun,sans-serif;*/
 
 .boer{float: left; width: 38%; margin: 20px;}
 
+li[name=home]{position: relative;}
+.notice{position: absolute; width: 5px; height: 5px; border-radius: 25px; background: red; left: 7px; top: 11px;}
+
+
