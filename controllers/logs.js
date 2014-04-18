@@ -58,8 +58,7 @@ exports.getLogScoreAjax = function(req, res) {
 //更新日志页面
 exports.getChangeLog = function(req, res) {
   res.render('changeLog',{
-      title : '更新日志',
-      sessionID : req.cookies['connect.sid']
+      title : '更新日志'
     }); 
 }
 
@@ -69,8 +68,7 @@ exports.getScoreListByUid = function(req, res) {
     res.render('scoreList',{
         title : '我的积分日志',
         user : req.session.user,
-        otheruser : req.session.user,
-        sessionID : req.cookies['connect.sid']
+        otheruser : req.session.user
       });
 }
 
@@ -80,7 +78,7 @@ exports.changeScoreByAdmin = function(req, res) {
   var uid = req.body.uid;
   var score = req.body.score;
   var mark = req.body.mark;
-  var oldScore = score;
+
   models['user'].getUserByUid(uid,function(err,user) {
     if(!err) {
       var logOptions = {
@@ -95,15 +93,6 @@ exports.changeScoreByAdmin = function(req, res) {
       models['user'].updateScoreAdmin(uid,score,logOptions,function(err,rows) {
         if(!err) {
           res.redirect('/weblist#lD');
-          var time = CommonJS.changeTime(new Date());
-
-          var noticeObj = {
-            'uid' : uid,
-            'content' : '管理员在'+time+'变动了您的积分（'+oldScore+'）理由：'+mark
-          }
-
-          var notice = new models['notice'](noticeObj);
-          models['notice']['add'](notice, function(err, notice) {});
         }
       })
     }

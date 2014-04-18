@@ -49,6 +49,7 @@ messageSchema.static('updateMessagecNumByMid',function(mid, which, callback) {
 			}
 			if(which === 'good') {
 				self.update({'_id':mid},{'good':count},function(err,message) {
+					console.log(count)
 					callback(err, count);
 				})	
 			}else{

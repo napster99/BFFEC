@@ -22,12 +22,8 @@ $(function() {
     $dailyCon    : $('#dailyCon'),
     $msgSeeDetail : $('#msgSeeDetail'),
     $dayPagi : $('#dayPagi'),
-    $userList : $('select[which=userList]'),   //user list
-    $authList : $('#authList'),
-    $authSureBtn : $('#authSureBtn')
+    $userList : $('#userList')   //user list
   }
-
-  var authUid;
 
   var Page = {
     init : function(){
@@ -40,10 +36,7 @@ $(function() {
       this.getUserList();
     },
     view : function() {
-      if(window.location.hash) 
-        $('.nav-tabs').find('a[href='+window.location.hash+']').trigger('click');
-      else 
-        $('.nav-tabs').find('a').eq(0).trigger('click');
+      $('.nav-tabs').find('a[href='+window.location.hash+']').trigger('click');
     },
     addEventListener : function() {
       var self = this;
@@ -61,7 +54,6 @@ $(function() {
       ui.$passBtn.on('click','',function() {
         var mid = ui.$msgDetail.attr('mid');
         var uid = ui.$msgDetail.attr('uid');
-        var title = ui.$msgDetail.attr('title');
         var reviews = ui.$reviews.val().replace(/\s*/g,'');
         var score = ui.$score.val();
         if(!/^[0-9]*[0-9][0-9]*$/.test(score)) {
@@ -70,16 +62,15 @@ $(function() {
           return;
         }
 
-        self.changeMessageStatus(mid,title,'passed',uid,reviews,score);
+        self.changeMessageStatus(mid,'passed',uid,reviews,score);
       });
       //不通过
       ui.$unPassBtn.on('click','',function() {
         var mid = ui.$msgDetail.attr('mid');
         var uid = ui.$msgDetail.attr('uid');
-        var title = ui.$msgDetail.attr('title');
         var reviews = ui.$reviews.val().replace(/\s*/g,'');
         var score = ui.$score.val();
-        self.changeMessageStatus(mid,title,'unpass',uid,reviews,score);
+        self.changeMessageStatus(mid,'unpass',uid,reviews,score);
       });
       //返回列表
       ui.$backBtn.on('click','',function() {
@@ -102,93 +93,14 @@ $(function() {
             ui.$msgList.show();
         }
       })
-
-
-      ui.$userList.change(function() {
-        if($(this).attr('name') != 'auth') return;
-        authUid = $(this).val();
-        self.initAuthList(authUid);
-      })
-
-      ui.$authSureBtn.click(function() {
-        if(!authUid) {
-          alert('请选择成员！');
-          return;
-        }
-        var inputs = ui.$authList.find('li input:checked');
-        var authArr = [];
-        for(var i=0; i<inputs.length; i++) {
-          authArr.push(inputs.eq(i).val());
-        }
-        if(authArr.length == 0) {
-          self.resetAuth(authUid);
-        }else{
-          var obj = {
-          'conditionObj' : {
-            '_id' : authUid
-          },
-          'fieldObj' : {
-            'auth' : authArr
-          }
-        }
-        self.updateAuthList(obj);
-        }
-        
-      });
     },
 
-    resetAuth : function(uid) {
-      var options = {
-        'url' : '/resetAuth',
-        'dataType' : 'json',
-        'type' : 'POST',
-        'data' : {'uid' : uid },
-        'success' : function() {
-            alert('更新成功！')
-         }
-      }
-      $.ajax(options);
-    },
-
-    updateAuthList : function(data) {
-      var options = {
-        'url' : '/data/user/edit',
-        'dataType' : 'json',
-        'type' : 'POST',
-        'data' : data,
-        'success' : function() {
-            alert('更新成功！')
-         }
-      }
-      $.ajax(options);
-    },
-
-    initAuthList : function(uid) {
-      var options = {
-        'url' : '/data/user/list?_id='+uid,
-        'dataType' : 'json',
-        'type' : 'GET',
-        'success' : function(data) {
-          var auth = data['data'][0]['auth'];
-          var inputs = ui.$authList.find('li input');
-          for(var i=0; i<inputs.length; i++) {
-            if(auth.indexOf(inputs.eq(i).val()) > -1) {
-              inputs.eq(i).get(0).checked = true;
-            }else{
-              inputs.eq(i).get(0).checked = false;
-            }
-          }
-        }
-      }
-      $.ajax(options);
-    },
-
-    changeMessageStatus : function(mid,title,status,uid,reviews,score) {
+    changeMessageStatus : function(mid,status,uid,reviews,score) {
       var options = {
         'url' : '/changeMessageStatus',
         'dataType' : 'json',
         'type' : 'POST',
-        'data' : {mid : mid, title: title, status : status ,uid : uid,reviews:reviews,score:score},
+        'data' : {mid : mid,status : status ,uid : uid,reviews:reviews,score:score},
         'success' : function(data) {
           if(data['message'] == 'success') {
             window.location.href = window.location.href;
@@ -232,7 +144,7 @@ $(function() {
       +'     </span>'
       +'</div>';
       ui.$msgCon.html(html);
-      ui.$msgDetail.attr('mid',message['_id']).attr('uid',message['uid']).attr('title',message['mtitle']);
+      ui.$msgDetail.attr('mid',message['_id']).attr('uid',message['uid']);
       ui.$msgList.hide();
       ui.$msgDetail.show();
     },
@@ -413,43 +325,12 @@ $(function() {
       +'<div class="topic_content"> '
       +'    <div class="well"> '+message['mcontent'] + '</div>'
       +'</div>'
+      +'<hr>'
       +'<div class="changes"> '
       +'     <span class="col_fade"> '
       +'          <a class="dark" href="javascript:;">'+uname+'</a> 在 '+message['mtime']+' 发布 '
       +'     </span>'
-      +'</div>'
-      +'<hr>';
-      var replyArr = data['replyArr'];
-
-      if(replyArr.length > 0) {
-        $('#commentCon').show();
-        $('#commentNum').text(replyArr.length);
-      }
-      var replyHtml = '';
-      for(var i=0; i<replyArr.length; i++) {
-        replyHtml += '<div class="cell reply_area reply_item">'
-                  +'<div class="author_content">'
-                  +'<div class="user_avatar block">'
-                  +'<a target="_blank" href="/user/52bd397d75dc0af411000001"><img src="../images/avatar/52bd397d75dc0af411000001.jpg" title="谢武"></a>'
-                  +'</div>'
-                  +'<div class="user_info">'
-                  +'<span class="reply_author"> '
-                  +'<a class="dark" href="/user/52bd397d75dc0af411000001">谢武</a> '
-                  +'</span>'
-                  +'<span class="col_fade">'
-                  +'<span>'+new Date(replyArr[i]['rtime']).format('yyyy-MM-dd hh:mm')+'</span>'
-                  +'</span> '
-                  +'</div>'
-                  +'<div class="user_action"> '
-                  +'<span class="col_fade">#'+(i+1)+'</span>  '
-                  +'</div></div> '
-                  +'<div class="reply_content"> '
-                  +'<pre>'+replyArr[i]['rcontent']+'</pre>'
-                  +' </div></div>  ';
-      }
-
-      $('#adminComment').html(replyHtml);
-     
+      +'</div>';
       ui.$msgSeeCon.html(html);
       ui.$msgList.hide();
       ui.$msgDetail.hide();
@@ -490,3 +371,14 @@ $(function() {
 
 });
 
+
+                
+                  
+                
+                
+                    
+                        
+                    
+                
+                
+             

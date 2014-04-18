@@ -5,7 +5,7 @@ var querystring = require('querystring');
 var mw = require('./middleware');
 var url = require('url');
 var models = require('../models/models');
-
+console.log(models)
 function RedisFour(app) {
 	this.init(app);
 }
@@ -34,9 +34,11 @@ RedisFour.prototype.resolution = function(req, res) {
 	if(this.isEmptyObject(options)) {
 		options = req.body;
 	}
+	
 	if(typeof models[controller][action] === 'function') {
 		// delete options['callback'];
 		models[controller][action](options,function(err,result) {
+			// console.log(req.query.callback)
 			res.header("Access-Control-Allow-Origin", "*");
 			if(!err) {
 				res.json({

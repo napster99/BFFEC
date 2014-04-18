@@ -86,6 +86,7 @@ proSchema.static('list',function(options,callback) {
 					})
 			})
 		}else{
+
 			that.find(options,function(err, project) {
 				if(curUid) {
 					var newProjects = [];
@@ -107,8 +108,7 @@ proSchema.static('list',function(options,callback) {
 		for(var i=0,len=project.length; i<len; i++) {
 			project[i] = project[i].toJSON();
 			var resPersonId = project[i]['resPerson'];
-	
-
+			
 			var userProjectsObj = {};
 			var userProjects = userObj[resPersonId]['projects'];
 			for(var j=0; j<userProjects.length; j++) {
@@ -123,7 +123,6 @@ proSchema.static('list',function(options,callback) {
 				,'todo' : userProjectsObj[project[i]['_id']]['todo'] || ''
 				,'speed' : userProjectsObj[project[i]['_id']]['speed'] || ''
 			};
-
 			project[i]['joinPersons'] = [];
 			project[i]['role'] = {};
 			project[i]['role']['1'] = []; //参与者
@@ -150,21 +149,16 @@ proSchema.static('list',function(options,callback) {
 				
 				project[i]['role']['1'].push(uid);
 			});
-			
+			if(totalCount)
+				project[i]['totalCount'] = totalCount;
 		}
 		
-		var backObj = {
-			'list' : project,
-			'totalCount' : totalCount || 0
-		}
-		
-		callback(err,backObj);
+		callback(err,project);
 	}
 })
 
 //add
 proSchema.static('add',function(options,callback) {
-	console.log(options);
 	var newProject = new Project(options);
 	newProject.save(function(err,project) {
 		var resPerson = options['resPerson']
@@ -173,9 +167,6 @@ proSchema.static('add',function(options,callback) {
 			User.findOne({'_id':resPerson},function(err,user) {
 				//添加负责人项目
 				if(!err) {
-					console.log('------------')
-					console.log(user)
-					user['projects'] = user['projects'] ? user['projects'] : [];
 					user['projects'].push({
 						'pid' 	: project['_id'],
 						'speed' : 0,

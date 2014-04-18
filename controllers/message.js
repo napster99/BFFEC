@@ -23,18 +23,13 @@ exports.getDailyDetailForPass = function(req, res) {
       if(!err) {
         var uid = message['uid'];
         models['user'].getUsersByUids([uid],function(err,user) {
-          models['replys'].getReplysByMids([mid],function(err,replyArr) {
-            if(!err) {
-                message = message.toJSON();
-                message['mtime'] = new Date(message['mtime']).format('yyyy-MM-dd hh:mm');
-                var data = {
-                  'uname' : user[0]['name'],
-                  'message' : message,
-                  'replyArr' : replyArr
-                }
-                res.send(data);
-            }
-          });
+          message = message.toJSON();
+          message['mtime'] = new Date(message['mtime']).format('yyyy-MM-dd hh:mm');
+          var data = {
+            'uname' : user[0]['name'],
+            'message' : message
+          }
+          res.send(data);
         })
       }
     });
@@ -93,8 +88,7 @@ exports.getSingleTopic = function(req, res) {
                       res.render('messageDetail',{
                           'title':messageDetail['mtitle'],
                           'messageDetail' : messageDetail,
-                          'otheruser' : req.session.user,
-                          'sessionID' : req.cookies['connect.sid']
+                          'otheruser' : req.session.user
                         })
                     }
                   });
@@ -111,8 +105,7 @@ exports.getSingleTopic = function(req, res) {
 //发表话题页
 exports.getCreateTopic = function(req, res) {
    res.render('create',{
-      title : '发表话题',
-      sessionID : req.cookies['connect.sid']
+      title : '发表话题'
     });
 }
 
@@ -144,8 +137,7 @@ exports.getAddDaily = function(req, res) {
   res.render('addDaily',{
       title : '发布日报',
       user : req.session.user,
-      otheruser:req.session.user,
-      sessionID : req.cookies['connect.sid']
+      otheruser:req.session.user
     });
 }
 
@@ -182,8 +174,7 @@ exports.getDailyListByUid = function(req, res) {
           title : '日报列表',
           uid : uid,
           user : data[0],
-          otheruser : data[0],
-          sessionID : req.cookies['connect.sid']
+          otheruser : data[0]
         });
       }
     })
@@ -200,8 +191,7 @@ exports.getTopicListByUid = function(req, res) {
           title : '话题列表',
           uid : uid,
           user : data[0],
-          otheruser : data[0],
-          sessionID : req.cookies['connect.sid']
+          otheruser : data[0]
         });
       }
     })
@@ -279,16 +269,14 @@ exports.getDailyDetailById = function(req, res) {
                   'title':messageDetail['mtitle'],
                   'messageDetail' : messageDetail,
                   'otheruser' : req.session.user,
-                  'user' : req.session.user,
-                  'sessionID' : req.cookies['connect.sid']
+                  'user' : req.session.user
                 })
               } else {
                 res.render('dailyDetail',{
                   'title':messageDetail['mtitle'],
                   'messageDetail' : messageDetail,
                   'otheruser' : req.session.user,
-                  'user' : req.session.user,
-                  'sessionID' : req.cookies['connect.sid']
+                  'user' : req.session.user
                 })
               }
             }
@@ -301,64 +289,80 @@ exports.getDailyDetailById = function(req, res) {
 
 //管理员通过审核 【Admin】
 exports.postChangeMessageStatus = function(req, res) {
-    var mid = req.body['mid'];
+  var mid = req.body['mid'];
     var uid = req.body['uid'];
-    var title = req.body['title'];
     var status = req.body['status'];
     var reviews = req.body['reviews'];
     var score = req.body['score'];
     models['message'].changeMessageStatus(mid,status,function(err,message) {
       //如果管理员有点评
-      console.log('如果管理员有点评')
       if(reviews != '') {
-        console.log('aaa'+status)
         var reply = new models['replys']({
           'mid' : mid,
           'rcontent' : reviews,
           'uid' : uid,
           'type' : 'admin'
         });
-         
-        models['replys'].saveReply(reply,function(err,message) {
-          if(status === 'passed') {
-            //给成员加积分
-            models['user'].getUserByUid(uid,function(err,user) {
-              if(!err) {
-                var logOptions = {
-                  'name' : user['name'],
-                  'uid' : uid,
-                  'score' : score,
-                  'type' : 1, //日报
-                  'totalScore' : user['score'],
-                  'mark' : '--'
-                }
-                score = (+user['score']) + (+score);
-                models['user'].updateScoreAdmin(uid,score,logOptions,function(err,rows) {
-                  if(!err) {
-                    res.send({'message':'success'});
 
-                     var notice = new models['notice']({
+        models['replys'].getReplysByMids([mid],function(err,docs) {
+         
+          if(docs && docs.length == 0) {
+            models['replys'].saveReply(reply,function(err,message) {
+              if(status === 'passed') {
+                //给成员加积分
+                models['user'].getUserByUid(uid,function(err,user) {
+                  if(!err) {
+                    var logOptions = {
+                      'name' : user['name'],
                       'uid' : uid,
-                      'content' : '日报（<a target="_blank" href="/dailyDetail/'+mid+'#day" >'+title+'</a>）已审核通过'
-                    });
-                     models['notice']['add'](notice, function(err, notice) {});
+                      'score' : score,
+                      'type' : 1, //日报
+                      'totalScore' : user['score'],
+                      'mark' : '--'
+                    }
+                    score = (+user['score']) + (+score);
+                    models['user'].updateScoreAdmin(uid,score,logOptions,function(err,rows) {
+                      if(!err) {
+                        res.send({'message':'success'});
+                      }
+                    })
                   }
                 })
+              } else {
+                //不通过
+                res.send({'message':'success'});
+              }
+            });
+          } else {
+            models['replys'].updateDailyComment(mid,reviews,function(err,reply) {
+              if(status === 'passed') {
+                //给成员加积分
+                models['user'].getUserByUid(uid,function(err,user) {
+                  if(!err) {
+                    var logOptions = {
+                      'name' : user['name'],
+                      'uid' : uid,
+                      'score' : score,
+                      'type' : 1, //日报
+                      'totalScore' : user['score'],
+                      'mark' : '--'
+                    }
+                    score = (+user['score']) + (+score);
+                    models['user'].updateScoreAdmin(uid,score,logOptions,function(err,rows) {
+                      if(!err) {
+                        res.send({'message':'success'});
+                      }
+                    })
+                  }
+                })
+              } else {
+                //不通过
+                res.send({'message':'success'});
               }
             })
-          } else {
-            //不通过
-            res.send({'message':'success'});
-             var notice = new models['notice']({
-              'uid' : uid,
-              'content' : '日报<a target="_blank" href="/dailyDetail/'+mid+'#day" >'+title+'</a>审核不通过'
-            });
-             
-             models['notice']['add'](notice, function(err, notice) {});
           }
         });
       }else{
-        console.log('bbb')
          if(status === 'passed') {
             //给成员加积分
             models['user'].getUserByUid(uid,function(err,user) {
@@ -375,12 +379,6 @@ exports.postChangeMessageStatus = function(req, res) {
                 models['user'].updateScoreAdmin(uid,score,logOptions,function(err,rows) {
                   if(!err) {
                     res.send({'message':'success'});
-                      var notice = new models['notice']({
-                      'uid' : uid,
-                      'content' : '日报<a target="_blank" href="/dailyDetail/'+mid+'#day" >'+title+'</a>已审核通过'
-                    });
-                     
-                     models['notice']['add'](notice, function(err, notice) {});
                   }
                 })
               }
@@ -388,12 +386,6 @@ exports.postChangeMessageStatus = function(req, res) {
           } else {
             //不通过
             res.send({'message':'success'});
-            var notice = new models['notice']({
-              'uid' : uid,
-              'content' : '日报<a target="_blank" href="/dailyDetail/'+mid+'#day" >'+title+'</a>审核不通过'
-            });
-             
-             models['notice']['add'](notice, function(err, notice) {});
           }
       }
     })
@@ -598,8 +590,7 @@ exports.getArticleList = function(req, res) {
                   objArr : objArr,
                   user : req.session.user,
                   otheruser : req.session.user,
-                  score : req.session.user['score'],
-                  sessionID : req.cookies['connect.sid']
+                  score : req.session.user['score']
                 });
               }else{
                 //组装成对象，输出到页面
@@ -607,8 +598,7 @@ exports.getArticleList = function(req, res) {
                   title : '阅读版块',
                   objArr : objArr,
                   user : req.session.user,
-                  otheruser : req.session.user,
-                  sessionID : req.cookies['connect.sid']
+                  otheruser : req.session.user
                 });
               }
             })
@@ -622,8 +612,7 @@ exports.getArticleList = function(req, res) {
 //发表文章
 exports.getCreateArticle = function (req, res) {
     res.render('createArticle',{
-      title : '发表文章',
-      sessionID : req.cookies['connect.sid']
+      title : '发表文章'
     });
 }
 
@@ -708,8 +697,7 @@ exports.getSingleArticle = function(req, res) {
                       res.render('articleDetail',{
                           'title':articleDetail['mtitle'],
                           'articleDetail' : articleDetail,
-                          'otheruser' : req.session.user,
-                          'sessionID' : req.cookies['connect.sid']
+                          'otheruser' : req.session.user
                         })
                     }
                   });
@@ -723,7 +711,7 @@ exports.getSingleArticle = function(req, res) {
 }
 
 
-//点赞（消息）
+//点赞
 exports.postSendGoodAction = function(req, res) {
   var mid = req.body.mid;
   
@@ -739,13 +727,6 @@ exports.postSendGoodAction = function(req, res) {
         models['records']['RecordGood'].add(options,function(err,record) {
           if(!err) 
             res.send({'code':'0','message':'success','data':{'goodNum':goodNum}});
-            models['message']['list']({'_id':mid},function(err, message) {
-              var notice = {
-                'uid' : message[0].uid,
-                'content' : req.session.user.name + '赞了您的分享（<a target="_blank" href="/article/'+mid+'">'+message[0].mtitle+'</a>）'
-              }
-              models['notice']['add'](notice, function(err, notice) {});
-            });
         })
       }
     }
@@ -809,8 +790,7 @@ exports.getArticleListByUid = function(req, res) {
           title : '文章列表',
           uid : uid,
           user : data[0],
-          otheruser : data[0],
-          sessionID : req.cookies['connect.sid']
+          otheruser : data[0]
         });
       }
     })
@@ -910,8 +890,7 @@ exports.getTopicList = function(req, res) {
                     objArr : objArr,
                     user : req.session.user,
                     otheruser : req.session.user,
-                    score : req.session.user['score'],
-                    sessionID : req.cookies['connect.sid']
+                    score : req.session.user['score']
                   });
                 }else{
                   //组装成对象，输出到页面
@@ -919,8 +898,7 @@ exports.getTopicList = function(req, res) {
                     title : '边锋前端社区',
                     objArr : objArr,
                     user : req.session.user,
-                    otheruser : req.session.user,
-                    sessionID : req.cookies['connect.sid']
+                    otheruser : req.session.user
                   });
                 }
               })

@@ -62,58 +62,56 @@ projects : [
 	{
 	  "code": "1",
 	  "message": "success",
-	  "data": {
-		"list" : [
+	  "data": [
+		{
+		  "_id": "52ca5e0a6073e1b80f000001",
+		  "name": "天枢",
+		  "type": "1",
+		  "desc": "后台管理系统",
+		  "resPerson": {
+			"name": "张三",
+			"uid": "52bd3a0c75dc0af411000008"
+		  },
+		  "svn": "121.45.125.224/web/nodeList",
+		  "comment": "测试评论",
+		  "__v": 0,
+		  "isCheck": false,
+		  "speed": 98.2,
+		  "state": 1,
+		  "priority": 1,
+		  "approvalEndTime": "2014-01-06T07:40:58.164Z",
+		  "approvalStartTime": "2014-01-06T07:40:58.164Z",
+		  "joinPerson": [
+			"52bd3a0c75dc0af411000008",
+			"52bd3a2075dc0af411000009",
+			"52bd3a4475dc0af41100000b"
+		  ],
+		  "joinPersons": [
 			{
-			  "_id": "52ca5e0a6073e1b80f000001",
-			  "name": "天枢",
-			  "type": "1",
-			  "desc": "后台管理系统",
-			  "resPerson": {
-				"name": "张三",
-				"uid": "52bd3a0c75dc0af411000008"
-			  },
-			  "svn": "121.45.125.224/web/nodeList",
-			  "comment": "测试评论",
-			  "__v": 0,
-			  "isCheck": false,
-			  "speed": 98.2,
-			  "state": 1,
-			  "priority": 1,
-			  "approvalEndTime": "2014-01-06T07:40:58.164Z",
-			  "approvalStartTime": "2014-01-06T07:40:58.164Z",
-			  "joinPerson": [
-				"52bd3a0c75dc0af411000008",
-				"52bd3a2075dc0af411000009",
-				"52bd3a4475dc0af41100000b"
-			  ],
-			  "joinPersons": [
-				{
-				  "uid": "52bd3a0c75dc0af411000008",
-				  "name": "张三",
-				  "speed": "",
-				  "role": ""
-				},
-				{
-				  "uid": "52bd3a2075dc0af411000009",
-				  "name": "李四",
-				  "speed": "",
-				  "role": ""
-				},
-				{
-				  "uid": "52bd3a4475dc0af41100000b",
-				  "name": "王五",
-				  "speed": "",
-				  "role": ""
-				}
-			  ],
-			  "role": {
-				"uid": "2"
-			  }
+			  "uid": "52bd3a0c75dc0af411000008",
+			  "name": "张三",
+			  "speed": "",
+			  "role": ""
+			},
+			{
+			  "uid": "52bd3a2075dc0af411000009",
+			  "name": "李四",
+			  "speed": "",
+			  "role": ""
+			},
+			{
+			  "uid": "52bd3a4475dc0af41100000b",
+			  "name": "王五",
+			  "speed": "",
+			  "role": ""
 			}
-		],
-		"totalCount" : "200"    //总条数
-	  }
+		  ],
+		  "role": {
+			"uid": "2"
+		  },
+		  "totalCount" : "200"    //总条数
+		}
+	  ]
 	}
 
 三、获取当前用户的信息（uid, name, role ）

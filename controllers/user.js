@@ -13,7 +13,6 @@ var querystring = require('querystring');
 var url = require('url');
 var fs = require('fs');
 var yp = require('../lib/yp');
-var cookieManager = require('../lib/cookieManager');
 var mission = require('../lib/mission');
 
 
@@ -22,8 +21,7 @@ var mission = require('../lib/mission');
 exports.getModifyPwd = function(req, res) {
    req.session.error = null;
     res.render('modifyPwd',{
-      title : '修改口令',
-      sessionID : req.cookies['connect.sid']
+      title : '修改口令'
     });
 }
 
@@ -32,8 +30,7 @@ exports.getModifyAvatar = function(req, res) {
     res.render('modifyAvatar',{
       title : '修改头像',
       otheruser : req.session.user,
-      user : req.session.user,
-      sessionID : req.cookies['connect.sid']
+      user : req.session.user
     });
 }
 
@@ -117,9 +114,8 @@ exports.postModifyPwd = function(req, res) {
 //用户登陆页
 exports.getLogin = function(req, res) {
       res.render('login', {
-        title : '用户登入',
-        sessionID : req.cookies['connect.sid']
-      });
+      title : '用户登入'
+    });
 }
 
 //提交用户登陆
@@ -162,11 +158,9 @@ exports.postLogin = function(req, res) {
         user.curSign = curSign;
         req.session.user = user;
 
-        //设置过期时间
-
-        // cookieManager.set_cookie();
-
-
+        console.log('+++++++++++登入成功++++++++++++++');
+        console.log(req.session.user);
+        console.log('+++++++++++登入成功++++++++++++++');
         req.session.success = '登入成功';
         req.session.error = null;
         res.redirect('/');
@@ -206,8 +200,7 @@ exports.getWebList = function(req, res) {
           res.render('webList', {
             title : '管理人员',
             users : datas,
-            messages : mesObj,
-            sessionID : req.cookies['connect.sid']
+            messages : mesObj
           });
         });
       })
@@ -217,8 +210,7 @@ exports.getWebList = function(req, res) {
 //新成员录入页
 exports.getAddUser = function(req,res) {
 	 res.render('addUser', {
-      title : '新成员录入',
-      sessionID : req.cookies['connect.sid']
+      title : '新成员录入'
     });
 }
 
@@ -273,8 +265,7 @@ exports.getSingleUser = function(req, res) {
         res.render('user',{
           title : user.name + '的主页',
           otheruser : user,
-          user : req.session.user,
-          sessionID : req.cookies['connect.sid']
+          user : req.session.user
         });
       }
     });
@@ -428,15 +419,3 @@ exports.getProjectList = function(req, res) {
       })
     })
 }
-
-
-
-// 重置权限
-exports.resetAuth = function(req, res) {
-  var uid = req.body.uid;
-
-  models['user'].resetAuth(uid,function(err,result) {
-    console.log('重置权限');
-    console.log(err);
-  })
-} 
